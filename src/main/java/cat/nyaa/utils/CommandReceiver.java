@@ -15,11 +15,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class CommandReceiver<T extends JavaPlugin> implements CommandExecutor {
     //==== Error Definitions ====//
@@ -55,17 +51,31 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     private final Map<String, CommandReceiver> subCommandClasses = new HashMap<>();
     private final Map<String, String> subCommandPermission = new HashMap<>();
 
+    private Set<Method> getAllMethods(Class cls) {
+        Set<Method> ret = new HashSet<>();
+        while (cls != null) {
+            ret.addAll(Arrays.asList(cls.getDeclaredMethods()));
+            cls = cls.getSuperclass();
+        }
+        return ret;
+    }
+
+    private Set<Field> getAllFields(Class cls) {
+        Set<Field> ret = new HashSet<>();
+        while (cls != null) {
+            ret.addAll(Arrays.asList(cls.getDeclaredFields()));
+            cls = cls.getSuperclass();
+        }
+        return ret;
+    }
+
     public CommandReceiver(T plugin, Internationalization i18n) {
         //this.plugin = plugin;
         this.i18n = i18n;
 
-        for (Method m : getClass().getDeclaredMethods()) {
+        for (Method m : getAllMethods(getClass())) {
             SubCommand anno = m.getAnnotation(SubCommand.class);
             if (anno == null) continue;
-            if (!Modifier.isStatic(m.getModifiers())) {
-                plugin.getLogger().warning(i18n.get("internal.warn.bad_subcommand", m.toString()));
-                continue;
-            }
             Class<?>[] params = m.getParameterTypes();
             if (!(params.length == 2 &&
                     params[0] == CommandSender.class &&
@@ -79,13 +89,9 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             }
         }
 
-        for (Field f : getClass().getDeclaredFields()) {
+        for (Field f : getAllFields(getClass())) {
             SubCommand anno = f.getAnnotation(SubCommand.class);
             if (anno == null) continue;
-            if (!Modifier.isStatic(f.getModifiers())) {
-                plugin.getLogger().warning(i18n.get("internal.warn.bad_subcommand", f.toString()));
-                continue;
-            }
             if (CommandSender.class.isAssignableFrom(f.getType())) {
                 CommandReceiver<T> obj = null;
                 try {
@@ -170,7 +176,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     private String getHelpContent(String type, String... subkeys) {
         String key = "manual";
         for (String s : subkeys) {
-            key += "." + s;
+            if (s.length() > 0)
+                key += "." + s;
         }
         key += "." + type;
         if (i18n.hasKey(key)) {
@@ -188,6 +195,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             tmp += "\n    " + cmd + ":\t" + getHelpContent("description", getHelpPrefix(), cmd);
             tmp += "\n    " + cmd + ":\t" + getHelpContent("usage", getHelpPrefix(), cmd);
         }
+        sender.sendMessage(tmp);
     }
 
     public static Player asPlayer(CommandSender target) {

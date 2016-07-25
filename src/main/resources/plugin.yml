@@ -1,0 +1,27 @@
+name: NyaaUtils
+main: cat.nyaa.nyaautils.NyaaUtils
+description: "Plugin for Nyaacat Minecraft Server"
+version: 1.0
+depend: []
+authors: [RecursiveG]
+website: "https://github.com/NyaaCat/nyaautils"
+database: false
+
+commands:
+  nyaautils:
+    description: The command for NyaaUtils
+    aliases: nu
+    permission: nu.command
+    permission-message: "You do not have the required permission: <permission>"
+    usage: "/<command> [SubCommand...] [Arguments...] or /<command> help"
+
+permissions:
+  nu.command:
+    description: Base permission node for commands
+    default: true
+  nu.enchant:
+    description: Permission node for self-serve enchanting
+    default: true
+  nu.reload:
+    description: Reload permission
+    default: op

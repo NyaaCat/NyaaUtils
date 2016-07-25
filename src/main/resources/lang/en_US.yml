@@ -1,0 +1,26 @@
+internal:
+  info:
+    using_language: "Now using language: %s"
+  warn:
+    bad_subcommand: "Bad subcommand handler: %s"
+user:
+  info:
+    command_complete: "Command Executed!"
+    not_player: "Only players can do this"
+    not_item_hand: "No item in hand"
+  error:
+    bad_command: "Wrong command: %s"
+    not_int: "Not a valid integer"
+    not_double: "Not a valid number"
+    command_exception: "Internal server error. Unable to run command."
+    bad_enum: "Not valid for enum type: %s. Values: %s"
+
+manual.no_description: "No description"
+manual.no_usage: "No usage"
+manual:
+  enchant:
+    description: "Enchant item"
+    usage: "/nu enchant [Enchantment] [Level]"
+  help:
+    description: "Show help message"
+    usage: "/nu [subCommands...] help"
