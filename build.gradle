@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     jcenter()
@@ -26,4 +26,4 @@ dependencies {
     compile 'org.spigotmc:spigot-api:1.10.2-R0.1-SNAPSHOT'
 }
 
-// CI fail counter: 0
+
