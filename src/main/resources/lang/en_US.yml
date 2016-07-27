@@ -14,7 +14,8 @@ user:
     not_double: "Not a valid number"
     command_exception: "Internal server error. Unable to run command."
     bad_enum: "Not valid for enum type: %s. Values: %s"
-
+  showitem:
+    message: "Player %s show item: &r{itemName}&r * {amount}"
 manual.no_description: "No description"
 manual.no_usage: "No usage"
 manual:

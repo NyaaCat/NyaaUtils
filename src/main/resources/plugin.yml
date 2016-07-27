@@ -22,6 +22,9 @@ permissions:
   nu.enchant:
     description: Permission node for self-serve enchanting
     default: true
+  nu.show:
+    description: Permission node for show item
+    default: true
   nu.reload:
     description: Reload permission
     default: op
