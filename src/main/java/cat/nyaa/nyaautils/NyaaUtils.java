@@ -28,6 +28,7 @@ public class NyaaUtils extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        i18n.load(cfg.language);
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
     }

@@ -94,7 +94,7 @@ public enum I16rEnchantment {
     }
 
     public static I16rEnchantment fromEnchantment(Enchantment ench) {
-        return lookup.containsKey(ench)? lookup.get(ench): null;
+        return lookup.containsKey(ench) ? lookup.get(ench) : null;
     }
 
     public BaseComponent getUnlocalizedName() {

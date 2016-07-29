@@ -23,6 +23,11 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     }
 
     private static class NoItemInHandException extends RuntimeException {
+        public final boolean isOffHand;
+
+        public NoItemInHandException(boolean ifh) {
+            isOffHand = ifh;
+        }
     }
 
     private static class NoPermissionException extends RuntimeException {
@@ -162,7 +167,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         } catch (NotPlayerException ex) {
             msg(sender, "user.info.not_player");
         } catch (NoItemInHandException ex) {
-            msg(sender, "user.info.no_item_hand");
+            msg(sender, ex.isOffHand ? "user.info.no_item_offhand" : "user.info.no_item_hand");
         } catch (BadCommandException ex) {
             sender.sendMessage(ex.getMessage());
         } catch (Exception ex) {
@@ -219,7 +224,22 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                     return i;
                 }
             }
-            throw new NoItemInHandException();
+            throw new NoItemInHandException(false);
+        } else {
+            throw new NotPlayerException();
+        }
+    }
+
+    public static ItemStack getItemInOffHand(CommandSender se) {
+        if (se instanceof Player) {
+            Player p = (Player) se;
+            if (p.getInventory() != null) {
+                ItemStack i = p.getInventory().getItemInOffHand();
+                if (i != null && i.getType() != Material.AIR) {
+                    return i;
+                }
+            }
+            throw new NoItemInHandException(true);
         } else {
             throw new NotPlayerException();
         }

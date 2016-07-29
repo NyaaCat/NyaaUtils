@@ -4,15 +4,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /* TODO: support NBT matching       */
 /* TODO: item attribute modifiers   */
 /* TODO: item flags                 */
-public class BasicItemMatcher implements ISerializable{
+public class BasicItemMatcher implements ISerializable {
     @Serializable
     public ItemStack itemTemplate = null;
     @Serializable
@@ -39,16 +36,18 @@ public class BasicItemMatcher implements ISerializable{
         int baseDamage = base.getDurability();
         int givenDamage = given.getDurability();
         if (minDamageValue == -2 && givenDamage < baseDamage) return false;
-        if (minDamageValue >= 0  && givenDamage < minDamageValue) return false;
+        if (minDamageValue >= 0 && givenDamage < minDamageValue) return false;
         if (maxDamageValue == -2 && givenDamage > baseDamage) return false;
-        if (maxDamageValue >= 0  && givenDamage > maxDamageValue) return false;
+        if (maxDamageValue >= 0 && givenDamage > maxDamageValue) return false;
 
         String baseDisplay = getDisplayName(base);
         String givenDisplay = getDisplayName(given);
         if (nameMatch == MatchingMode.EXACT && !baseDisplay.equals(givenDisplay)) return false;
-        if (nameMatch == MatchingMode.EXACT_TEXT && !ChatColor.stripColor(baseDisplay).equals(ChatColor.stripColor(givenDisplay))) return false;
+        if (nameMatch == MatchingMode.EXACT_TEXT && !ChatColor.stripColor(baseDisplay).equals(ChatColor.stripColor(givenDisplay)))
+            return false;
         if (nameMatch == MatchingMode.CONTAINS && !givenDisplay.contains(baseDisplay)) return false;
-        if (nameMatch == MatchingMode.CONTAINS_TEXT && !ChatColor.stripColor(givenDisplay).contains(ChatColor.stripColor(baseDisplay))) return false;
+        if (nameMatch == MatchingMode.CONTAINS_TEXT && !ChatColor.stripColor(givenDisplay).contains(ChatColor.stripColor(baseDisplay)))
+            return false;
 
         Map<Enchantment, Integer> baseEnch = base.getEnchantments();
         Map<Enchantment, Integer> givenEnch = given.getEnchantments();
@@ -88,7 +87,7 @@ public class BasicItemMatcher implements ISerializable{
     private boolean containStrArr(String[] sample, String[] pattern, boolean stripColor) {
         Set<String> sampleSet = new HashSet<>();
         for (String s : sample) {
-            sampleSet.add(stripColor? ChatColor.stripColor(s): s);
+            sampleSet.add(stripColor ? ChatColor.stripColor(s) : s);
         }
         for (String s : pattern) {
             if (!sampleSet.contains(s))
@@ -97,12 +96,20 @@ public class BasicItemMatcher implements ISerializable{
         return true;
     }
 
-
-    enum MatchingMode {
+    public enum MatchingMode {
         EXACT,
         EXACT_TEXT, // ignore the control chars for strings.
         CONTAINS,
         CONTAINS_TEXT,  // ignore the control chars for strings.
         ARBITRARY;
+    }
+
+    public static boolean containsMatch(Collection<BasicItemMatcher> list, ItemStack item) {
+        for (BasicItemMatcher m : list) {
+            if (m.matches(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

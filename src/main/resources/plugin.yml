@@ -28,3 +28,6 @@ permissions:
   nu.reload:
     description: Reload permission
     default: op
+  nu.addenchsrc:
+    description: Add item as enchantment source
+    default: op

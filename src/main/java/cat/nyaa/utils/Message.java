@@ -56,6 +56,11 @@ public final class Message {
         return this;
     }
 
+    public Message append(BaseComponent component) {
+        inner.addExtra(component);
+        return this;
+    }
+
     public Message send(Player p) {
         p.spigot().sendMessage(inner);
         return this;

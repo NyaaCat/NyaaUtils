@@ -7,7 +7,8 @@ user:
   info:
     command_complete: "Command Executed!"
     not_player: "Only players can do this"
-    not_item_hand: "No item in hand"
+    no_item_hand: "No item in main hand"
+    no_item_offhand: "No item in off hand"
   error:
     bad_command: "Wrong command: %s"
     not_int: "Not a valid integer"
@@ -16,12 +17,28 @@ user:
     bad_enum: "Not valid for enum type: %s. Values: %s"
   showitem:
     message: "Player %s show item: &r{itemName}&r * {amount}"
-manual.no_description: "No description"
-manual.no_usage: "No usage"
+  enchant:
+    list_ench_header: "=== Listing available enchantments ==="
+    invalid_src: "The item in off hand is not valid enchantment source."
+    invalid_ench: "%s is not a valid enchantment name"
+    invalid_level: "The level required is invalid"
+
 manual:
+  no_description: "No description"
+  no_usage: "No usage"
+
   enchant:
     description: "Enchant item"
     usage: "/nu enchant [Enchantment] [Level]"
+
   help:
     description: "Show help message"
     usage: "/nu [subCommands...] help"
+
+  reload:
+    description: "Reload config from config file. Unsaved changes will lost"
+    usage: "/nu reload"
+
+  addenchsrc:
+    description: "Register Item in hand as a valid enchant source"
+    usage: "/nu addenchsrc"
