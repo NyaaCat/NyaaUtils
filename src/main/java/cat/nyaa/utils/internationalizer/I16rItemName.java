@@ -1,4 +1,4 @@
-package cat.nyaa.utils;
+package cat.nyaa.utils.internationalizer;
 
 /*
  * Copyright (c) 2015 Jerrell Fang
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 
 @SuppressWarnings("unused")
-public enum EnumItem {
+public enum I16rItemName {
 
     AIR(Material.AIR, "Air"),
     BARRIER(Material.BARRIER, "tile.barrier.name"),
@@ -646,10 +646,10 @@ public enum EnumItem {
     ORANGE_SHIELD(Material.SHIELD, 15, "item.shield.orange.name"),
     WHITE_SHIELD(Material.SHIELD, 16, "item.shield.white.name");
 
-    private static final Map<String, EnumItem> lookup = new HashMap<>();
+    private static final Map<String, I16rItemName> lookup = new HashMap<>();
 
     static {
-        for (EnumItem item : EnumSet.allOf(EnumItem.class))
+        for (I16rItemName item : EnumSet.allOf(I16rItemName.class))
             lookup.put(item.material.name()+":"+Integer.toString(item.metadata), item);
     }
 
@@ -660,13 +660,13 @@ public enum EnumItem {
     /**
      * Create an index of an item
      */
-    EnumItem(Material material, int metadata, String unlocalizedName) {
+    I16rItemName(Material material, int metadata, String unlocalizedName) {
         this.material = material;
         this.metadata = metadata;
         this.unlocalizedName = unlocalizedName;
     }
 
-    EnumItem(Material material, String unlocalizedName) {
+    I16rItemName(Material material, String unlocalizedName) {
         this(material, 0, unlocalizedName);
     }
 
@@ -692,7 +692,7 @@ public enum EnumItem {
     }
 
     public static BaseComponent getUnlocalizedName(ItemStack item) {
-        EnumItem e = lookup.get(item.getType().name() + ":" + Short.toString(item.getDurability()));
+        I16rItemName e = lookup.get(item.getType().name() + ":" + Short.toString(item.getDurability()));
         if (e == null) e = lookup.get(item.getType().name() + ":0");
         if (e == null) return new TextComponent(item.getType().name() + ":" + Short.toString(item.getDurability()));
         if (e == PLAYER_HEAD) {

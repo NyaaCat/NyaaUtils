@@ -1,6 +1,6 @@
 package cat.nyaa.utils;
 
-import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.utils.internationalizer.I16rItemName;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class Message {
+public final class Message {
     public final BaseComponent inner;
 
     public Message(String text) {
@@ -20,8 +20,8 @@ public class Message {
         return this;
     }
 
-    public Message appendFormat(String template, Object... obj) {
-        return append(I18n.instance.get(template, obj));
+    public Message appendFormat(Internationalization i18n, String template, Object... obj) {
+        return append(i18n.get(template, obj));
     }
 
     public Message append(ItemStack item) {
@@ -30,7 +30,7 @@ public class Message {
 
     public Message append(ItemStack item, String display) {
         boolean rawName = !(item.hasItemMeta() && item.getItemMeta().hasDisplayName());
-        BaseComponent nameComponent = rawName ? EnumItem.getUnlocalizedName(item) : new TextComponent(item.getItemMeta().getDisplayName());
+        BaseComponent nameComponent = rawName ? I16rItemName.getUnlocalizedName(item) : new TextComponent(item.getItemMeta().getDisplayName());
         BaseComponent result;
         String itemJson = ReflectionUtil.convertItemStackToJson(item);
         HoverEvent ev = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[]{new TextComponent(itemJson)});

@@ -19,16 +19,14 @@
  */
 package cat.nyaa.utils;
 
-import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
-public class ReflectionUtil {
+public final class ReflectionUtil {
 
     /*
      * The server version string to location NMS & OBC classes
@@ -149,7 +147,7 @@ public class ReflectionUtil {
 
     // https://github.com/sainttx/Auctions/blob/12533c9af0b1dba700473bf728895abb9ff5b33b/Auctions/src/main/java/com/sainttx/auctions/SimpleMessageFactory.java#L197
     // Converts an ItemStack to a JSON representation of itself
-    public static String convertItemStackToJson(ItemStack itemStack) {
+    public static String convertItemStackToJson(ItemStack itemStack) throws RuntimeException {
         // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
         Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
         Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
@@ -168,8 +166,7 @@ public class ReflectionUtil {
             nmsItemStackObj = asNMSCopyMethod.invoke(null, itemStack);
             itemAsJsonObject = saveNmsItemStackMethod.invoke(nmsItemStackObj, nmsNbtTagCompoundObj);
         } catch (Throwable t) {
-            NyaaUtils.instance.getLogger().log(Level.SEVERE, "failed to serialize itemstack to nms item", t);
-            return null;
+            throw new RuntimeException("failed to serialize itemstack to nms item", t);
         }
 
         // Return a string representation of the serialized object
