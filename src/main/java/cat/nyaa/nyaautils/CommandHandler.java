@@ -5,12 +5,17 @@ import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
 import cat.nyaa.utils.Message;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
 
@@ -110,6 +115,56 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void commandShow(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
         new Message("").append(item, I18n._("user.showitem.message", sender.getName())).broadcast();
+    }
+
+    @SubCommand(value = "launch", permission = "nu.launch")
+    public void commandLaunch(CommandSender sender, Arguments args) {
+        if (args.top() == null) {
+            sender.sendMessage(I18n._("user.launch.usage"));
+        } else {
+            double yaw = args.nextDouble();
+            double pitch = args.nextDouble();
+            double speed = args.nextDouble();
+            int delay = args.nextInt();
+            String pName = args.next();
+            if (pName == null) {
+                if (sender instanceof Player) {
+                    pName = sender.getName();
+                } else {
+                    sender.sendMessage(I18n._("user.launch.missing_name"));
+                    return;
+                }
+            }
+            Player p = Bukkit.getPlayer(pName);
+            if (p == null) {
+                sender.sendMessage(I18n._("user.launch.player_not_online", pName));
+                return;
+            }
+
+            ItemStack chestPlate = p.getInventory().getChestplate();
+            if (chestPlate == null || chestPlate.getType() != Material.ELYTRA) {
+                sender.sendMessage(I18n._("user.launch.not_ready_to_fly_sender"));
+                p.sendMessage(I18n._("user.launch.not_ready_to_fly"));
+                return;
+            }
+
+            p.setVelocity(toVector(yaw, pitch, speed));
+            if (delay >= 2) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        p.setGliding(true);
+                    }
+                }.runTaskLater(NyaaUtils.instance, delay);
+            }
+        }
+    }
+    private static Vector toVector(double yaw, double pitch, double length) {
+        return new Vector(
+                Math.cos(yaw/180*Math.PI)*Math.cos(pitch/180*Math.PI) * length,
+                Math.sin(pitch/180*Math.PI) * length,
+                Math.sin(yaw/180*Math.PI)*Math.cos(pitch/180*Math.PI) * length
+        );
     }
 
     @SubCommand(value = "reload", permission = "nu.reload")
