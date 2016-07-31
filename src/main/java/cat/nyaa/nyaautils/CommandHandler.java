@@ -7,8 +7,6 @@ import cat.nyaa.utils.Message;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.CommandBlock;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -18,9 +16,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
+    private NyaaUtils plugin;
 
     public CommandHandler(NyaaUtils plugin, Internationalization i18n) {
         super(plugin, i18n);
+        this.plugin = plugin;
     }
 
     @Override
@@ -46,10 +46,16 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             sender.sendMessage(I18n._("user.enchant.list_ench_header"));
             for (Enchantment e : Enchantment.values()) {
                 if (I16rEnchantment.fromEnchantment(e) != null) {
-                    p.spigot().sendMessage(new Message(e.getName() + ": ")
-                            .append(I16rEnchantment.fromEnchantment(e).getUnlocalizedName()).inner);
+                    Message msg = new Message(e.getName() + ": ");
+                    msg.append(I16rEnchantment.fromEnchantment(e).getUnlocalizedName());
+                    msg.append(" " + I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
+                    p.spigot().sendMessage(msg.inner);
                 } else {
-                    p.sendMessage(e.getName() + ": " + e.getName());
+                    if (e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                        continue;
+                    }
+                    p.sendMessage(e.getName() + ": " + e.getName() + " " + 
+                            I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                 }
             }
             sender.sendMessage(I18n._("manual.enchant.usage"));
@@ -61,16 +67,16 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 return;
             }
 
-            String enchStr = args.next();
+            String enchStr = args.next().toUpperCase();
             Enchantment ench = Enchantment.getByName(enchStr);
             if (ench == null) {
-                sender.sendMessage(I18n._("user.enchant.invalid_ench"));
+                sender.sendMessage(I18n._("user.enchant.invalid_ench", enchStr));
                 return;
             }
 
             int level = args.nextInt();
 
-            if (level <= 0) {
+            if (level <= 0 || level > plugin.cfg.enchantMaxLevel.get(ench)) {
                 sender.sendMessage(I18n._("user.enchant.invalid_level"));
                 return;
             }
@@ -78,7 +84,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             if (off.getType() == Material.ENCHANTED_BOOK) {
                 EnchantmentStorageMeta meta = (EnchantmentStorageMeta) off.getItemMeta();
                 int realLvl = meta.getStoredEnchantLevel(ench);
-                if (level > realLvl) {
+                if (level > realLvl
+                        || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n._("user.enchant.invalid_level"));
                     return;
                 } else if (level == realLvl) {
@@ -89,7 +96,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 off.setItemMeta(meta);
             } else {
                 int realLvl = off.getEnchantmentLevel(ench);
-                if (level > realLvl) {
+                if (level > realLvl
+                        || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n._("user.enchant.invalid_level"));
                     return;
                 } else if (level == realLvl) {
@@ -108,6 +116,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 int origLvl = main.getEnchantmentLevel(ench);
                 main.addUnsafeEnchantment(ench, origLvl + level);
             }
+            p.getInventory().setItemInMainHand(main);
+            p.getInventory().setItemInOffHand(off);
         }
     }
 
@@ -159,11 +169,12 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             }
         }
     }
+
     private static Vector toVector(double yaw, double pitch, double length) {
         return new Vector(
-                Math.cos(yaw/180*Math.PI)*Math.cos(pitch/180*Math.PI) * length,
-                Math.sin(pitch/180*Math.PI) * length,
-                Math.sin(yaw/180*Math.PI)*Math.cos(pitch/180*Math.PI) * length
+                Math.cos(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length,
+                Math.sin(pitch / 180 * Math.PI) * length,
+                Math.sin(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length
         );
     }
 
