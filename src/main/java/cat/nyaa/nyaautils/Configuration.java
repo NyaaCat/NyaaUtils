@@ -39,6 +39,7 @@ public class Configuration implements ISerializable {
                 if (src.isConfigurationSection(key)) {
                     BasicItemMatcher tmp = new BasicItemMatcher();
                     tmp.deserialize(src.getConfigurationSection(key));
+                    enchantSrc.add(tmp);
                 }
             }
         }
