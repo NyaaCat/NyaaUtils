@@ -15,6 +15,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
@@ -54,7 +56,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                     if (e.getName().equalsIgnoreCase("Custom Enchantment")) {
                         continue;
                     }
-                    p.sendMessage(e.getName() + ": " + e.getName() + " " + 
+                    p.sendMessage(e.getName() + ": " + e.getName() + " " +
                             I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                 }
             }
@@ -80,6 +82,38 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 sender.sendMessage(I18n._("user.enchant.invalid_level"));
                 return;
             }
+            long cooldown = 0;
+            if (plugin.enchantCooldown.containsKey(p.getUniqueId())) {
+                cooldown = plugin.enchantCooldown.get(p.getUniqueId()) + (plugin.cfg.enchantCooldown / 20 * 1000);
+            }
+
+            int chance1 = plugin.cfg.enchant_chance1;
+            int chance2 = plugin.cfg.enchant_chance2;
+            int chance3 = plugin.cfg.enchant_chance3;
+            int chance4 = plugin.cfg.enchant_chance4;
+            if (cooldown > System.currentTimeMillis()) {
+                chance1 = 0;
+            }
+            int rand = new Random().nextInt(chance1 + chance2 + chance3 + chance4) + 1;
+            boolean success = true;
+            boolean deleteItem = true;
+            if (chance1 > 0 && rand <= chance1) {
+                success = true;
+                deleteItem = false;
+            } else if (chance2 > 0 && rand <= chance1 + chance2) {
+                success = true;
+                deleteItem = false;
+                level = (int) Math.floor(level / 2);
+                if (level == 0) {
+                    success = false;
+                }
+            } else if (chance3 > 0 && rand <= chance1 + chance2 + chance3) {
+                success = false;
+                deleteItem = false;
+            } else if (chance4 > 0 && rand <= chance1 + chance2 + chance3 + chance4) {
+                success = false;
+                deleteItem = true;
+            }
 
             if (off.getType() == Material.ENCHANTED_BOOK) {
                 EnchantmentStorageMeta meta = (EnchantmentStorageMeta) off.getItemMeta();
@@ -88,34 +122,47 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                         || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n._("user.enchant.invalid_level"));
                     return;
-                } else if (level == realLvl) {
-                    meta.removeStoredEnchant(ench);
                 } else {
-                    meta.addStoredEnchant(ench, realLvl - level, true);
+                    meta.removeStoredEnchant(ench);
+                    off.setItemMeta(meta);
+                    if (meta.getStoredEnchants().size() == 0) {
+                        off = new ItemStack(Material.AIR);
+                    }
                 }
-                off.setItemMeta(meta);
+
             } else {
                 int realLvl = off.getEnchantmentLevel(ench);
                 if (level > realLvl
                         || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n._("user.enchant.invalid_level"));
                     return;
-                } else if (level == realLvl) {
-                    off.removeEnchantment(ench);
                 } else {
-                    off.addUnsafeEnchantment(ench, realLvl - level);
+                    off.removeEnchantment(ench);
+                    if (off.getEnchantments().size() == 0) {
+                        off = new ItemStack(Material.AIR);
+                    }
                 }
             }
-
-            if (main.getType() == Material.ENCHANTED_BOOK) {
-                EnchantmentStorageMeta meta = (EnchantmentStorageMeta) main.getItemMeta();
-                int origLvl = meta.getStoredEnchantLevel(ench);
-                meta.addStoredEnchant(ench, origLvl + level, true);
-                main.setItemMeta(meta);
-            } else {
-                int origLvl = main.getEnchantmentLevel(ench);
-                main.addUnsafeEnchantment(ench, origLvl + level);
+            if (success && level > 0) {
+                if (main.getType() == Material.ENCHANTED_BOOK) {
+                    EnchantmentStorageMeta meta = (EnchantmentStorageMeta) main.getItemMeta();
+                    int origLvl = meta.getStoredEnchantLevel(ench);
+                    meta.addStoredEnchant(ench, origLvl + level, true);
+                    main.setItemMeta(meta);
+                } else {
+                    int origLvl = main.getEnchantmentLevel(ench);
+                    main.addUnsafeEnchantment(ench, origLvl + level);
+                }
             }
+            if (success) {
+                p.sendMessage(I18n._("user.enchant.success"));
+            } else {
+                p.sendMessage(I18n._("user.enchant.fail"));
+                if (deleteItem) {
+                    main = new ItemStack(Material.AIR);
+                }
+            }
+            plugin.enchantCooldown.put(p.getUniqueId(), System.currentTimeMillis());
             p.getInventory().setItemInMainHand(main);
             p.getInventory().setItemInOffHand(off);
         }

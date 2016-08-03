@@ -13,6 +13,17 @@ public class Configuration implements ISerializable {
 
     @Serializable
     public String language = "en_US";
+    @Serializable
+    public long enchantCooldown = 60 * 20;
+    @Serializable
+    public int enchant_chance1 = 1;
+    @Serializable
+    public int enchant_chance2 = 1;
+    @Serializable
+    public int enchant_chance3 = 1;
+    @Serializable
+    public int enchant_chance4 = 1;
+
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
@@ -43,7 +54,7 @@ public class Configuration implements ISerializable {
                 }
             }
         }
-        
+
         enchantMaxLevel = new HashMap<>();
         if (config.isConfigurationSection("enchant")) {
             ConfigurationSection list = config.getConfigurationSection("enchant");
@@ -66,7 +77,7 @@ public class Configuration implements ISerializable {
             m.serialize(dst.createSection(Integer.toString(idx)));
             idx++;
         }
-        
+
         ConfigurationSection list = config.createSection("enchant");
         for (Enchantment k : enchantMaxLevel.keySet()) {
             list.set(k.getName() + ".MaxLevel", enchantMaxLevel.get(k));

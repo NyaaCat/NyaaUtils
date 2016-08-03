@@ -23,6 +23,8 @@ user:
     invalid_ench: "%s is not a valid enchantment name"
     invalid_level: "The level required is invalid"
     max_level: "(Max level: %d)"
+    success: "Enchantment success"
+    fail: "Enchantment failed"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]

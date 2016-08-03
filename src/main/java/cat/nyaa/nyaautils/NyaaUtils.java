@@ -2,11 +2,15 @@ package cat.nyaa.nyaautils;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
     public I18n i18n;
     public CommandHandler commandHandler;
     public Configuration cfg;
+    public HashMap<UUID, Long> enchantCooldown = new HashMap<>();
 
     @Override
     public void onLoad() {
@@ -24,6 +28,7 @@ public class NyaaUtils extends JavaPlugin {
         cfg.serialize(getConfig());
         saveConfig();
         I18n.instance.reset();
+        enchantCooldown.clear();
     }
 
     @Override
