@@ -34,3 +34,6 @@ permissions:
   nu.launch:
     description: Launch player into sky
     default: op
+  nu.lootprotect:
+    description: Toggle loot protect status
+    default: true

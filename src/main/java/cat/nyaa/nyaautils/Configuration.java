@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static cat.nyaa.nyaautils.Configuration.LootProtectMode.OFF;
+
 public class Configuration implements ISerializable {
 
     @Serializable
@@ -23,7 +25,8 @@ public class Configuration implements ISerializable {
     public int enchant_chance3 = 1;
     @Serializable
     public int enchant_chance4 = 1;
-
+    @Serializable
+    public LootProtectMode lootProtectMode = OFF;
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
@@ -82,5 +85,11 @@ public class Configuration implements ISerializable {
         for (Enchantment k : enchantMaxLevel.keySet()) {
             list.set(k.getName() + ".MaxLevel", enchantMaxLevel.get(k));
         }
+    }
+
+    public enum LootProtectMode {
+        OFF,
+        MAX_DAMAGE, //TODO: Unimplemented
+        FINAL_DAMAGE;
     }
 }
