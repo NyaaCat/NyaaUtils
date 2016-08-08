@@ -3,6 +3,7 @@ package cat.nyaa.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Repairable;
 
 import java.util.*;
 
@@ -24,6 +25,8 @@ public class BasicItemMatcher implements ISerializable {
     public MatchingMode loreMatch = MatchingMode.EXACT_TEXT;
     @Serializable
     public MatchingMode nameMatch = MatchingMode.ARBITRARY;
+    @Serializable
+    public MatchingMode repairCostMatch = MatchingMode.EXACT;
 
     public boolean matches(ItemStack anotherItem) {
         ItemStack base = itemTemplate.clone();
@@ -32,6 +35,12 @@ public class BasicItemMatcher implements ISerializable {
         given.setAmount(1);
         if (requireExact) return base.equals(given);
         if (!base.getType().equals(given.getType())) return false;
+
+        if (repairCostMatch == MatchingMode.EXACT &&
+                base.getItemMeta() instanceof Repairable && given.getItemMeta() instanceof Repairable &&
+                !(((Repairable) given.getItemMeta()).getRepairCost() == ((Repairable) base.getItemMeta()).getRepairCost())) {
+            return false;
+        }
 
         int baseDamage = base.getDurability();
         int givenDamage = given.getDurability();
@@ -65,8 +74,8 @@ public class BasicItemMatcher implements ISerializable {
         if (loreMatch == MatchingMode.EXACT && !Arrays.deepEquals(baseLore, givenLore)) return false;
         if (loreMatch == MatchingMode.CONTAINS && !containStrArr(givenLore, baseLore, false)) return false;
         if (loreMatch == MatchingMode.EXACT_TEXT) {
-            for (int i = 0; i < baseLore.length; i++) baseLore[i] = ChatColor.stripColor(baseLore[0]);
-            for (int i = 0; i < baseLore.length; i++) baseLore[i] = ChatColor.stripColor(baseLore[0]);
+            for (int i = 0; i < baseLore.length; i++) baseLore[i] = ChatColor.stripColor(baseLore[i]);
+            for (int i = 0; i < givenLore.length; i++) givenLore[i] = ChatColor.stripColor(givenLore[i]);
             if (!Arrays.deepEquals(baseLore, givenLore)) return false;
         }
         if (loreMatch == MatchingMode.CONTAINS_TEXT && !containStrArr(givenLore, baseLore, true)) return false;

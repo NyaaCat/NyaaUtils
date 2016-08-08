@@ -37,6 +37,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         matcher.itemTemplate = item.clone();
         matcher.enchantMatch = BasicItemMatcher.MatchingMode.ARBITRARY;
         matcher.nameMatch = BasicItemMatcher.MatchingMode.EXACT;
+        matcher.repairCostMatch = BasicItemMatcher.MatchingMode.EXACT;
         NyaaUtils.instance.cfg.enchantSrc.add(matcher);
         NyaaUtils.instance.cfg.save();
     }
@@ -66,6 +67,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             ItemStack off = getItemInOffHand(sender);
             if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, off)) {
                 sender.sendMessage(I18n._("user.enchant.invalid_src"));
+                return;
+            }
+
+            if (main.getAmount() != 1 || !(main.getType().getMaxDurability() > 0)) {
+                sender.sendMessage(I18n._("user.enchant.invalid_item"));
                 return;
             }
 

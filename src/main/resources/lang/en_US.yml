@@ -22,6 +22,7 @@ user:
     invalid_src: "The item in off hand is not valid enchantment source."
     invalid_ench: "%s is not a valid enchantment name"
     invalid_level: "The level required is invalid"
+    invalid_item: "The item cannot be enchanted"
     max_level: "(Max level: %d)"
     success: "Enchantment success"
     fail: "Enchantment failed"
