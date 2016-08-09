@@ -27,6 +27,10 @@ public class Configuration implements ISerializable {
     public int enchant_chance4 = 1;
     @Serializable
     public LootProtectMode lootProtectMode = OFF;
+    @Serializable
+    public int damageStatCacheTTL = 30; // in minutes, restart is required if changed
+    @Serializable
+    public boolean damageStatEnabled = true;
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();

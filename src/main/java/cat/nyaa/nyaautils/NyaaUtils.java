@@ -12,6 +12,7 @@ public class NyaaUtils extends JavaPlugin {
     public Configuration cfg;
     public HashMap<UUID, Long> enchantCooldown = new HashMap<>();
     public LootProtectListener lpListener;
+    public DamageStatListener dsListener;
 
     @Override
     public void onLoad() {
@@ -38,5 +39,6 @@ public class NyaaUtils extends JavaPlugin {
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
         lpListener = new LootProtectListener(this);
+        dsListener = new DamageStatListener(this);
     }
 }
