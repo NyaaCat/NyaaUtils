@@ -23,7 +23,7 @@ public class LootProtectListener implements Listener {
 
     /**
      * @return true:  loot protect is enabled
-     *         false: loot protect is disabled
+     * false: loot protect is disabled
      */
     public boolean toggleStatus(UUID uuid) {
         if (bypassPlayer.contains(uuid)) {
@@ -37,9 +37,14 @@ public class LootProtectListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMobKilled(EntityDeathEvent ev) {
-        if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.OFF)
-            return; //TODO: MAX_DAMAGE
-        Player p = ev.getEntity().getKiller();
+        if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.OFF || ev.getEntity() instanceof Player)
+            return;
+        Player p = null;
+        if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.MAX_DAMAGE) {
+            p = plugin.dsListener.getMaxDamagePlayer(ev.getEntity());
+        } else if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.FINAL_DAMAGE) {
+            p = ev.getEntity().getKiller();
+        }
         if (p == null) return;
         if (bypassPlayer.contains(p.getUniqueId())) return;
         Map<Integer, ItemStack> leftItem =

@@ -93,7 +93,7 @@ public class Configuration implements ISerializable {
 
     public enum LootProtectMode {
         OFF,
-        MAX_DAMAGE, //TODO: Unimplemented
+        MAX_DAMAGE,
         FINAL_DAMAGE;
     }
 }
