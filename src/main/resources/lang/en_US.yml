@@ -26,6 +26,7 @@ user:
     max_level: "(Max level: %d)"
     success: "Enchantment success"
     fail: "Enchantment failed"
+    enchantsrc_already_exists: "The enchantment source already exists"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]

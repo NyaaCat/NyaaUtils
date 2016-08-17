@@ -33,6 +33,10 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
+        if(BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)){
+            sender.sendMessage(I18n._("user.enchant.enchantsrc_already_exists"));
+            return;
+        }
         BasicItemMatcher matcher = new BasicItemMatcher();
         matcher.itemTemplate = item.clone();
         matcher.enchantMatch = BasicItemMatcher.MatchingMode.ARBITRARY;

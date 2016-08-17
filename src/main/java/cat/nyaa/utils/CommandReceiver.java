@@ -197,8 +197,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         List<String> cmds = getSubcommands();
         String tmp = "";
         for (String cmd : cmds) {
-            tmp += "\n    " + cmd + ":\t" + getHelpContent("description", getHelpPrefix(), cmd);
-            tmp += "\n    " + cmd + ":\t" + getHelpContent("usage", getHelpPrefix(), cmd);
+            tmp += "\n    " + cmd + ":  " + getHelpContent("description", getHelpPrefix(), cmd);
+            tmp += "\n    " + cmd + ":  " + getHelpContent("usage", getHelpPrefix(), cmd);
         }
         sender.sendMessage(tmp);
     }
