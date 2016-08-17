@@ -97,7 +97,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         for (Field f : getAllFields(getClass())) {
             SubCommand anno = f.getAnnotation(SubCommand.class);
             if (anno == null) continue;
-            if (CommandSender.class.isAssignableFrom(f.getType())) {
+            if (CommandReceiver.class.isAssignableFrom(f.getType())) {
                 CommandReceiver<T> obj = null;
                 try {
                     Class<? extends CommandReceiver<T>> cls = (Class<? extends CommandReceiver<T>>) f.getType();
@@ -122,6 +122,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     public List<String> getSubcommands() {
         ArrayList<String> ret = new ArrayList<>();
         ret.addAll(subCommands.keySet());
+        ret.addAll(subCommandClasses.keySet());
         ret.sort(String::compareTo);
         return ret;
     }
@@ -163,7 +164,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 else
                     throw new RuntimeException("Failed to invoke subcommand", ex);
             }
-            msg(sender, "user.info.command_complete");
+            if (!subClassCommand) msg(sender, "user.info.command_complete");
         } catch (NotPlayerException ex) {
             msg(sender, "user.info.not_player");
         } catch (NoItemInHandException ex) {

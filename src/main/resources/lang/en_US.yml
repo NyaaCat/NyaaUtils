@@ -46,6 +46,13 @@ user:
     mode_OFF: "Loot protect has been turned off globally"
     mode_MAX_DAMAGE: "Item will be given to the player who made most damages"
     mode_FINAL_DAMAGE: "Item will be given to the player who made the last damage."
+  exhibition:
+    no_item_frame: "No ItemFrame found"
+    already_set: "Already set."
+    no_item: "This frame has no item"
+    have_not_set: "Haven't set"
+    frame_protected: "Cannot damage protected item frame"
+
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -73,3 +80,19 @@ manual:
   lp:
     description: "Toggle loot protect status"
     usage: "/nu lp"
+
+  exhibition:
+    description: "Create or modify exhibition items"
+    usage: "/nu exhibition help"
+    set:
+      description: "Set the ItemFrame looking at as an exhibition"
+      usage: "/nu exhibition set"
+    unset:
+      description: "Destroy the ItemFrame looking at"
+      usage: "/nu exhibition unset"
+    desc:
+      description: "Change the description of the exhibition"
+      usage: "/nu exhibition [lineNumber] <description>"
+    help:
+      description: "Show help messages"
+      usage: "/nu exhibition help"

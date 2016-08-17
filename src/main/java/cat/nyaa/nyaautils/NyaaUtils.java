@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class NyaaUtils extends JavaPlugin {
     public HashMap<UUID, Long> enchantCooldown = new HashMap<>();
     public LootProtectListener lpListener;
     public DamageStatListener dsListener;
+    public ExhibitionListener exhibitionListener;
 
     @Override
     public void onLoad() {
@@ -40,5 +42,6 @@ public class NyaaUtils extends JavaPlugin {
         getCommand("nyaautils").setExecutor(commandHandler);
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
+        exhibitionListener = new ExhibitionListener(this);
     }
 }

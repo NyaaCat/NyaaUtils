@@ -37,3 +37,15 @@ permissions:
   nu.lootprotect:
     description: Toggle loot protect status
     default: true
+  nu.exhibition.set:
+    description: Exhibition modification
+    default: true
+  nu.exhibition.unset:
+    description: Exhibition modification
+    default: true
+  nu.exhibition.desc:
+    description: Exhibition modification
+    default: true
+  nu.exhibition.forceUnset:
+    description: Exhibition modification
+    default: op

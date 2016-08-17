@@ -1,5 +1,7 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
+import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
@@ -29,6 +31,9 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public String getHelpPrefix() {
         return "";
     }
+
+    @SubCommand("exhibition")
+    public ExhibitionCommands exhibitionCommands;
 
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
