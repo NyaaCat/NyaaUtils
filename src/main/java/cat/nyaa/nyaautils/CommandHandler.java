@@ -97,10 +97,10 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 cooldown = plugin.enchantCooldown.get(p.getUniqueId()) + (plugin.cfg.enchantCooldown / 20 * 1000);
             }
 
-            int chance1 = plugin.cfg.enchant_chance1;
-            int chance2 = plugin.cfg.enchant_chance2;
-            int chance3 = plugin.cfg.enchant_chance3;
-            int chance4 = plugin.cfg.enchant_chance4;
+            int chance1 = plugin.cfg.chanceSuccess;
+            int chance2 = plugin.cfg.chanceModerate;
+            int chance3 = plugin.cfg.chanceFail;
+            int chance4 = plugin.cfg.chanceDestroy;
             if (cooldown > System.currentTimeMillis()) {
                 chance1 = 0;
             }

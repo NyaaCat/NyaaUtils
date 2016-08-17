@@ -18,13 +18,13 @@ public class Configuration implements ISerializable {
     @Serializable
     public long enchantCooldown = 60 * 20;
     @Serializable
-    public int enchant_chance1 = 1;
+    public int chanceSuccess = 1;
     @Serializable
-    public int enchant_chance2 = 1;
+    public int chanceModerate = 1;
     @Serializable
-    public int enchant_chance3 = 1;
+    public int chanceFail = 1;
     @Serializable
-    public int enchant_chance4 = 1;
+    public int chanceDestroy = 1;
     @Serializable
     public LootProtectMode lootProtectMode = OFF;
     @Serializable
