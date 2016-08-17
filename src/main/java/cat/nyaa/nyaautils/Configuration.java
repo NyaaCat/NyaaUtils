@@ -39,6 +39,9 @@ public class Configuration implements ISerializable {
 
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
+        for (Enchantment e : Enchantment.values()) {
+            enchantMaxLevel.put(e, e.getMaxLevel());
+        }
     }
 
     public void save() {
@@ -63,13 +66,16 @@ public class Configuration implements ISerializable {
         }
 
         enchantMaxLevel = new HashMap<>();
-        if (config.isConfigurationSection("enchant")) {
-            ConfigurationSection list = config.getConfigurationSection("enchant");
-            for (Enchantment e : Enchantment.values()) {
-                if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
-                    continue;
+        for (Enchantment e : Enchantment.values()) {
+            enchantMaxLevel.put(e, e.getMaxLevel());
+        }
+        if (config.isConfigurationSection("enchantMaxLevel")) {
+            ConfigurationSection list = config.getConfigurationSection("enchantMaxLevel");
+            for (String enchName : list.getKeys(false)) {
+                Enchantment e = Enchantment.getByName(enchName);
+                if (e != null && list.isInt(enchName)) {
+                    enchantMaxLevel.put(e, list.getInt(enchName));
                 }
-                enchantMaxLevel.put(e, list.getInt(e.getName() + ".MaxLevel", e.getMaxLevel()));
             }
         }
     }
@@ -85,9 +91,9 @@ public class Configuration implements ISerializable {
             idx++;
         }
 
-        ConfigurationSection list = config.createSection("enchant");
+        ConfigurationSection list = config.createSection("enchantMaxLevel");
         for (Enchantment k : enchantMaxLevel.keySet()) {
-            list.set(k.getName() + ".MaxLevel", enchantMaxLevel.get(k));
+            list.set(k.getName(), enchantMaxLevel.get(k));
         }
     }
 
