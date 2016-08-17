@@ -242,7 +242,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         p.i18n.load(p.cfg.language);
     }
 
-    @SubCommand(value = "lp", permission = "nu.lp")
+    @SubCommand(value = "lp", permission = "nu.lootprotect")
     public void commandLootProtectToggle(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         if (plugin.lpListener.toggleStatus(p.getUniqueId())) {
