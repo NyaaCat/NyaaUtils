@@ -54,10 +54,9 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                     msg.append(" " + I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                     p.spigot().sendMessage(msg.inner);
                 } else {
-                    // FIXME
-                    // if (e.getName().equalsIgnoreCase("Custom Enchantment")) {
-                    //     continue;
-                    // }
+                    if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                        continue;
+                    }
                     p.sendMessage(e.getName() + ": " + e.getName() + " " +
                             I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                 }

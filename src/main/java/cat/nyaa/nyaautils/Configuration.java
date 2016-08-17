@@ -66,10 +66,9 @@ public class Configuration implements ISerializable {
         if (config.isConfigurationSection("enchant")) {
             ConfigurationSection list = config.getConfigurationSection("enchant");
             for (Enchantment e : Enchantment.values()) {
-                // FIXME
-                // if (e.getName().equalsIgnoreCase("Custom Enchantment")) {
-                //     continue;
-                // }
+                if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                    continue;
+                }
                 enchantMaxLevel.put(e, list.getInt(e.getName() + ".MaxLevel", e.getMaxLevel()));
             }
         }
