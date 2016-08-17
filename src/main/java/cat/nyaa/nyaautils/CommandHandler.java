@@ -193,6 +193,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             double pitch = args.nextDouble();
             double speed = args.nextDouble();
             int delay = args.nextInt();
+            int launchSpeed = args.nextInt();
             String pName = args.next();
             if (pName == null) {
                 if (sender instanceof Player) {
@@ -215,15 +216,29 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 return;
             }
 
-            p.setVelocity(toVector(yaw, pitch, speed));
-            if (delay >= 2) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        p.setGliding(true);
+            new BukkitRunnable() {
+                final int d = delay;
+                final Vector v = toVector(yaw, pitch, speed);
+                final Player player = p;
+                int current = 0;
+
+
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        if (current < d) {
+                            current ++;
+                            player.setVelocity(v);
+                        } else {
+                            player.setGliding(true);
+                            player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(launchSpeed));
+                            cancel();
+                        }
+                    } else {
+                        cancel();
                     }
-                }.runTaskLater(NyaaUtils.instance, delay);
-            }
+                }
+            }.runTaskTimer(plugin,1,1);
         }
     }
 

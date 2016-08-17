@@ -29,11 +29,12 @@ user:
     enchantsrc_already_exists: "The enchantment source already exists"
   launch:
     usage: |
-      /nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]
+      /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]
       yaw: 0=+X 90=+Z 180=-X 270=-Z
       pitch: 0=Horizon 90=+Y
-      speed: In what speed the player will be launched
-      delay: How many ticks to wait before opening the player's elytra. Usually 2
+      speed: In what speed the player will be moved
+      delay: How many ticks to wait before launching player
+      launchSpeed: In what speed the player will be launched
       player: Can be @p in command block.
     player_not_online: "Player %s is not online"
     not_ready_to_fly: "You must have an elytra worn."
