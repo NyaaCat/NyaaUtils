@@ -1,0 +1,24 @@
+language: java
+before_install: sed -i "s/^\(version:.*\)/\1.$TRAVIS_BUILD_NUMBER/" src/main/resources/plugin.yml
+before_deploy:
+- git config --global user.email "builds@travis-ci.com"
+- git config --global user.name "Travis CI"
+- export GIT_TAG=$TRAVIS_BRANCH-v3.5.$TRAVIS_BUILD_NUMBER
+- git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+- git push -q https://$GITHUB_KEY@github.com/NyaaCat/nyaautils --follow-tags
+deploy:
+  skip_cleanup: true
+  provider: releases
+  prerelease: true
+  api_key:
+    secure: EDe3KykJ7BGwnIlsdiZGUVU0qev5uHd+3V5aq5be2VQYpvBIS1Ifh+MjMfLSs4DuViT9TbBXqMwRdj9Ub5CAK2uSTsCxBXC6me9ozyrX326l2EawCTbPqKwBpy3lQeKyvwb4XJJ5U5ugvzqRX0WYfdM1/n+77Tu14YIqIpyKJNruNAhZyBhnvuaQ/EfVWl/eWhXHAa51GklWq3xsIJHG991wZ7dMZsooETfSTzX0ZK3JaI0dZsgTZMsBIDJePOcdoCzSsdBCq/yQVMT4GLEDq6rFp46gGix6H3QEm4wc16w70ksX8iJgbhrHp1OZVsDAZw3Nc94BIuaJqFJbl3itRIayM5IS3sd4TIjBc8X8dVJOh+wrObL6j8EmWkfi84KedFQKQ6UYZLjy4Aaki6oqCn6JMsa73+g0r0UrTeIMt0hcyVQDwzRFd+iyKr4c+hsvGUFZAxU5h+2aMrp2PnEp7UKr0ljQZZ1zVONwBj3PrBaDbvHBl7AOFlfAkZxobbqrvjgq3p5G8BXENmyPnrfPNxByxxDsu2SpagZLOQOLrz3fXnv9SjMjL2/QrpLGmIVAOG7lPD7x5YgeGJHKJKvE/HijQcQCpdXmh4KlGH4Hpeq1JYf1ledK2cYHnzFltcCuoVscTf8i35pghmwD9yDDEIund08cIyq+6e4NEC+/r/g=
+  file: build/libs/nyaautils.jar
+  on:
+    tags: false
+    all_branches: true
+branches:
+  except:
+  - "/^*-v[0-9]/"
+env:
+  global:
+    secure: d87YXY8y4KW9v06Q4VmkEyUVPgfjGu334jcNhllfRdMQub9ue0ofSP1XR41bCMwcWvPyMuauIsSS6wA5TojeWTAFXV9ESzWHonLhCJpMcTL/8+Ohc62qQZCpWWWqze5wBgh0fxZiXsV9V6cGFJoB5qh/vZM86EMnYHrkTamNXy/6yVTIxRmwNZLhVRrPsBaOaThfOQm4lMw6TOzlqDmt4YBiTnF9oxC7iK8bsEf9SWoI8oeYayF2dtDZBo1SPrUR53+BDl0Xlvolx6eytKeXVEjhKs2kYmRN26WC622GHFwBfo2iIZDGwBSQP1uqr4P2DOvRPG3LNwOUkzcpbJG592YMLms9/YdQrpx1qR+wsyHlyTjICNDhcizRNrWjY6EKYRWR0NAkH3Wu8YkspuhH7qiiWyyGJNRCsppn/AfX9J+9LH8okkGV2h/OGHqlmWo6QaJGjLwTObUCj7JEml7l4eFspc8ThduSg8nTzFXhUAuygPxTKOZRt+bHF2S734vYKkbX2ARDPL1G3gbC3K7uqhEkLV3mpOyUz+57HQ0ukF0wCmTq+bZqD5gHwSA+CXmiVmMam/4y4Y+j08V+9hLwcMvTYPt2MxyXenYfLe+Cz4FL4prhUO0c26oOVSKVPPdNyU1k++jlHDm1S5CvvePoNGebq2I5DGgx8Sf/0n42Xv0=
