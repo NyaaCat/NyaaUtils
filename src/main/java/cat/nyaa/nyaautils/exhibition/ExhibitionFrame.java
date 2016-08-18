@@ -1,7 +1,6 @@
 package cat.nyaa.nyaautils.exhibition;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -24,6 +23,7 @@ public class ExhibitionFrame {
     private String ownerName;
     private List<String> descriptions;
     private boolean itemSet = false;
+
     private void decodeItem() {
         itemSet = false;
         ownerName = "";
@@ -36,7 +36,7 @@ public class ExhibitionFrame {
         if (!frame.getItem().hasItemMeta()) return;
         if (!frame.getItem().getItemMeta().hasLore()) return;
         List<String> lore = frame.getItem().getItemMeta().getLore();
-        if (lore.size()>=1 && lore.get(0).startsWith(MAGIC_TITLE)) {
+        if (lore.size() >= 1 && lore.get(0).startsWith(MAGIC_TITLE)) {
             String lenStr = lore.get(0).substring(MAGIC_TITLE.length());
             int len = -1;
             try {
@@ -48,20 +48,21 @@ public class ExhibitionFrame {
                 descriptions = new ArrayList<>();
                 ownerUUID = lore.get(1);
                 ownerName = lore.get(2);
-                for (int i = 3; i<len; i++) {
+                for (int i = 3; i < len; i++) {
                     descriptions.add(lore.get(i));
                 }
                 ItemMeta meta = baseItem.getItemMeta();
                 if (len + 1 == lore.size()) {
                     meta.setLore(null);
                 } else {
-                    meta.setLore(lore.subList(len+1, lore.size()));
+                    meta.setLore(lore.subList(len + 1, lore.size()));
                 }
                 baseItem.setItemMeta(meta);
             }
             itemSet = true;
         }
     }
+
     private void encodeItem() {
         if (frame == null) return;
         if (baseItem == null || baseItem.getType() == AIR) return;
@@ -73,7 +74,7 @@ public class ExhibitionFrame {
         if (ownerUUID == null) ownerUUID = "";
         if (ownerName == null) ownerName = "";
         List<String> metaList = new ArrayList<>();
-        metaList.add(MAGIC_TITLE + Integer.toString(3+descriptions.size()));
+        metaList.add(MAGIC_TITLE + Integer.toString(3 + descriptions.size()));
         metaList.add(ownerUUID);
         metaList.add(ownerName);
         metaList.addAll(descriptions);
@@ -103,17 +104,18 @@ public class ExhibitionFrame {
     public static ExhibitionFrame fromPlayerEye(Player p) {
         Vector eyeVector = p.getEyeLocation().getDirection();
         Vector locVec = p.getEyeLocation().toVector().multiply(-1);
-        Optional<Entity> itemF = p.getNearbyEntities(10,10,10).stream()
+        Optional<Entity> itemF = p.getNearbyEntities(10, 10, 10).stream()
                 .filter(entity -> entity instanceof ItemFrame)
-                .filter(entity -> entity.getLocation().toVector().add(locVec).angle(eyeVector) < 0.5D )
-                .sorted((e1,e2)->Double.compare(e1.getLocation().distance(p.getLocation()), e2.getLocation().distance(p.getLocation())))
+                .filter(entity -> entity.getLocation().toVector().add(locVec).angle(eyeVector) < 0.5D)
+                .sorted((e1, e2) -> Double.compare(e1.getLocation().distance(p.getLocation()), e2.getLocation().distance(p.getLocation())))
                 .findFirst();
         if (itemF.isPresent()) {
-            return new ExhibitionFrame((ItemFrame)itemF.get());
+            return new ExhibitionFrame((ItemFrame) itemF.get());
         } else {
             return null;
         }
     }
+
     public boolean hasItem() {
         return frame.getItem() != null && frame.getItem().getType() != AIR;
     }

@@ -40,7 +40,7 @@ public class Configuration implements ISerializable {
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
         for (Enchantment e : Enchantment.values()) {
-            if(e == null) {
+            if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
             } else if (e.getName() == null) {
                 plugin.getLogger().warning(String.format("Bad enchantment: %s: %s", e.getClass().getName(), e.toString()));
@@ -73,14 +73,14 @@ public class Configuration implements ISerializable {
 
         enchantMaxLevel = new HashMap<>();
         for (Enchantment e : Enchantment.values()) {
-            if(e == null || e.getName() == null) continue;
+            if (e == null || e.getName() == null) continue;
             enchantMaxLevel.put(e, e.getMaxLevel());
         }
         if (config.isConfigurationSection("enchantMaxLevel")) {
             ConfigurationSection list = config.getConfigurationSection("enchantMaxLevel");
             for (String enchName : list.getKeys(false)) {
                 Enchantment e = Enchantment.getByName(enchName);
-                if(e == null || e.getName() == null) continue;
+                if (e == null || e.getName() == null) continue;
                 if (list.isInt(enchName)) {
                     enchantMaxLevel.put(e, list.getInt(enchName));
                 }
@@ -101,7 +101,7 @@ public class Configuration implements ISerializable {
 
         ConfigurationSection list = config.createSection("enchantMaxLevel");
         for (Enchantment k : enchantMaxLevel.keySet()) {
-            if(k == null || k.getName() == null) continue;
+            if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
     }

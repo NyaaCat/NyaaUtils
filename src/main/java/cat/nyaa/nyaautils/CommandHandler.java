@@ -1,7 +1,6 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
-import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
@@ -38,7 +37,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
-        if(BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)){
+        if (BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)) {
             sender.sendMessage(I18n._("user.enchant.enchantsrc_already_exists"));
             return;
         }
@@ -233,7 +232,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 public void run() {
                     if (player.isOnline()) {
                         if (current < d) {
-                            current ++;
+                            current++;
                             player.setVelocity(v);
                             if (current == ELYTRA_DELAY) {
                                 player.setGliding(true);
@@ -249,7 +248,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                         cancel();
                     }
                 }
-            }.runTaskTimer(plugin,1,1);
+            }.runTaskTimer(plugin, 1, 1);
         }
     }
 

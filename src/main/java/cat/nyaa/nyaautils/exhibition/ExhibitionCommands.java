@@ -15,8 +15,8 @@ public class ExhibitionCommands extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
     public ExhibitionCommands(Object plugin, Internationalization i18n) {
-        super((NyaaUtils)plugin, i18n);
-        this.plugin = (NyaaUtils)plugin;
+        super((NyaaUtils) plugin, i18n);
+        this.plugin = (NyaaUtils) plugin;
     }
 
     @Override
