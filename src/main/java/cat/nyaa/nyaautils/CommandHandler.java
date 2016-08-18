@@ -217,6 +217,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             }
 
             new BukkitRunnable() {
+                private final static int ELYTRA_DELAY = 3;
                 final int d = delay;
                 final Vector v = toVector(yaw, pitch, speed);
                 final Player player = p;
@@ -229,8 +230,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                         if (current < d) {
                             current ++;
                             player.setVelocity(v);
+                            if (current == ELYTRA_DELAY) {
+                                player.setGliding(true);
+                            }
                         } else {
-                            player.setGliding(true);
+                            if (!player.isGliding()) {
+                                player.setGliding(true);
+                            }
                             player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(launchSpeed));
                             cancel();
                         }
