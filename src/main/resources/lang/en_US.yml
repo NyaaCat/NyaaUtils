@@ -52,6 +52,14 @@ user:
     no_item: "This frame has no item"
     have_not_set: "Haven't set"
     frame_protected: "Cannot damage protected item frame"
+    unset_protected: "You cannot unset a protected frame"
+    looking_at: "You are looking at: &f"
+    provided_by: "Provided by: %s"
+    no_desc: "No description set"
+    range_error: "Invalid line number range"
+    line_removed: "Line %d removed"
+    line_changed: "Line %d changed"
+    desc_protected: "You cannot set description of a protected frame"
 
 manual:
   no_description: "No description"
@@ -92,7 +100,7 @@ manual:
       usage: "/nu exhibition unset"
     desc:
       description: "Change the description of the exhibition"
-      usage: "/nu exhibition [lineNumber] <description>"
+      usage: "/nu exhibition desc <lineNumber> [description]"
     help:
       description: "Show help messages"
       usage: "/nu exhibition help"

@@ -12,8 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 
 import static org.bukkit.event.EventPriority.HIGHEST;
@@ -30,8 +32,13 @@ public class ExhibitionListener implements Listener {
         if (!(ev.getRightClicked() instanceof ItemFrame)) return;
         ItemFrame f = (ItemFrame)ev.getRightClicked();
         if (f.getItem() == null || f.getItem().getType() == Material.AIR) return;
-        if (ExhibitionFrame.fromItemFrame(f).isSet()) {
-            new Message("").append(f.getItem()).send(ev.getPlayer());
+        ExhibitionFrame fr = ExhibitionFrame.fromItemFrame(f);
+        if (fr.isSet()) {
+            new Message(I18n._("user.exhibition.looking_at")).append(fr.getItemInFrame()).send(ev.getPlayer());
+            ev.getPlayer().sendMessage(I18n._("user.exhibition.provided_by", fr.getOwnerName()));
+            for (String line : fr.getDescriptions()) {
+                ev.getPlayer().sendMessage(line);
+            }
             ev.setCancelled(true);
         }
     }
@@ -58,6 +65,15 @@ public class ExhibitionListener implements Listener {
             plugin.getLogger().warning(String.format("Exhibition broken: Location: %s, item: %s", f.getLocation().toString(),
                     f.getItem().toString()));
             f.setItem(new ItemStack(Material.AIR));
+        }
+    }
+
+    @EventHandler(priority = HIGHEST, ignoreCancelled = true)
+    public void onPlayerFetchItem(InventoryCreativeEvent ev) {
+        if (!(ev.getWhoClicked() instanceof Player)) return;
+        ExhibitionFrame fr = ExhibitionFrame.fromPlayerEye((Player)ev.getWhoClicked());
+        if (fr != null && fr.isSet()) {
+            ev.setCancelled(true);
         }
     }
 }
