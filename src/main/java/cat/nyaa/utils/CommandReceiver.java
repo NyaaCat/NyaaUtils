@@ -171,6 +171,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             msg(sender, ex.isOffHand ? "user.info.no_item_offhand" : "user.info.no_item_hand");
         } catch (BadCommandException ex) {
             sender.sendMessage(ex.getMessage());
+        } catch (NoPermissionException ex) {
+            msg(sender, "user.error.no_required_permission", ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
             msg(sender, "user.error.command_exception");
