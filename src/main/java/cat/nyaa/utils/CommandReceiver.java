@@ -144,13 +144,16 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             if (cmd.length() == 0 || !hasCommand) {
                 subCommand = "help";
             }
-
-            if (subCommandPermission.containsKey(subCommand)) {
-                if (!sender.hasPermission(subCommandPermission.get(subCommand))) {
-                    throw new NoPermissionException(subCommandPermission.get(subCommand));
+            try {
+                if (subCommandPermission.containsKey(subCommand)) {
+                    if (!sender.hasPermission(subCommandPermission.get(subCommand))) {
+                        throw new NoPermissionException(subCommandPermission.get(subCommand));
+                    }
                 }
+            } catch (NoPermissionException e) {
+                msg(sender, "user.error.no_permission");
+                return;
             }
-
             try {
                 if (subClassCommand) {
                     subCommandClasses.get(subCommand.toLowerCase()).acceptCommand(sender, cmd);

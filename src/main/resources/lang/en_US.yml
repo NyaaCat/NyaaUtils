@@ -15,6 +15,7 @@ user:
     not_double: "Not a valid number"
     command_exception: "Internal server error. Unable to run command."
     bad_enum: "Not valid for enum type: %s. Values: %s"
+    no_permission: "You don't have permission to use this command"
   showitem:
     message: "Player %s show item: &r{itemName}&r * {amount}"
   enchant:
