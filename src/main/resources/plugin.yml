@@ -55,3 +55,6 @@ permissions:
     default: true
   nu.format:
     default: true
+  nu.project:
+    description: Set player velocity
+    default: op

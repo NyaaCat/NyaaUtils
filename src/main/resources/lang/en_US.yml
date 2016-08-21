@@ -56,6 +56,16 @@ user:
     not_ready_to_fly: "You must have an elytra worn."
     not_ready_to_fly_sender: "The player must have an elytra worn."
     missing_name: "Player name required"
+  project:
+    usage: |
+      /nu project <Yaw> <Pitch> <Speed> <duration> [Player]
+      yaw: 0=+X 90=+Z 180=-X 270=-Z
+      pitch: 0=Horizon 90=+Y
+      speed: In what speed the player will be moved
+      duration: How much ticks the speed will be applied
+      player: Can be @p in command block.
+    missing_name: "Player name required"
+    player_not_online: "Player %s is not online"
   lp:
     turned_off: "Loot protect turned off"
     turned_on: "Loot protect turned on"
@@ -158,3 +168,6 @@ manual:
     help:
       description: "Show help messages"
       usage: "/nu exhibition help"
+  project:
+    description: "Set player velocity"
+    usage: "/nu project <Yaw> <Pitch> <Speed> <duration> [Player]"

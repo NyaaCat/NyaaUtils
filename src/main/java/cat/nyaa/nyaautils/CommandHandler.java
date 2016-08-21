@@ -250,6 +250,54 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         }
     }
 
+    @SubCommand(value = "project", permission = "nu.project")
+    public void commandProject(CommandSender sender, Arguments args) {
+        if (args.top() == null) {
+            sender.sendMessage(I18n._("user.project.usage"));
+        } else {
+            double yaw = args.nextDouble();
+            double pitch = args.nextDouble();
+            double speed = args.nextDouble();
+            int duration = args.nextInt();
+            String pName = args.next();
+            if (pName == null) {
+                if (sender instanceof Player) {
+                    pName = sender.getName();
+                } else {
+                    sender.sendMessage(I18n._("user.project.missing_name"));
+                    return;
+                }
+            }
+            Player p = Bukkit.getPlayer(pName);
+            if (p == null) {
+                sender.sendMessage(I18n._("user.project.player_not_online", pName));
+                return;
+            }
+
+            new BukkitRunnable() {
+                final int d = duration;
+                final Vector v = toVector(yaw, pitch, speed);
+                final Player player = p;
+                int current = 0;
+
+
+                @Override
+                public void run() {
+                    if (player.isOnline()) {
+                        if (current < d) {
+                            current++;
+                            player.setVelocity(v);
+                        } else {
+                            cancel();
+                        }
+                    } else {
+                        cancel();
+                    }
+                }
+            }.runTaskTimer(plugin, 1, 1);
+        }
+    }
+
     private static Vector toVector(double yaw, double pitch, double length) {
         return new Vector(
                 Math.cos(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length,
