@@ -20,10 +20,15 @@ repositories {
         name 'sk89q'
         url 'http://maven.sk89q.com/artifactory/repo/'
     }
+    maven {
+        name 'vault-repo'
+        url 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
 }
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.10.2-R0.1-SNAPSHOT'
+    compile 'net.milkbowl.vault:VaultAPI:1.6'
 }
 
 
