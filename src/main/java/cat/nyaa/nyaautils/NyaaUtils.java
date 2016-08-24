@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
+import cat.nyaa.utils.VaultUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -15,7 +16,8 @@ public class NyaaUtils extends JavaPlugin {
     public LootProtectListener lpListener;
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
-
+    public VaultUtil vaultUtil;
+    
     @Override
     public void onLoad() {
         instance = this;
@@ -43,5 +45,6 @@ public class NyaaUtils extends JavaPlugin {
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
         exhibitionListener = new ExhibitionListener(this);
+        vaultUtil = new VaultUtil(this);
     }
 }

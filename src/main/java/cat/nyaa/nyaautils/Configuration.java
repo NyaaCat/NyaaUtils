@@ -31,6 +31,30 @@ public class Configuration implements ISerializable {
     public int damageStatCacheTTL = 30; // in minutes, restart is required if changed
     @Serializable
     public boolean damageStatEnabled = true;
+    @Serializable
+    public String custom_fixes_prefix_format = "&r{prefix}&r ";
+    @Serializable
+    public int custom_fixes_prefix_moneyCost = 100;
+    @Serializable
+    public int custom_fixes_prefix_expCost = 100;
+    @Serializable
+    public int custom_fixes_prefix_maxlength = 10;
+    @Serializable
+    public List<String> custom_fixes_prefix_disabledFormattingCodes = new ArrayList<>();
+    @Serializable
+    public List<String> custom_fixes_prefix_blockedWords = new ArrayList<>();
+    @Serializable
+    public String custom_fixes_suffix_format = " &r{suffix}&r";
+    @Serializable
+    public int custom_fixes_suffix_moneyCost = 100;
+    @Serializable
+    public int custom_fixes_suffix_expCost = 100;
+    @Serializable
+    public int custom_fixes_suffix_maxlength = 10;
+    @Serializable
+    public List<String> custom_fixes_suffix_disabledFormattingCodes = new ArrayList<>();
+    @Serializable
+    public List<String> custom_fixes_suffix_blockedWords = new ArrayList<>();
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();

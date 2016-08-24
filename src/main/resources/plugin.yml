@@ -2,7 +2,7 @@ name: NyaaUtils
 main: cat.nyaa.nyaautils.NyaaUtils
 description: "Plugin for Nyaacat Minecraft Server"
 version: 1.0
-depend: []
+depend: [Vault]
 authors: [RecursiveG]
 website: "https://github.com/NyaaCat/nyaautils"
 database: false
@@ -49,3 +49,9 @@ permissions:
   nu.exhibition.forceUnset:
     description: Exhibition modification
     default: op
+  nu.prefix:
+    default: true
+  nu.suffix:
+    default: true
+  nu.format:
+    default: true

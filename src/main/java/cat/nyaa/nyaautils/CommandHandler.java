@@ -1,12 +1,10 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
-import cat.nyaa.utils.BasicItemMatcher;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.Message;
+import cat.nyaa.utils.*;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -280,5 +278,140 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             p.sendMessage(I18n._("user.lp.turned_off"));
         }
         p.sendMessage(I18n._("user.lp.mode_" + plugin.cfg.lootProtectMode.name()));
+    }
+
+    @SubCommand(value = "prefix", permission = "nu.prefix")
+    public void commandPrefix(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.prefix.usage");
+            return;
+        }
+        Player p = asPlayer(sender);
+        String prefix = args.next().replace("§", "");
+        for (String k : plugin.cfg.custom_fixes_prefix_disabledFormattingCodes) {
+            if (prefix.toUpperCase().contains("&" + k.toUpperCase())) {
+                msg(sender, "user.warn.blocked_format_codes", "&" + k);
+                return;
+            }
+        }
+        prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+        for (String k : plugin.cfg.custom_fixes_prefix_blockedWords) {
+            if (ChatColor.stripColor(prefix).toUpperCase().contains(k.toUpperCase())) {
+                msg(sender, "user.warn.blocked_words", k);
+                return;
+            }
+        }
+        if (ChatColor.stripColor(prefix).length() > plugin.cfg.custom_fixes_prefix_maxlength) {
+            msg(sender, "user.prefix.prefix_too_long", plugin.cfg.custom_fixes_prefix_maxlength);
+            return;
+        }
+        if (plugin.cfg.custom_fixes_prefix_expCost > 0 &&
+                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_prefix_expCost)) {
+            msg(sender, "user.warn.not_enough_exp");
+            return;
+        }
+
+        if (plugin.cfg.custom_fixes_prefix_moneyCost > 0 &&
+                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
+            msg(sender, "user.warn.no_enough_money");
+            return;
+        }
+        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_prefix_expCost);
+        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
+        plugin.vaultUtil.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix));
+        msg(sender, "user.prefix.success", prefix);
+    }
+
+    @SubCommand(value = "suffix", permission = "nu.suffix")
+    public void commandSuffix(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.suffix.usage");
+            return;
+        }
+        Player p = asPlayer(sender);
+        String suffix = args.next().replace("§", "");
+        for (String k : plugin.cfg.custom_fixes_suffix_disabledFormattingCodes) {
+            if (suffix.toUpperCase().contains("&" + k.toUpperCase())) {
+                msg(sender, "user.warn.blocked_format_codes", "&" + k);
+                return;
+            }
+        }
+        suffix = ChatColor.translateAlternateColorCodes('&', suffix);
+        for (String k : plugin.cfg.custom_fixes_suffix_blockedWords) {
+            if (ChatColor.stripColor(suffix).toUpperCase().contains(k.toUpperCase())) {
+                msg(sender, "user.warn.blocked_words", k);
+                return;
+            }
+        }
+        if (ChatColor.stripColor(suffix).length() > plugin.cfg.custom_fixes_suffix_maxlength) {
+            msg(sender, "user.suffix.suffix_too_long", plugin.cfg.custom_fixes_suffix_maxlength);
+            return;
+        }
+        if (plugin.cfg.custom_fixes_suffix_expCost > 0 &&
+                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_suffix_expCost)) {
+            msg(sender, "user.warn.not_enough_exp");
+            return;
+        }
+
+        if (plugin.cfg.custom_fixes_suffix_moneyCost > 0 &&
+                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
+            msg(sender, "user.warn.no_enough_money");
+            return;
+        }
+        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
+        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_suffix_expCost);
+        plugin.vaultUtil.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix));
+        msg(sender, "user.suffix.success", suffix);
+    }
+
+    @SubCommand(value = "resetprefix", permission = "nu.prefix")
+    public void commandResetPrefix(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        if (!(plugin.vaultUtil.getPlayerPrefix(p).length() > 0)) {
+            return;
+        }
+        if (plugin.cfg.custom_fixes_prefix_expCost > 0 &&
+                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_prefix_expCost)) {
+            msg(sender, "user.warn.not_enough_exp");
+            return;
+        }
+
+        if (plugin.cfg.custom_fixes_prefix_moneyCost > 0 &&
+                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
+            msg(sender, "user.warn.no_enough_money");
+            return;
+        }
+        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_prefix_expCost);
+        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
+        plugin.vaultUtil.setPlayerPrefix(p, "");
+        msg(sender, "user.resetprefix.success");
+    }
+
+    @SubCommand(value = "resetsuffix", permission = "nu.suffix")
+    public void commandResetSuffix(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        if (!(plugin.vaultUtil.getPlayerSuffix(p).length() > 0)) {
+            return;
+        }
+        if (plugin.cfg.custom_fixes_suffix_expCost > 0 &&
+                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_suffix_expCost)) {
+            msg(sender, "user.warn.not_enough_exp");
+            return;
+        }
+
+        if (plugin.cfg.custom_fixes_suffix_moneyCost > 0 &&
+                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
+            msg(sender, "user.warn.no_enough_money");
+            return;
+        }
+        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
+        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_suffix_expCost);
+        plugin.vaultUtil.setPlayerSuffix(p, "");
+        msg(sender, "user.resetsuffix.success");
+    }
+
+    @SubCommand(value = "format", permission = "nu.format")
+    public void commandFormat(CommandSender sender, Arguments args) {
+        msg(sender, "user.format.message");
     }
 }

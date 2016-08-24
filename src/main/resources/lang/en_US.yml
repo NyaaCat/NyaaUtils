@@ -16,6 +16,11 @@ user:
     command_exception: "Internal server error. Unable to run command."
     bad_enum: "Not valid for enum type: %s. Values: %s"
     no_required_permission: "You do not have the required permission: %s"
+  warn:
+    blocked_words: "You can't use this word: %s"
+    blocked_format_codes: "You can't use format codes %s"
+    no_enough_money: "You do not have that much money"
+    not_enough_exp: "You do not have enough experience"
   showitem:
     message: "Player %s show item: &r{itemName}&r * {amount}"
   enchant:
@@ -28,6 +33,16 @@ user:
     success: "Enchantment success"
     fail: "Enchantment failed"
     enchantsrc_already_exists: "The enchantment source already exists"
+  prefix:
+    prefix_too_long: "Max prefix length is %d"
+    success: "You prefix has been set to %s"
+  suffix:
+    suffix_too_long: "Max suffix length is %d"
+    success: "You suffix has been set to %s"
+  resetprefix:
+    success: "You prefix has been reset"
+  resetsuffix:
+    success: "You suffix has been reset"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]
@@ -61,7 +76,29 @@ user:
     line_removed: "Line %d removed"
     line_changed: "Line %d changed"
     desc_protected: "You cannot set description of a protected frame"
-
+  format:
+    message: |
+      &r&&f0 &0 black
+      &r&&f1 &1 dark blue
+      &r&&f2 &2 dark green
+      &r&&f3 &3 dark aqua
+      &r&&f4 &4 dark red
+      &r&&f5 &5 dark purple
+      &r&&f6 &6 glod
+      &r&&f7 &7 gray
+      &r&&f8 &8 dark gray
+      &r&&f9 &9 blue
+      &r&&fa &a green
+      &r&&fb &b aqua
+      &r&&fc &c red
+      &r&&fd &d light purple
+      &r&&fe &e yello
+      &r&&ff &f white
+      &r&&fl &l bold
+      &r&&fm &m strikethrough
+      &r&&fn &n underline
+      &r&&fo &o ltalic
+      &r&&fr &r reset
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -89,7 +126,23 @@ manual:
   lp:
     description: "Toggle loot protect status"
     usage: "/nu lp"
-
+    
+  prefix:
+    description: "Set youself prefix"
+    usage: "/nu prefix [prefix]"
+    
+  suffix:
+    description: "Set youself suffix"
+    usage: "/nu suffix [suffix]"
+    
+  resetprefix:
+    description: "Reset youself prefix"
+    usage: "/nu resetprefix"
+    
+  resetsuffix:
+    description: "Reset youself suffix"
+    usage: "/nu resetsuffix"
+    
   exhibition:
     description: "Create or modify exhibition items"
     usage: "/nu exhibition help"
