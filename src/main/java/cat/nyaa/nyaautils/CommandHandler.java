@@ -370,19 +370,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         if (!(plugin.vaultUtil.getPlayerPrefix(p).length() > 0)) {
             return;
         }
-        if (plugin.cfg.custom_fixes_prefix_expCost > 0 &&
-                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_prefix_expCost)) {
-            msg(sender, "user.warn.not_enough_exp");
-            return;
-        }
-
-        if (plugin.cfg.custom_fixes_prefix_moneyCost > 0 &&
-                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
-            msg(sender, "user.warn.no_enough_money");
-            return;
-        }
-        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_prefix_expCost);
-        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
+        
         plugin.vaultUtil.setPlayerPrefix(p, "");
         msg(sender, "user.resetprefix.success");
     }
@@ -393,19 +381,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         if (!(plugin.vaultUtil.getPlayerSuffix(p).length() > 0)) {
             return;
         }
-        if (plugin.cfg.custom_fixes_suffix_expCost > 0 &&
-                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_suffix_expCost)) {
-            msg(sender, "user.warn.not_enough_exp");
-            return;
-        }
-
-        if (plugin.cfg.custom_fixes_suffix_moneyCost > 0 &&
-                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
-            msg(sender, "user.warn.no_enough_money");
-            return;
-        }
-        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
-        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_suffix_expCost);
+        
         plugin.vaultUtil.setPlayerSuffix(p, "");
         msg(sender, "user.resetsuffix.success");
     }
