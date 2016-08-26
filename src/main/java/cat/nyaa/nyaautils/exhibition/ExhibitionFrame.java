@@ -8,7 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +51,10 @@ public class ExhibitionFrame {
                 ownerUUID = lore.get(1);
                 ownerName = lore.get(2);
                 for (int i = 3; i < len; i++) {
-                    descriptions.add(lore.get(i));
+                    String tmp = deBase64(lore.get(i));
+                    if (tmp != null && tmp.length() > 0) {
+                        descriptions.add(tmp);
+                    }
                 }
                 ItemMeta meta = baseItem.getItemMeta();
                 if (len + 1 == lore.size()) {
@@ -77,7 +82,9 @@ public class ExhibitionFrame {
         metaList.add(MAGIC_TITLE + Integer.toString(3 + descriptions.size()));
         metaList.add(ownerUUID);
         metaList.add(ownerName);
-        metaList.addAll(descriptions);
+        for (String line : descriptions) {
+            metaList.add(base64(line));
+        }
         metaList.add(MAGIC_TITLE);
 
         ItemStack item = baseItem.clone();
@@ -178,5 +185,32 @@ public class ExhibitionFrame {
             else descriptions.set(line, str);
         }
         encodeItem();
+    }
+
+    public static boolean isFrameInnerItem(ItemStack item) {
+        return item != null
+                && item.hasItemMeta()
+                && item.getItemMeta().hasLore()
+                && item.getItemMeta().getLore().size() >= 1
+                && item.getItemMeta().getLore().get(0).startsWith(MAGIC_TITLE);
+    }
+
+    private static final Base64.Encoder b64Encoder = Base64.getEncoder();
+    private static final Base64.Decoder b64Decoder = Base64.getDecoder();
+    private static String base64(String str) {
+        try {
+            return b64Encoder.encodeToString(str.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException ex) { // WTF utf8 not supported?
+            return "";
+        }
+    }
+    private static String deBase64(String base64) {
+        try {
+            return new String(b64Decoder.decode(base64), "UTF-8");
+        } catch (UnsupportedEncodingException ex) { // WTF utf8 not supported?
+            return "";
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 }
