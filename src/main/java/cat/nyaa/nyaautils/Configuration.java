@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.mailbox.MailboxLocationCfg;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.ISerializable;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,14 +56,25 @@ public class Configuration implements ISerializable {
     public List<String> custom_fixes_suffix_disabledFormattingCodes = new ArrayList<>();
     @Serializable
     public List<String> custom_fixes_suffix_blockedWords = new ArrayList<>();
+    @Serializable(name = "mail.handFee")
+    public int mailHandFee = 10;
+    @Serializable(name = "mail.chestFee")
+    public int mailChestFee = 1000;
+    @Serializable(name = "mail.cooldownTicks")
+    public int mailCooldown = 20;
+    @Serializable(name = "mail.timeoutTicks")
+    public int mailTimeout = 200;
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
+
+    public final MailboxLocationCfg mailboxLoc;
 
     private final NyaaUtils plugin;
 
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
+        this.mailboxLoc = new MailboxLocationCfg(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -110,6 +122,8 @@ public class Configuration implements ISerializable {
                 }
             }
         }
+
+        mailboxLoc.load();
     }
 
     @Override
@@ -128,6 +142,8 @@ public class Configuration implements ISerializable {
             if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
+
+        mailboxLoc.save();
     }
 
     public enum LootProtectMode {
