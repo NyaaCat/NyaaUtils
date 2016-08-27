@@ -58,3 +58,5 @@ permissions:
   nu.project:
     description: Set player velocity
     default: op
+  nu.enchantinfo:
+    default: true

@@ -3,9 +3,7 @@ package cat.nyaa.nyaautils;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.utils.*;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,6 +12,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.Map;
 import java.util.Random;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
@@ -168,8 +167,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             }
             if (success) {
                 p.sendMessage(I18n._("user.enchant.success"));
+                p.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, p.getEyeLocation(), 300);
+                p.getWorld().playSound(p.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
             } else {
                 p.sendMessage(I18n._("user.enchant.fail"));
+                p.getWorld().spawnParticle(Particle.SLIME, p.getEyeLocation(), 200);
                 if (deleteItem) {
                     main = new ItemStack(Material.AIR);
                 }
@@ -177,6 +179,62 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             plugin.enchantCooldown.put(p.getUniqueId(), System.currentTimeMillis());
             p.getInventory().setItemInMainHand(main);
             p.getInventory().setItemInOffHand(off);
+        }
+    }
+
+    @SubCommand(value = "enchantinfo", permission = "nu.enchantinfo")
+    public void commandEnchantInfo(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        ItemStack item = getItemInOffHand(sender);
+
+        if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)) {
+            sender.sendMessage(I18n._("user.enchant.invalid_src"));
+            return;
+        }
+
+        Map<Enchantment, Integer> enchant;
+        if (item.getType().equals(Material.ENCHANTED_BOOK)) {
+            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+            enchant = meta.getStoredEnchants();
+        } else {
+            enchant = item.getEnchantments();
+        }
+
+        sender.sendMessage(I18n._("user.enchant.list_ench_header"));
+        for (Enchantment e : enchant.keySet()) {
+            if (I16rEnchantment.fromEnchantment(e) != null) {
+                Message msg = new Message(e.getName() + ": ");
+                msg.append(I16rEnchantment.fromEnchantment(e).getUnlocalizedName());
+                msg.append(" " + I18n._("user.enchantinfo.enchant_level", enchant.get(e)));
+                p.spigot().sendMessage(msg.inner);
+            } else {
+                if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                    continue;
+                }
+                p.sendMessage(e.getName() + ": " + e.getName() + " " +
+                        I18n._("user.enchantinfo.enchant_level", enchant.get(e)));
+            }
+        }
+        long cooldown = 0;
+        if (plugin.enchantCooldown.containsKey(p.getUniqueId())) {
+            cooldown = plugin.enchantCooldown.get(p.getUniqueId()) + (plugin.cfg.enchantCooldown / 20 * 1000);
+        }
+        float percent;
+        msg(sender, "user.enchantinfo.info_0");
+        if (cooldown > System.currentTimeMillis()) {
+            percent = (plugin.cfg.chanceModerate +
+                    plugin.cfg.chanceFail + plugin.cfg.chanceDestroy) / 100.0F;
+            msg(sender, "user.enchantinfo.info_1", 0);
+        } else {
+            percent = (plugin.cfg.chanceSuccess + plugin.cfg.chanceModerate +
+                    plugin.cfg.chanceFail + plugin.cfg.chanceDestroy) / 100.0F;
+            msg(sender, "user.enchantinfo.info_1", (int) (plugin.cfg.chanceSuccess / percent));
+        }
+        msg(sender, "user.enchantinfo.info_2", (int) (plugin.cfg.chanceModerate / percent));
+        msg(sender, "user.enchantinfo.info_3", (int) (plugin.cfg.chanceFail / percent));
+        msg(sender, "user.enchantinfo.info_4", (int) (plugin.cfg.chanceDestroy / percent));
+        if (cooldown > System.currentTimeMillis()) {
+            msg(sender, "user.enchantinfo.info_cooldown", (int) ((cooldown - System.currentTimeMillis()) / 1000));
         }
     }
 

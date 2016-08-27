@@ -109,6 +109,14 @@ user:
       &r&&fn &n underline
       &r&&fo &o ltalic
       &r&&fr &r reset
+  enchantinfo:
+    info_0: "=== Chance ==="
+    info_1: "Success: %d%%"
+    info_2: "Moderate: %d%%"
+    info_3: "Fail: %d%%"
+    info_4: "Destroy: %d%%"
+    info_cooldown: "Cooldown: %d seconds remaining "
+    enchant_level: "Level: %d"
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -152,6 +160,10 @@ manual:
   resetsuffix:
     description: "Reset youself suffix"
     usage: "/nu resetsuffix"
+    
+  enchantinfo:
+    description: "Show enchant info"
+    usage: "/nu enchantinfo"
     
   exhibition:
     description: "Create or modify exhibition items"
