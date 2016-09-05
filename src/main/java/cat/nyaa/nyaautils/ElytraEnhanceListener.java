@@ -56,7 +56,7 @@ public class ElytraEnhanceListener implements Listener {
                 if (!InventoryUtils.hasItem(player.getInventory(), plugin.cfg.elytra_fuel, plugin.cfg.elytra_fuel_notify)) {
                     player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", InventoryUtils.getAmount(player, plugin.cfg.elytra_fuel)));
                 }
-                player.setVelocity(player.getVelocity().multiply(plugin.cfg.elytra_max_velocity));
+                player.setVelocity(player.getVelocity().normalize().multiply(plugin.cfg.elytra_max_velocity));
             }
             return;
         } else if (FuelMode.contains(player.getUniqueId())) {

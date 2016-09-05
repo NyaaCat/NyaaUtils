@@ -503,6 +503,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         if (item != null && item.getType() != Material.AIR) {
             item.setAmount(1);
             plugin.cfg.elytra_fuel = item;
+            NyaaUtils.instance.cfg.save();
         }
     }
 }
