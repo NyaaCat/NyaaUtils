@@ -109,6 +109,31 @@ user:
       &r&&fn &n underline
       &r&&fo &o ltalic
       &r&&fr &r reset
+  mailbox:
+    right_click_timeout: "No box clicked in time. Action cancelled."
+    already_set: "You should unset your current mailbox before setting a new one."
+    havent_set_self: "You do not have mailbox."
+    havent_set_other: "The player %s do not have a mailbox."
+    set_success: "Successfully set your mailbox."
+    set_fail: "Failed to set your mailbox."
+    remove_success: "Mailbox removed."
+    now_right_click: "Right click a chest in 5 seconds to setup your mailbox."
+    permission_required: "You do not have the required permission."
+    info:
+      location: "Your mailbox location: {X:%d, Y:%d, Z:%d}"
+      hand_price: "Price: send items in hand:  %.2f"
+      chest_price: "Price: send items in chest: %.2f"
+      send_cooldown: "Cooldown between sending mails: %.2f seconds"
+      send_timeout: "Timeout for rejecting an incoming mail: %.2f seconds"
+    player_no_mailbox: "The player: %s do not have a mailbox."
+    create_mailbox_hint: |
+      Player %s wants to send you a package but you haven't setup one.
+      Please setup your mailbox with /nu mailbox create
+    recipient_no_space: "The player's mailbox doesn't have enough space."
+    mailbox_no_space: "Player %s wants to send you a package but your mailbox don't have enough space to hold."
+    mail_sent: "You've sent a package to %s and been charged %.2f for fee."
+    mail_received: "Player %s sent you a package and is put into your mailbox."
+
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -168,6 +193,23 @@ manual:
     help:
       description: "Show help messages"
       usage: "/nu exhibition help"
+
   project:
     description: "Set player velocity"
     usage: "/nu project <Yaw> <Pitch> <Speed> <duration> [Player]"
+
+  mailbox:
+    description: "Set mailbox or send items"
+    usage: "/nu mailbox help"
+    create:
+      description: "Right click chest to setup an mailbox"
+      usage: "/nu mailbox create [player]"
+    info:
+      description: "Show your mailbox info"
+      usage: "/nu mailbox info [player]"
+    remove:
+      description: "Unset your mailbox"
+      usage: "/nu mailbox remove [player]"
+    send:
+      description: "Send item in hand to another player"
+      usage: "/nu mailbox send <player>"

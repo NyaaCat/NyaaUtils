@@ -1,6 +1,6 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.nyaautils.mailbox.MailboxLocationCfg;
+import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.ISerializable;
 import org.bukkit.configuration.ConfigurationSection;
@@ -68,13 +68,13 @@ public class Configuration implements ISerializable {
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
-    public final MailboxLocationCfg mailboxLoc;
+    public final MailboxLocations mailbox;
 
     private final NyaaUtils plugin;
 
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
-        this.mailboxLoc = new MailboxLocationCfg(plugin);
+        this.mailbox = new MailboxLocations(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -123,7 +123,7 @@ public class Configuration implements ISerializable {
             }
         }
 
-        mailboxLoc.load();
+        mailbox.load();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class Configuration implements ISerializable {
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
 
-        mailboxLoc.save();
+        mailbox.save();
     }
 
     public enum LootProtectMode {

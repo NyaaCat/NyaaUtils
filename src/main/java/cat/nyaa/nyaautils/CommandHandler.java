@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
+import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.utils.*;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.Bukkit;
@@ -31,6 +32,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
 
     @SubCommand("exhibition")
     public ExhibitionCommands exhibitionCommands;
+    @SubCommand("mailbox")
+    public MailboxCommands mailboxCommands;
 
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
@@ -418,7 +421,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         if (!(plugin.vaultUtil.getPlayerPrefix(p).length() > 0)) {
             return;
         }
-        
+
         plugin.vaultUtil.setPlayerPrefix(p, "");
         msg(sender, "user.resetprefix.success");
     }
@@ -429,7 +432,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         if (!(plugin.vaultUtil.getPlayerSuffix(p).length() > 0)) {
             return;
         }
-        
+
         plugin.vaultUtil.setPlayerSuffix(p, "");
         msg(sender, "user.resetsuffix.success");
     }
