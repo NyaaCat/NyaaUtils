@@ -43,6 +43,9 @@ user:
     success: "You prefix has been reset"
   resetsuffix:
     success: "You suffix has been reset"
+  elytra_enhance:
+    fuel_notify: "Fuel remaining %d"
+    durability_notify: "Elytra %d durability remaining"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]

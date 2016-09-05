@@ -496,4 +496,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void commandFormat(CommandSender sender, Arguments args) {
         msg(sender, "user.format.message");
     }
+
+    @SubCommand(value = "addfuel", permission = "nu.addfuel")
+    public void commandAddFuel(CommandSender sender, Arguments args) {
+        ItemStack item = getItemInHand(sender).clone();
+        if (item != null && item.getType() != Material.AIR) {
+            item.setAmount(1);
+            plugin.cfg.elytra_fuel = item;
+        }
+    }
 }

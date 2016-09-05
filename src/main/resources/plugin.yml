@@ -60,3 +60,5 @@ permissions:
     default: op
   nu.enchantinfo:
     default: true
+  nu.addfuel:
+    default: op

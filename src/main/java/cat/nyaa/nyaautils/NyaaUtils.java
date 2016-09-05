@@ -17,7 +17,8 @@ public class NyaaUtils extends JavaPlugin {
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
     public VaultUtil vaultUtil;
-    
+    public ElytraEnhanceListener elytraEnhanceListener;
+
     @Override
     public void onLoad() {
         instance = this;
@@ -44,6 +45,7 @@ public class NyaaUtils extends JavaPlugin {
         getCommand("nyaautils").setExecutor(commandHandler);
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
+        elytraEnhanceListener = new ElytraEnhanceListener(this);
         exhibitionListener = new ExhibitionListener(this);
         vaultUtil = new VaultUtil(this);
     }

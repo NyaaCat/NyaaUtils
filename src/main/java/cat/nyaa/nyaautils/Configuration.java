@@ -2,10 +2,13 @@ package cat.nyaa.nyaautils;
 
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.ISerializable;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +58,22 @@ public class Configuration implements ISerializable {
     public List<String> custom_fixes_suffix_disabledFormattingCodes = new ArrayList<>();
     @Serializable
     public List<String> custom_fixes_suffix_blockedWords = new ArrayList<>();
+    @Serializable
+    public boolean elytra_enhance_enabled = true;
+    @Serializable
+    public ItemStack elytra_fuel = new ItemStack(Material.SULPHUR);
+    @Serializable
+    public double elytra_min_velocity = 1.2;
+    @Serializable
+    public double elytra_max_velocity = 1.6;
+    @Serializable
+    public int elytra_boost_max_height = 256;
+    @Serializable
+    public int elytra_durability_notify = 10;
+    @Serializable
+    public int elytra_fuel_notify = 10;
+    @Serializable
+    public List<String> disabled_world = new ArrayList<String>(Arrays.asList("world1", "world2"));
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
