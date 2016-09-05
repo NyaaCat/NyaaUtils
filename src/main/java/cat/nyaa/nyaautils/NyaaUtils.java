@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
+import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.utils.VaultUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,7 @@ public class NyaaUtils extends JavaPlugin {
     public LootProtectListener lpListener;
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
+    public MailboxListener mailboxListener;
     public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
 
@@ -47,6 +49,7 @@ public class NyaaUtils extends JavaPlugin {
         dsListener = new DamageStatListener(this);
         elytraEnhanceListener = new ElytraEnhanceListener(this);
         exhibitionListener = new ExhibitionListener(this);
+        mailboxListener = new MailboxListener(this);
         vaultUtil = new VaultUtil(this);
     }
 }

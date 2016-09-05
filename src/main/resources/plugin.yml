@@ -64,3 +64,9 @@ permissions:
     default: op
   nu.elytratoggle:
     default: true
+  nu.mailbox:
+    description: Basic permission requied for mailbox
+    default: true
+  nu.mailadmin:
+    description: Administrative commands for mailbox
+    default: op
