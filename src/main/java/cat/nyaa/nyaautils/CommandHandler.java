@@ -506,4 +506,16 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             NyaaUtils.instance.cfg.save();
         }
     }
+
+    @SubCommand(value = "el", permission = "nu.elytratoggle")
+    public void commandElytraToggle(CommandSender sender, Arguments args) {
+        Player player = asPlayer(sender);
+        if (ElytraEnhanceListener.disableFuelMode.contains(player.getUniqueId())) {
+            ElytraEnhanceListener.disableFuelMode.remove(player.getUniqueId());
+            msg(sender, "user.elytra_enhance.fuelmode_on");
+        } else {
+            ElytraEnhanceListener.disableFuelMode.add(player.getUniqueId());
+            msg(sender, "user.elytra_enhance.fuelmode_off");
+        }
+    }
 }

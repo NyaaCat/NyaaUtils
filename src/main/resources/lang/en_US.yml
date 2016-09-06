@@ -46,6 +46,8 @@ user:
   elytra_enhance:
     fuel_notify: "Fuel remaining %d"
     durability_notify: "Elytra %d durability remaining"
+    fuelmode_on: "Fuel mode turned on"
+    fuelmode_off: "Fuel mode turned off"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]
@@ -186,3 +188,6 @@ manual:
   project:
     description: "Set player velocity"
     usage: "/nu project <Yaw> <Pitch> <Speed> <duration> [Player]"
+  el:
+    description: "Toggle fuel mode"
+    usage: "/nu el"

@@ -62,3 +62,5 @@ permissions:
     default: true
   nu.addfuel:
     default: op
+  nu.elytratoggle:
+    default: true

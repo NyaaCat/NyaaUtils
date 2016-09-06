@@ -67,6 +67,8 @@ public class Configuration implements ISerializable {
     @Serializable
     public double elytra_max_velocity = 1.6;
     @Serializable
+    public int elytra_power_duration = 3;
+    @Serializable
     public int elytra_boost_max_height = 256;
     @Serializable
     public int elytra_durability_notify = 10;
