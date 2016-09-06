@@ -133,17 +133,6 @@ user:
     mailbox_no_space: "Player %s wants to send you a package but your mailbox don't have enough space to hold."
     mail_sent: "You've sent a package to %s and been charged %.2f for fee."
     mail_received: "Player %s sent you a package and is put into your mailbox."
-    import:
-      db_not_found: "Old database file not found."
-      db_read_fail: "Cannot import old database, see console for errors."
-      invalid_header: "Listing invalid locations which won't be imported:"
-      invalid_item: "{playerName: \"%s\", reason: \"%s\", message: \"%s\"}"
-      stat: "Total: %d, Imported: %d"
-      confirm_info: |
-        Please use `/nu mailbox import confirm [dbFilePath]` to save the changes.
-        Existing locations won't be overwritten.
-      success: "Import finished."
-
 
 manual:
   no_description: "No description"
@@ -224,6 +213,3 @@ manual:
     send:
       description: "Send item in hand to another player"
       usage: "/nu mailbox send <player>"
-    import:
-      description: "Import mailbox info from 'MailBox' plugin."
-      usage: "/nu mailbox import [\"confirm\"] [dbFilePath]"

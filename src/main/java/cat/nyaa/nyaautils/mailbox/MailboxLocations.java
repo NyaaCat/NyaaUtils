@@ -129,21 +129,4 @@ public class MailboxLocations {
         return nameMap.inverse().get(name.toLowerCase());
     }
 
-    public void importMailboxLocations(Map<UUID, Location> mapping) {
-        for (Map.Entry<UUID, Location> entry : mapping.entrySet()) {
-            locationMap.putIfAbsent(entry.getKey(), entry.getValue());
-        }
-        save();
-    }
-
-    public void importUUIDMapping(Map<String, UUID> mapping) {
-        for (Map.Entry<String, UUID> entry : mapping.entrySet()) {
-            try {
-                nameMap.put(entry.getValue(), entry.getKey());
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            }
-        }
-        save();
-    }
 }
