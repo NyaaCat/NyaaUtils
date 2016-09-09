@@ -6,6 +6,7 @@ import cat.nyaa.utils.Internationalization;
 import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,15 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "create", permission = "nu.mailbox")
     public void createMailbox(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
+        String tmp = args.top();
+        if (tmp != null) {
+            if (sender.hasPermission("nu.mailadmin")) {
+                createMailbox(p, tmp);
+            } else {
+                msg(sender, "user.mailbox.permission_required");
+            }
+            return;
+        }
         if (plugin.cfg.mailbox.getMailboxLocation(p.getUniqueId()) != null) {
             msg(p, "user.mailbox.already_set");
             return;
@@ -49,9 +59,45 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
         msg(p, "user.mailbox.now_right_click");
     }
 
+    public void createMailbox(Player admin, String player) {
+        if (plugin.cfg.mailbox.getMailboxLocation(player) != null) {
+            msg(admin, "user.mailbox.admin.already_set");
+            return;
+        }
+        OfflinePlayer p = plugin.getServer().getOfflinePlayer(player);
+        UUID id = p.getUniqueId();
+        plugin.mailboxListener.registerRightClickCallback(admin, 100,
+                (Location clickedBlock) -> {
+                    Block b = clickedBlock.getBlock();
+                    if (b.getState() instanceof Chest) {
+                        plugin.cfg.mailbox.updateNameMapping(id, player);
+                        plugin.cfg.mailbox.updateLocationMapping(id, b.getLocation());
+                        msg(admin, "user.mailbox.admin.success");
+                        if (p.isOnline()) {
+                            Player tmp = plugin.getServer().getPlayer(id);
+                            if (tmp != null) {
+                                msg(tmp, "user.mailbox.admin.player_hint_set");
+                            }
+                        }
+                        return;
+                    }
+                    msg(admin, "user.mailbox.admin.fail");
+                });
+        msg(admin, "user.mailbox.admin.right_click_set", player);
+    }
+
     @SubCommand(value = "remove", permission = "nu.mailbox")
     public void removeMailbox(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
+        String tmp = args.top();
+        if (tmp != null) {
+            if (sender.hasPermission("nu.mailadmin")) {
+                removeMailbox(p, tmp);
+            } else {
+                msg(sender, "user.mailbox.permission_required");
+            }
+            return;
+        }
         if (plugin.cfg.mailbox.getMailboxLocation(p.getUniqueId()) == null) {
             msg(p, "user.mailbox.havent_set_self");
             return;
@@ -60,9 +106,32 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
         msg(p, "user.mailbox.remove_success");
     }
 
+    public void removeMailbox(Player admin, String player) {
+        if (plugin.cfg.mailbox.getMailboxLocation(player) == null) {
+            msg(admin, "user.mailbox.admin.no_mailbox");
+        } else {
+            UUID id = plugin.cfg.mailbox.getUUIDbyName(player);
+            plugin.cfg.mailbox.updateLocationMapping(id, null);
+            msg(admin, "user.mailbox.admin.success_remove");
+            Player p = plugin.getServer().getPlayer(player);
+            if (p != null) {
+                msg(p, "user.mailbox.admin.player_hint_removed");
+            }
+        }
+    }
+
     @SubCommand(value = "info", permission = "nu.mailbox")
     public void infoMailbox(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
+        String tmp = args.top();
+        if (tmp != null) {
+            if (sender.hasPermission("nu.mailadmin")) {
+                infoMailbox(p, tmp);
+            } else {
+                msg(sender, "user.mailbox.permission_required");
+            }
+            return;
+        }
         Location loc = plugin.cfg.mailbox.getMailboxLocation(p.getUniqueId());
         if (loc == null) {
             msg(p, "user.mailbox.havent_set_self");
@@ -75,6 +144,17 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             msg(p, "user.mailbox.info.send_timeout", ((double) plugin.cfg.mailTimeout) / 20D);
         }
     }
+
+    public void infoMailbox(Player admin, String player) {
+        Location loc = plugin.cfg.mailbox.getMailboxLocation(player);
+        if (loc != null) {
+            msg(admin, "user.mailbox.admin.info", player, plugin.cfg.mailbox.getUUIDbyName(player).toString(),
+                    loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        } else {
+            msg(admin, "user.mailbox.admin.no_mailbox");
+        }
+    }
+
 
     @SubCommand(value = "send", permission = "nu.mailbox")
     public void sendMailbox(CommandSender sender, Arguments args) {

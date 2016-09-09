@@ -149,6 +149,17 @@ user:
     now_right_click_send: "Now right click the box you want to sent to %s"
     chest_protected: "You cannot send this chest because it's protected."
     mail_sent_nothing: "The postman is kind, not charging any fee for an empty box."
+    admin:
+      right_click_set: "Right click to setup %s's mailbox."
+      already_set: "The player has an mailbox set already"
+      fail_set: "Failed to set the mailbox"
+      success_set: "Mailbox set!"
+      player_hint_set: "Your mailbox is set by an administrator."
+      no_mailbox: "The player does not have a mailbox"
+      success_remove: "Successfully removed the mailbox"
+      player_hint_removed: "Your mailbox is removed by an administrator."
+      info: "Player %s(%s) X:%d Y:%d Z:%d"
+
 manual:
   no_description: "No description"
   no_usage: "No usage"
