@@ -3,6 +3,7 @@ main: cat.nyaa.nyaautils.NyaaUtils
 description: "Plugin for Nyaacat Minecraft Server"
 version: 1.0
 depend: [Vault]
+softdepend: [LockettePro]
 authors: [RecursiveG]
 website: "https://github.com/NyaaCat/nyaautils"
 database: false
