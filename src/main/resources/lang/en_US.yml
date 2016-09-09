@@ -149,6 +149,7 @@ user:
     now_right_click_send: "Now right click the box you want to sent to %s"
     chest_protected: "You cannot send this chest because it's protected."
     mail_sent_nothing: "The postman is kind, not charging any fee for an empty box."
+    money_insufficient: "You do not have enough money to send a package."
     admin:
       right_click_set: "Right click to setup %s's mailbox."
       already_set: "The player has an mailbox set already"
