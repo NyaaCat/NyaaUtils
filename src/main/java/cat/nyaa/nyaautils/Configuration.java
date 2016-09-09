@@ -123,7 +123,7 @@ public class Configuration implements ISerializable {
             }
         }
 
-        mailbox.load();
+        if (plugin.isServerEnabled()) mailbox.load();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class Configuration implements ISerializable {
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
 
-        mailbox.save();
+        if (plugin.isServerEnabled()) mailbox.save();
     }
 
     public enum LootProtectMode {

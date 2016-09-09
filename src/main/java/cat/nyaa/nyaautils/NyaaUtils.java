@@ -20,8 +20,15 @@ public class NyaaUtils extends JavaPlugin {
     public MailboxListener mailboxListener;
     public VaultUtil vaultUtil;
 
+    private boolean serverEnabled = false;
+
+    public boolean isServerEnabled() {
+        return serverEnabled;
+    }
+
     @Override
     public void onLoad() {
+        serverEnabled = false;
         instance = this;
         saveDefaultConfig();
         cfg = new Configuration(this);
@@ -37,10 +44,13 @@ public class NyaaUtils extends JavaPlugin {
         saveConfig();
         I18n.instance.reset();
         enchantCooldown.clear();
+        serverEnabled = false;
     }
 
     @Override
     public void onEnable() {
+        serverEnabled = true;
+        cfg.mailbox.load(); // mailbox location deserialize fails when worlds aren't loaded.
         i18n.load(cfg.language);
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);

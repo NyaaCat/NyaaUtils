@@ -122,16 +122,17 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
     @SubCommand(value = "info", permission = "nu.mailbox")
     public void infoMailbox(CommandSender sender, Arguments args) {
-        Player p = asPlayer(sender);
         String tmp = args.top();
         if (tmp != null) {
             if (sender.hasPermission("nu.mailadmin")) {
-                infoMailbox(p, tmp);
+                infoMailbox(sender, tmp);
             } else {
                 msg(sender, "user.mailbox.permission_required");
             }
             return;
         }
+        Player p = asPlayer(sender);
+
         Location loc = plugin.cfg.mailbox.getMailboxLocation(p.getUniqueId());
         if (loc == null) {
             msg(p, "user.mailbox.havent_set_self");
@@ -141,11 +142,11 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             msg(p, "user.mailbox.info.hand_price", (float) plugin.cfg.mailHandFee);
             msg(p, "user.mailbox.info.chest_price", (float) plugin.cfg.mailChestFee);
             msg(p, "user.mailbox.info.send_cooldown", ((double) plugin.cfg.mailCooldown) / 20D);
-            msg(p, "user.mailbox.info.send_timeout", ((double) plugin.cfg.mailTimeout) / 20D);
+            //msg(p, "user.mailbox.info.send_timeout", ((double) plugin.cfg.mailTimeout) / 20D);
         }
     }
 
-    public void infoMailbox(Player admin, String player) {
+    public void infoMailbox(CommandSender admin, String player) {
         Location loc = plugin.cfg.mailbox.getMailboxLocation(player);
         if (loc != null) {
             msg(admin, "user.mailbox.admin.info", player, plugin.cfg.mailbox.getUUIDbyName(player).toString(),
@@ -165,6 +166,12 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             msg(sender, "manual.mailbox.send.usage");
             return;
         }
+
+        if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailHandFee)) {
+            msg(p, "user.mailbox.money_insufficient");
+            return;
+        }
+
         UUID recipient = plugin.cfg.mailbox.getUUIDbyName(toPlayer);
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
 
@@ -205,7 +212,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             if (recp != null) {
                 msg(recp, "user.mailbox.mail_received", sender.getName());
             }
-            // TODO: log & fee
+            plugin.vaultUtil.withdraw(p, plugin.cfg.mailHandFee);
         }
     }
 
@@ -217,6 +224,12 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             msg(sender, "manual.mailbox.sendchest.usage");
             return;
         }
+
+        if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
+            msg(p, "user.mailbox.money_insufficient");
+            return;
+        }
+
         UUID recipient = plugin.cfg.mailbox.getUUIDbyName(toPlayer);
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
 
@@ -248,6 +261,10 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
                 (Location boxLocation) -> {
+                    if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
+                        msg(p, "user.mailbox.money_insufficient");
+                        return;
+                    }
                     Block b = boxLocation.getBlock();
                     if (plugin.getServer().getPluginManager().getPlugin("LockettePro") != null) {
                         if (LocketteProAPI.isLocked(b) && !LocketteProAPI.isUser(b, p)) {
@@ -287,10 +304,10 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                         if (recpFinal != null) {
                             msg(recpFinal, "user.mailbox.mail_received", sender.getName());
                         }
+                        plugin.vaultUtil.withdraw(p, plugin.cfg.mailChestFee);
                     } else {
                         msg(sender, "user.mailbox.mail_sent_nothing");
                     }
-                    //TODO: LOG & FEE
                 });
         msg(p, "user.mailbox.now_right_click_send", toPlayer);
     }
