@@ -261,10 +261,6 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
                 (Location boxLocation) -> {
-                    if (boxLocation.equals(toLocationFinal)) {
-                        msg(p, "user.mailbox.same_src_dst");
-                        return;
-                    }
                     if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
                         msg(p, "user.mailbox.money_insufficient");
                         return;
@@ -279,12 +275,14 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
                     Inventory fromInventory = ((InventoryHolder) b.getState()).getInventory();
                     Inventory toInventory = ((InventoryHolder) toLocationFinal.getBlock().getState()).getInventory();
-                    ItemStack[] from = fromInventory.getStorageContents();
+                    ItemStack[] fromBefore = fromInventory.getStorageContents();
+                    ItemStack[] fromAfter = new ItemStack[fromBefore.length];
+                    fromInventory.setStorageContents(fromAfter);
                     ItemStack[] to = toInventory.getStorageContents();
                     int nextSlot = 0;
                     boolean itemMoved = false;
-                    for (int i = 0; i < from.length; i++) {
-                        if (from[i] != null && from[i].getType() != Material.AIR) {
+                    for (int i = 0; i < fromBefore.length; i++) {
+                        if (fromBefore[i] != null && fromBefore[i].getType() != Material.AIR) {
                             while (nextSlot < to.length && to[nextSlot] != null && to[nextSlot].getType() != Material.AIR) {
                                 nextSlot++;
                             }
@@ -293,16 +291,15 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                                 if (recpFinal != null) {
                                     msg(recpFinal, "user.mailbox.mailbox_no_space", sender.getName());
                                 }
+                                fromInventory.setStorageContents(fromBefore);
                                 return;
                             }
-                            to[nextSlot] = from[i].clone();
+                            to[nextSlot] = fromBefore[i].clone();
                             itemMoved = true;
-                            from[i] = new ItemStack(Material.AIR);
                             nextSlot++;
                         }
                     }
                     if (itemMoved) {
-                        fromInventory.setStorageContents(from);
                         toInventory.setStorageContents(to);
                         msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailChestFee);
                         if (recpFinal != null) {
