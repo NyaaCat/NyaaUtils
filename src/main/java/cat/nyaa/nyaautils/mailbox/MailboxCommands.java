@@ -261,6 +261,10 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
                 (Location boxLocation) -> {
+                    if (boxLocation.equals(toLocationFinal)) {
+                        msg(p, "user.mailbox.same_src_dst");
+                        return;
+                    }
                     if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
                         msg(p, "user.mailbox.money_insufficient");
                         return;

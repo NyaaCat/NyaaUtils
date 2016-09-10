@@ -132,6 +132,7 @@ user:
     remove_success: "Mailbox removed."
     now_right_click: "Right click a chest in 5 seconds to setup your mailbox."
     permission_required: "You do not have the required permission."
+    same_src_dst: "You cannot send your mailbox to yourself."
     info:
       location: "Your mailbox location: {X:%d, Y:%d, Z:%d}"
       hand_price: "Price: send items in hand:  %.2f"
