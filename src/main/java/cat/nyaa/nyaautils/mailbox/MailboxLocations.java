@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils.mailbox;
 
 import cat.nyaa.nyaautils.NyaaUtils;
+import cat.nyaa.utils.FileConfigure;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.apache.commons.lang.Validate;
@@ -9,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MailboxLocations {
+public class MailboxLocations extends FileConfigure {
     public final static String CFG_FILE_NAME = "mailbox_location.yml";
     private final NyaaUtils plugin;
 
@@ -27,51 +29,22 @@ public class MailboxLocations {
         this.plugin = plugin;
     }
 
-    private File ensureFile() {
-        File cfgFile = new File(plugin.getDataFolder(), CFG_FILE_NAME);
-        if (!cfgFile.exists()) {
-            cfgFile.getParentFile().mkdirs();
-            try {
-                cfgFile.createNewFile();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        return cfgFile;
+    @Override
+    protected String getFileName() {
+        return CFG_FILE_NAME;
     }
 
-    public void save() {
-        YamlConfiguration cfg = new YamlConfiguration();
-        ConfigurationSection locationSection = cfg.createSection("locations");
-        for (UUID uuid : locationMap.keySet()) {
-            locationSection.set(uuid.toString(), locationMap.get(uuid));
-        }
-        ConfigurationSection nameSection = cfg.createSection("names");
-        for (UUID uuid : nameMap.keySet()) {
-            nameSection.set(uuid.toString(), nameMap.get(uuid));
-        }
-
-        try {
-            cfg.save(ensureFile());
-        } catch (IOException ex) {
-            plugin.getLogger().severe("Cannot save Mailbox location info. Emergency dump:");
-            plugin.getLogger().severe("\n" + cfg.saveToString());
-            plugin.getLogger().severe("Cannot save Mailbox location info. Emergency dump End.");
-            throw new RuntimeException(ex);
-        }
+    @Override
+    protected JavaPlugin getPlugin() {
+        return plugin;
     }
 
-    public void load() {
-        YamlConfiguration cfg = new YamlConfiguration();
-        try {
-            cfg.load(ensureFile());
-        } catch (IOException | InvalidConfigurationException ex) {
-            throw new RuntimeException(ex);
-        }
+    @Override
+    public void deserialize(ConfigurationSection config) {
         locationMap.clear();
         nameMap.clear();
-        ConfigurationSection locations = cfg.getConfigurationSection("locations");
-        ConfigurationSection names = cfg.getConfigurationSection("names");
+        ConfigurationSection locations = config.getConfigurationSection("locations");
+        ConfigurationSection names = config.getConfigurationSection("names");
         if (locations != null) {
             for (String uuid_s : locations.getKeys(false)) {
                 locationMap.put(UUID.fromString(uuid_s), (Location) locations.get(uuid_s));
@@ -86,8 +59,18 @@ public class MailboxLocations {
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             nameMap.put(p.getUniqueId(), p.getName().toLowerCase());
         }
+    }
 
-        save();
+    @Override
+    public void serialize(ConfigurationSection config) {
+        ConfigurationSection locationSection = config.createSection("locations");
+        for (UUID uuid : locationMap.keySet()) {
+            locationSection.set(uuid.toString(), locationMap.get(uuid));
+        }
+        ConfigurationSection nameSection = config.createSection("names");
+        for (UUID uuid : nameMap.keySet()) {
+            nameSection.set(uuid.toString(), nameMap.get(uuid));
+        }
     }
 
     public void updateNameMapping(UUID uuid, String name) {
@@ -128,5 +111,4 @@ public class MailboxLocations {
         if (name == null) return null;
         return nameMap.inverse().get(name.toLowerCase());
     }
-
 }
