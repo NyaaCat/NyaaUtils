@@ -2,6 +2,7 @@ package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
+import cat.nyaa.nyaautils.repair.RepairCommands;
 import cat.nyaa.utils.*;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.*;
@@ -33,6 +34,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public ExhibitionCommands exhibitionCommands;
     @SubCommand("mailbox")
     public MailboxCommands mailboxCommands;
+    @SubCommand("repair")
+    public RepairCommands repairCommands;
 
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {

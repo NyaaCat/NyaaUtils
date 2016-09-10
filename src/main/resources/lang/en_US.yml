@@ -162,6 +162,9 @@ user:
       player_hint_removed: "Your mailbox is removed by an administrator."
       info: "Player %s(%s) X:%d Y:%d Z:%d"
 
+  repair:
+    item_added: "Repairable item added"
+
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -249,3 +252,19 @@ manual:
     send:
       description: "Send item in hand to another player"
       usage: "/nu mailbox send <player>"
+
+  repair:
+    description: "Repair item"
+    usage: "/nu repair help"
+    add:
+      description: "Add repairable item"
+      usage: "/nu repair add [item] [material] [fullRepairCostAmount] [expCostPerConsume] [enchantCostPerLv] [repairTimesLimit]"
+    hand:
+      description: "Repair the item in hand"
+      usage: "/nu repair hand"
+    full:
+      description: "Completely repair the item in hand"
+      usage: "/nu repair full"
+    info:
+      description: "Show repair info about the item in hand"
+      usage: "/nu repair info"
