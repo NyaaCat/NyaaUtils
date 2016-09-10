@@ -71,3 +71,9 @@ permissions:
   nu.mailadmin:
     description: Administrative commands for mailbox
     default: op
+  nu.repair:
+    description: Repair item
+    default: true
+  nu.addrepair:
+    description: Add repairable item
+    default: op

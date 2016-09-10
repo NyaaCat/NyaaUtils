@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
+import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.ISerializable;
 import org.bukkit.Material;
@@ -90,12 +91,14 @@ public class Configuration implements ISerializable {
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
     public final MailboxLocations mailbox;
+    public final RepairConfig repair;
 
     private final NyaaUtils plugin;
 
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
         this.mailbox = new MailboxLocations(plugin);
+        this.repair = new RepairConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -145,6 +148,7 @@ public class Configuration implements ISerializable {
         }
 
         if (plugin.isServerEnabled()) mailbox.load();
+        repair.load();
     }
 
     @Override
@@ -165,6 +169,7 @@ public class Configuration implements ISerializable {
         }
 
         if (plugin.isServerEnabled()) mailbox.save();
+        repair.save();
     }
 
     public enum LootProtectMode {

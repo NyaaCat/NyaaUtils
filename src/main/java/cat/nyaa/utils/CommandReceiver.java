@@ -170,7 +170,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         } catch (NoItemInHandException ex) {
             msg(sender, ex.isOffHand ? "user.info.no_item_offhand" : "user.info.no_item_hand");
         } catch (BadCommandException ex) {
-            sender.sendMessage(ex.getMessage());
+            sender.sendMessage(i18n.get(ex.getMessage(), ex.objs));
         } catch (NoPermissionException ex) {
             msg(sender, "user.error.no_required_permission", ex.getMessage());
         } catch (Exception ex) {
@@ -353,9 +353,13 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 return Enum.valueOf(cls, str);
             } catch (IllegalArgumentException ex) {
                 String vals = "";
+                List<String> l = new ArrayList<>();
                 for (T k : cls.getEnumConstants()) {
-                    vals += k.name() + "|";
+                    l.add(k.name());
                 }
+                l.sort(Comparator.naturalOrder());
+                for (String k : l) vals += "\n" + k;
+
                 throw new BadCommandException("user.error.bad_enum", cls.getName(), vals);
             }
         }
