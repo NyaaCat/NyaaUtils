@@ -67,5 +67,4 @@ public class MailboxListener implements Listener {
         runnable.runTaskLater(plugin, timeout);
         timeoutListener.put(p, runnable);
     }
-
 }

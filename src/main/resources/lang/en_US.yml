@@ -147,6 +147,16 @@ user:
       success_remove: "Successfully removed the mailbox"
       player_hint_removed: "Your mailbox is removed by an administrator."
       info: "Player %s(%s) X:%d Y:%d Z:%d"
+    import:
+      db_not_found: "Old database file not found."
+      db_read_fail: "Cannot import old database, see console for errors."
+      invalid_header: "Listing invalid locations which won't be imported:"
+      invalid_item: "{playerName: \"%s\", reason: \"%s\", message: \"%s\"}"
+      stat: "Total: %d, Imported: %d"
+      confirm_info: |
+        Please use `/nu mailbox import confirm [dbFilePath]` to save the changes.
+        Existing locations won't be overwritten.
+      success: "Import finished."
 
 manual:
   no_description: "No description"
@@ -227,3 +237,6 @@ manual:
     send:
       description: "Send item in hand to another player"
       usage: "/nu mailbox send <player>"
+    import:
+      description: "Import mailbox info from 'MailBox' plugin."
+      usage: "/nu mailbox import [\"confirm\"] [dbFilePath]"
