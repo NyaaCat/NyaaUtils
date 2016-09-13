@@ -164,6 +164,23 @@ user:
 
   repair:
     item_added: "Repairable item added"
+    material_mismatch: "Material mismatch"
+    no_enough_exp: "Experience not sufficient"
+    info_1: "Currently holds: "
+    info_2: "Item type: %s"
+    info_3: "Item not repairable. Reason: %s"
+    info_4: "Durability: %d/%d (%.01f%%)"
+    info_5: "Material required: "
+    info_6: "Exp consumption: %d (per material)"
+    info_7: "Durability gain: %d (%.01f%%) (per material)"
+    info_8: "Repair limit: unlimited"
+    info_9: "Repair limit: %d/%d"
+    unrepairable:
+      UNREPAIRABLE: "Item unrepairable."
+      UNREPAIRABLE_REPAIRED: "Already fully repaired."
+      UNREPAIRABLE_UNBREAKABLE: "Item is unbreakable."
+      UNREPAIRABLE_RLE: "Repair count limit exceeded."
+      UNREPAIRABLE_LOWRECOVER: "Durability not recoverable."
 
 manual:
   no_description: "No description"
