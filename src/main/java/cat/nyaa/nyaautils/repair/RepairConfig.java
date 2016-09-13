@@ -87,4 +87,8 @@ public class RepairConfig extends FileConfigure {
         repairMap.put(m, item);
         save();
     }
+
+    public RepairConfigItem getRepairConfig(Material toolMaterial) {
+        return repairMap.get(toolMaterial);
+    }
 }
