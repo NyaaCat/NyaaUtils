@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils.mailbox;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
+import cat.nyaa.utils.InventoryUtils;
 import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -199,14 +200,13 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
         Player recp = plugin.getServer().getPlayer(toPlayer);
         if (recp != null && !recp.isOnline()) recp = null;
         Inventory targetInventory = ((InventoryHolder) toLocation.getBlock().getState()).getInventory();
-        int slot = targetInventory.firstEmpty();
-        if (slot < 0) {
+        if (!InventoryUtils.hasEnoughSpace(targetInventory, stack)) {
             msg(sender, "user.mailbox.recipient_no_space");
             if (recp != null) {
                 msg(recp, "user.mailbox.mailbox_no_space", sender.getName());
             }
         } else {
-            targetInventory.setItem(slot, stack);
+            InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
             msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailHandFee);
             if (recp != null) {

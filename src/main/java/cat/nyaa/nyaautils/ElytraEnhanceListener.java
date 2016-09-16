@@ -36,7 +36,7 @@ public class ElytraEnhanceListener implements Listener {
                 !disableFuelMode.contains(player.getUniqueId())) {
             if (!FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() >= 0.75 &&
-                    InventoryUtils.hasItem(player.getInventory(), plugin.cfg.elytra_fuel, 1)) {
+                    InventoryUtils.hasItem(player, plugin.cfg.elytra_fuel, 1)) {
                 FuelMode.add(player.getUniqueId());
             }
             if (FuelMode.contains(player.getUniqueId()) &&
@@ -52,7 +52,7 @@ public class ElytraEnhanceListener implements Listener {
                     }
                 }
                 
-                if (!InventoryUtils.hasItem(player.getInventory(), plugin.cfg.elytra_fuel, plugin.cfg.elytra_fuel_notify)) {
+                if (!InventoryUtils.hasItem(player, plugin.cfg.elytra_fuel, plugin.cfg.elytra_fuel_notify)) {
                     player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", InventoryUtils.getAmount(player, plugin.cfg.elytra_fuel)));
                 }
                 if (!(duration.containsKey(player.getUniqueId()) && duration.get(player.getUniqueId()) >= System.currentTimeMillis())) {
