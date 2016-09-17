@@ -175,12 +175,14 @@ user:
     info_7: "Durability gain: %d (%.01f%%) (per material)"
     info_8: "Repair limit: unlimited"
     info_9: "Repair limit: %d/%d"
+    info_10: "Full repair material cost: %d units"
     unrepairable:
       UNREPAIRABLE: "Item unrepairable."
       UNREPAIRABLE_REPAIRED: "Already fully repaired."
       UNREPAIRABLE_UNBREAKABLE: "Item is unbreakable."
       UNREPAIRABLE_RLE: "Repair count limit exceeded."
       UNREPAIRABLE_LOWRECOVER: "Durability not recoverable."
+    repaired: "You've repaired your item."
 
 manual:
   no_description: "No description"
