@@ -122,6 +122,10 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
         Player p = asPlayer(sender);
+        if (p.getTotalExperience() < info.expConsumption) {
+            msg(sender, "user.repair.no_enough_exp");
+            return;
+        }
 
         int expMax = (int)Math.floor(p.getTotalExperience()/(double)info.expConsumption);
         int materialMax = material.getAmount();
