@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 
 import static cat.nyaa.nyaautils.repair.RepairInstance.RepairStat.REPAIRABLE;
@@ -72,6 +73,18 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         }
     }
 
+    private void increaseReapirCount(ItemStack item, int x) {
+        if (x == 0) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta instanceof Repairable) {
+            Repairable r = (Repairable) meta;
+            int count = r.getRepairCost() + x;
+            if (count < 0) count = 0;
+            r.setRepairCost(count);
+            item.setItemMeta(meta);
+        }
+    }
+
     @SubCommand(value = "hand", permission = "nu.repair")
     public void repairHand(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
@@ -97,6 +110,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         dur -= info.durRecovered;
         if (dur < 0) dur = 0;
         item.setDurability((short) dur);
+        increaseReapirCount(item, 1);
         p.getInventory().setItemInMainHand(item);
         int count = material.getAmount();
         if (count <= 1) {
@@ -137,6 +151,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         dur -= info.durRecovered*repairAmount;
         if (dur < 0) dur = 0;
         item.setDurability((short) dur);
+        increaseReapirCount(item, 1);
         p.getInventory().setItemInMainHand(item);
         int count = material.getAmount() - repairAmount;
         if (count <= 0) {
