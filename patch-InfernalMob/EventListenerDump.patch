@@ -1,0 +1,34 @@
+--- EventListener.java	2016-09-23 17:51:38.465887570 -0500
++++ EventListenerDump.java	2016-09-23 17:40:57.633407594 -0500
+@@ -1,8 +1,11 @@
+-package asm.io.hotmail.com.jacob_vejvoda.infernal_mobs;
+ import java.util.*;
+ import org.objectweb.asm.*;
+ public class EventListenerDump implements Opcodes {
+ 
++public static void main(String[] args) throws Exception{
++    System.out.write(dump());
++}
++
+ public static byte[] dump () throws Exception {
+ 
+ ClassWriter cw = new ClassWriter(0);
+@@ -1255,15 +1258,10 @@
+ mv.visitInsn(ICONST_1);
+ mv.visitJumpInsn(IF_ICMPNE, l28);
+ mv.visitVarInsn(ALOAD, 1);
+-mv.visitMethodInsn(INVOKEVIRTUAL, "org/bukkit/event/entity/EntityDeathEvent", "getEntity", "()Lorg/bukkit/entity/LivingEntity;", false);
+-mv.visitMethodInsn(INVOKEINTERFACE, "org/bukkit/entity/LivingEntity", "getWorld", "()Lorg/bukkit/World;", true);
+-mv.visitVarInsn(ALOAD, 6);
++mv.visitMethodInsn(INVOKEVIRTUAL, "org/bukkit/event/entity/EntityDeathEvent", "getDrops", "()Ljava/util/List;", false);
+ mv.visitVarInsn(ALOAD, 8);
+-mv.visitMethodInsn(INVOKEINTERFACE, "org/bukkit/World", "dropItemNaturally", "(Lorg/bukkit/Location;Lorg/bukkit/inventory/ItemStack;)Lorg/bukkit/entity/Item;", true);
+-mv.visitVarInsn(ASTORE, 12);
+-mv.visitFieldInsn(GETSTATIC, "io/hotmail/com/jacob_vejvoda/infernal_mobs/EventListener", "plugin", "Lio/hotmail/com/jacob_vejvoda/infernal_mobs/infernal_mobs;");
+-mv.visitVarInsn(ALOAD, 12);
+-mv.visitMethodInsn(INVOKEVIRTUAL, "io/hotmail/com/jacob_vejvoda/infernal_mobs/infernal_mobs", "keepAlive", "(Lorg/bukkit/entity/Item;)V", false);
++mv.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
++mv.visitInsn(POP);
+ mv.visitLabel(l28);
+ mv.visitFrame(Opcodes.F_FULL, 12, new Object[] {"io/hotmail/com/jacob_vejvoda/infernal_mobs/EventListener", "org/bukkit/event/entity/EntityDeathEvent", "java/util/UUID", Opcodes.INTEGER, "java/util/ArrayList", Opcodes.INTEGER, "org/bukkit/Location", "org/bukkit/entity/Player", "org/bukkit/inventory/ItemStack", Opcodes.INTEGER, Opcodes.INTEGER, Opcodes.INTEGER}, 0, new Object[] {});
+ mv.visitFieldInsn(GETSTATIC, "io/hotmail/com/jacob_vejvoda/infernal_mobs/EventListener", "plugin", "Lio/hotmail/com/jacob_vejvoda/infernal_mobs/infernal_mobs;");
