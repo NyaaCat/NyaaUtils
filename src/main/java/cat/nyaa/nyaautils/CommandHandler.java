@@ -86,6 +86,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 return;
             }
 
+            if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
+                if (!plugin.cfg.acl.canEnchant(main.getItemMeta().getLore())) {
+                    sender.sendMessage(I18n._("user.enchant.invalid_item"));
+                    return;
+                }
+            }
+
             String enchStr = args.next().toUpperCase();
             Enchantment ench = Enchantment.getByName(enchStr);
             if (ench == null) {

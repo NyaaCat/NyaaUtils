@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils.repair;
 
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Repairable;
@@ -20,11 +21,17 @@ public class RepairInstance {
     public int durRecovered;
     public int repairLimit;
 
-    public RepairInstance(ItemStack item, RepairConfig config) {
+    public RepairInstance(ItemStack item, RepairConfig config, NyaaUtils plugin) {
         if (item == null || item.getType() == Material.AIR) return;
         RepairConfig.RepairConfigItem cfg = config.getRepairConfig(item.getType());
         if (cfg == null) return;
         if (!(item.getItemMeta() instanceof Repairable)) return;
+        if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+            if (!plugin.cfg.acl.canRepair(item.getItemMeta().getLore())) {
+                stat = RepairStat.UNREPAIRABLE;
+                return;
+            }
+        }
         stat =  RepairStat.REPAIRABLE;
         if (item.getItemMeta().spigot().isUnbreakable()){
             stat = RepairStat.UNREPAIRABLE_UNBREAKABLE;

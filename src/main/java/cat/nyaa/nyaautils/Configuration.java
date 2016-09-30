@@ -86,12 +86,17 @@ public class Configuration implements ISerializable {
     public int mailCooldown = 20;
     @Serializable(name = "mail.timeoutTicks")
     public int mailTimeout = 200;
+    @Serializable
+    public boolean acl_default_enchant = true;
+    @Serializable
+    public boolean acl_default_repair = true;
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
     public final MailboxLocations mailbox;
     public final RepairConfig repair;
+    public final Acl acl;
 
     private final NyaaUtils plugin;
 
@@ -99,6 +104,7 @@ public class Configuration implements ISerializable {
         this.plugin = plugin;
         this.mailbox = new MailboxLocations(plugin);
         this.repair = new RepairConfig(plugin);
+        this.acl = new Acl(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -149,6 +155,7 @@ public class Configuration implements ISerializable {
 
         if (plugin.isServerEnabled()) mailbox.load();
         repair.load();
+        acl.load();
     }
 
     @Override
@@ -170,6 +177,7 @@ public class Configuration implements ISerializable {
 
         if (plugin.isServerEnabled()) mailbox.save();
         repair.save();
+        acl.save();
     }
 
     public enum LootProtectMode {

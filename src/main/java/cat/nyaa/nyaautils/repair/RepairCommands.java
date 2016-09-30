@@ -49,7 +49,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "info", permission = "nu.repair")
     public void repairInfo(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
-        RepairInstance info = new RepairInstance(item, plugin.cfg.repair);
+        RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         new Message(I18n._("user.repair.info_1")).append(item).send(asPlayer(sender));
         msg(sender, "user.repair.info_2", item.getType().name());
         if (info.stat != REPAIRABLE) {
@@ -89,7 +89,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
     public void repairHand(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
         ItemStack material = getItemInOffHand(sender);
-        RepairInstance info = new RepairInstance(item, plugin.cfg.repair);
+        RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
             msg(sender, "user.repair.info_3", I18n._("user.repair.unrepairable." + info.stat.name()));
             return;
@@ -126,7 +126,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
     public void repairFull(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
         ItemStack material = getItemInOffHand(sender);
-        RepairInstance info = new RepairInstance(item, plugin.cfg.repair);
+        RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
             msg(sender, "user.repair.info_3", I18n._("user.repair.unrepairable." + info.stat.name()));
             return;
