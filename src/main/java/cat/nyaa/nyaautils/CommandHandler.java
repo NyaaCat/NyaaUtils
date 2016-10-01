@@ -40,7 +40,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "addenchsrc", permission = "nu.addenchsrc")
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
-        if (BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)) {
+        if (BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, item)) {
             sender.sendMessage(I18n._("user.enchant.enchantsrc_already_exists"));
             return;
         }
@@ -49,7 +49,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         matcher.enchantMatch = BasicItemMatcher.MatchingMode.ARBITRARY;
         matcher.nameMatch = BasicItemMatcher.MatchingMode.EXACT;
         matcher.repairCostMatch = BasicItemMatcher.MatchingMode.EXACT;
-        NyaaUtils.instance.cfg.enchantSrc.add(matcher);
+        NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc.add(matcher);
         NyaaUtils.instance.cfg.save();
     }
 
@@ -76,7 +76,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         } else {
             ItemStack main = getItemInHand(sender);
             ItemStack off = getItemInOffHand(sender);
-            if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, off)) {
+            if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, off)) {
                 sender.sendMessage(I18n._("user.enchant.invalid_src"));
                 return;
             }
@@ -200,7 +200,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         Player p = asPlayer(sender);
         ItemStack item = getItemInOffHand(sender);
 
-        if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrc, item)) {
+        if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, item)) {
             sender.sendMessage(I18n._("user.enchant.invalid_src"));
             return;
         }

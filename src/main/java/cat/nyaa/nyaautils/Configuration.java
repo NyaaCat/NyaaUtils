@@ -87,12 +87,12 @@ public class Configuration implements ISerializable {
     @Serializable(name = "mail.timeoutTicks")
     public int mailTimeout = 200;
 
-    public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
     public final MailboxLocations mailbox;
     public final RepairConfig repair;
     public final Acl acl;
+    public final EnchantSrcConfig enchantSrcConfig;
 
     private final NyaaUtils plugin;
 
@@ -101,6 +101,7 @@ public class Configuration implements ISerializable {
         this.mailbox = new MailboxLocations(plugin);
         this.repair = new RepairConfig(plugin);
         this.acl = new Acl(plugin);
+        this.enchantSrcConfig = new EnchantSrcConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -121,7 +122,7 @@ public class Configuration implements ISerializable {
     public void deserialize(ConfigurationSection config) {
         ISerializable.deserialize(config, this);
 
-        enchantSrc = new ArrayList<>();
+        List<BasicItemMatcher> enchantSrc = new ArrayList<>();   
         if (config.isConfigurationSection("enchantSrc")) {
             ConfigurationSection src = config.getConfigurationSection("enchantSrc");
             for (String key : src.getKeys(false)) {
@@ -131,6 +132,7 @@ public class Configuration implements ISerializable {
                     enchantSrc.add(tmp);
                 }
             }
+            config.set("enchantSrc",null);
         }
 
         enchantMaxLevel = new HashMap<>();
@@ -152,18 +154,15 @@ public class Configuration implements ISerializable {
         if (plugin.isServerEnabled()) mailbox.load();
         repair.load();
         acl.load();
+        enchantSrcConfig.load();
+        if(!enchantSrc.isEmpty() && enchantSrcConfig.enchantSrc.isEmpty()){
+            enchantSrcConfig.enchantSrc = enchantSrc;
+        }
     }
 
     @Override
     public void serialize(ConfigurationSection config) {
         ISerializable.serialize(config, this);
-
-        ConfigurationSection dst = config.createSection("enchantSrc");
-        int idx = 0;
-        for (BasicItemMatcher m : enchantSrc) {
-            m.serialize(dst.createSection(Integer.toString(idx)));
-            idx++;
-        }
 
         ConfigurationSection list = config.createSection("enchantMaxLevel");
         for (Enchantment k : enchantMaxLevel.keySet()) {
@@ -174,6 +173,7 @@ public class Configuration implements ISerializable {
         if (plugin.isServerEnabled()) mailbox.save();
         repair.save();
         acl.save();
+        enchantSrcConfig.save();
     }
 
     public enum LootProtectMode {
