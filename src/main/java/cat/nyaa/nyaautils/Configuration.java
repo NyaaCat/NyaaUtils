@@ -86,10 +86,6 @@ public class Configuration implements ISerializable {
     public int mailCooldown = 20;
     @Serializable(name = "mail.timeoutTicks")
     public int mailTimeout = 200;
-    @Serializable
-    public boolean acl_default_enchant = true;
-    @Serializable
-    public boolean acl_default_repair = true;
 
     public List<BasicItemMatcher> enchantSrc = new ArrayList<>();
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
