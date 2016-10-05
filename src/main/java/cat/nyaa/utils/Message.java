@@ -7,6 +7,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+
+import java.util.ArrayList;
 
 public final class Message {
     public final BaseComponent inner;
@@ -32,7 +35,16 @@ public final class Message {
         boolean rawName = !(item.hasItemMeta() && item.getItemMeta().hasDisplayName());
         BaseComponent nameComponent = rawName ? I16rItemName.getUnlocalizedName(item) : new TextComponent(item.getItemMeta().getDisplayName());
         BaseComponent result;
-        String itemJson = ReflectionUtil.convertItemStackToJson(item);
+        String itemJson = "";
+        if (item.hasItemMeta() && item.getItemMeta() instanceof BookMeta) {
+            ItemStack itemStack = item.clone();
+            BookMeta meta = (BookMeta) itemStack.getItemMeta();
+            meta.setPages(new ArrayList<String>());
+            itemStack.setItemMeta(meta);
+            itemJson = ReflectionUtil.convertItemStackToJson(itemStack);
+        } else {
+            itemJson = ReflectionUtil.convertItemStackToJson(item);
+        }
         HoverEvent ev = new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[]{new TextComponent(itemJson)});
         nameComponent.setHoverEvent(ev);
 
