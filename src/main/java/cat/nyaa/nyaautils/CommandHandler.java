@@ -435,7 +435,9 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_prefix_expCost);
+        if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
+            repairCommands.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
+        }
         plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
         plugin.vaultUtil.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix));
         msg(sender, "user.prefix.success", prefix);
@@ -477,8 +479,10 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
+        if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
+            repairCommands.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
+        }
         plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
-        ExpUtil.setTotalExperience(p, p.getTotalExperience() - plugin.cfg.custom_fixes_suffix_expCost);
         plugin.vaultUtil.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix));
         msg(sender, "user.suffix.success", suffix);
     }
