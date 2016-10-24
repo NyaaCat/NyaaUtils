@@ -5,10 +5,6 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    flatDir {
-        dirs 'lib'
-    }
-   
     jcenter()
 
     maven {
@@ -34,7 +30,7 @@ repositories {
 dependencies {
     compile 'org.spigotmc:spigot-api:1.10.2-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
-    compile name: 'LocketteProAPI'
+    compile files('lib/LocketteProAPI.jar')
 }
 
 publishing {
@@ -52,4 +48,3 @@ publishing {
         }
     }
 }
-
