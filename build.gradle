@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -36,4 +37,19 @@ dependencies {
     compile name: 'LocketteProAPI'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId "cat.nyaa"
+            artifactId "nyaautils"
+            version '2.0-SNAPSHOT'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
+}
 
