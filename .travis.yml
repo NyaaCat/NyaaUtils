@@ -1,10 +1,9 @@
 language: java
 jdk: oraclejdk8
-rvm:
-  - 2.2
 before_install:
-- gem update --system
-- gem --version
+- rvm install 2.3.1
+- rvm use 2.3.1
+- ruby -v
 - 'sed "s/^\(version: \).*$/\1$main_version.$TRAVIS_BUILD_NUMBER/g" src/main/resources/plugin.yml'
 before_deploy:
 - git config --global user.email "builds@travis-ci.com"
