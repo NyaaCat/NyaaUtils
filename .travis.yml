@@ -1,6 +1,8 @@
 language: java
 jdk: oraclejdk8
 before_install:
+- gem update --system
+- gem --version
 - 'sed "s/^\(version: \).*$/\1$main_version.$TRAVIS_BUILD_NUMBER/g" src/main/resources/plugin.yml'
 before_deploy:
 - git config --global user.email "builds@travis-ci.com"
