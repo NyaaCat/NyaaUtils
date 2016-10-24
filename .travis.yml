@@ -12,17 +12,16 @@ before_deploy:
 - git push -q https://$GITHUB_KEY@github.com/NyaaCat/nyaautils --follow-tags
 - gem install octokit -v 4.3.0
 deploy:
+- provider: releases
   skip_cleanup: true
-  provider: releases
   prerelease: true
   api_key:
     secure: EDe3KykJ7BGwnIlsdiZGUVU0qev5uHd+3V5aq5be2VQYpvBIS1Ifh+MjMfLSs4DuViT9TbBXqMwRdj9Ub5CAK2uSTsCxBXC6me9ozyrX326l2EawCTbPqKwBpy3lQeKyvwb4XJJ5U5ugvzqRX0WYfdM1/n+77Tu14YIqIpyKJNruNAhZyBhnvuaQ/EfVWl/eWhXHAa51GklWq3xsIJHG991wZ7dMZsooETfSTzX0ZK3JaI0dZsgTZMsBIDJePOcdoCzSsdBCq/yQVMT4GLEDq6rFp46gGix6H3QEm4wc16w70ksX8iJgbhrHp1OZVsDAZw3Nc94BIuaJqFJbl3itRIayM5IS3sd4TIjBc8X8dVJOh+wrObL6j8EmWkfi84KedFQKQ6UYZLjy4Aaki6oqCn6JMsa73+g0r0UrTeIMt0hcyVQDwzRFd+iyKr4c+hsvGUFZAxU5h+2aMrp2PnEp7UKr0ljQZZ1zVONwBj3PrBaDbvHBl7AOFlfAkZxobbqrvjgq3p5G8BXENmyPnrfPNxByxxDsu2SpagZLOQOLrz3fXnv9SjMjL2/QrpLGmIVAOG7lPD7x5YgeGJHKJKvE/HijQcQCpdXmh4KlGH4Hpeq1JYf1ledK2cYHnzFltcCuoVscTf8i35pghmwD9yDDEIund08cIyq+6e4NEC+/r/g=
-  file: './nyaautils-$TRAVIS_BRANCH-v$main_version.$TRAVIS_BUILD_NUMBER.jar
+  file: './nyaautils-$TRAVIS_BRANCH-v$main_version.$TRAVIS_BUILD_NUMBER.jar'
   on:
     tags: false
     all_branches: true
-deploy:
-  provider: script
+- provider: script
   script: deploy_repo.sh
   on:
     branch: master
