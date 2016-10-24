@@ -8,6 +8,7 @@ before_deploy:
 - export GIT_TAG=$TRAVIS_BRANCH-v$main_version.$TRAVIS_BUILD_NUMBER
 - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 - git push -q https://$GITHUB_KEY@github.com/NyaaCat/nyaautils --follow-tags
+- gem install octokit -v 4.3.0
 deploy:
   skip_cleanup: true
   provider: releases
