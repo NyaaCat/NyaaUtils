@@ -22,6 +22,7 @@ deploy:
     all_branches: true
 - provider: script
   script: deploy_repo.sh
+  skip_cleanup: true
   on:
     branch: master
 branches:
