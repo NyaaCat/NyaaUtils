@@ -1,7 +1,8 @@
-package cat.nyaa.nyaautils;
+package cat.nyaa.nyaautils.elytra;
 
 
-import cat.nyaa.utils.InventoryUtils;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +37,7 @@ public class ElytraEnhanceListener implements Listener {
                 !disableFuelMode.contains(player.getUniqueId())) {
             if (!FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() >= 0.75 &&
-                    InventoryUtils.hasItem(player, plugin.cfg.elytra_fuel, 1)) {
+                    plugin.fuelManager.getFuelAmount(player) > 0) {
                 FuelMode.add(player.getUniqueId());
             }
             if (FuelMode.contains(player.getUniqueId()) &&
@@ -51,17 +52,14 @@ public class ElytraEnhanceListener implements Listener {
                         player.sendMessage(I18n._("user.elytra_enhance.durability_notify", durability));
                     }
                 }
-                
-                if (!InventoryUtils.hasItem(player, plugin.cfg.elytra_fuel, plugin.cfg.elytra_fuel_notify)) {
-                    player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", InventoryUtils.getAmount(player, plugin.cfg.elytra_fuel)));
+                int fuelAmount = plugin.fuelManager.getFuelAmount(player);
+                if (fuelAmount <= plugin.cfg.elytra_fuel_notify) {
+                    player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", fuelAmount));
                 }
                 if (!(duration.containsKey(player.getUniqueId()) && duration.get(player.getUniqueId()) >= System.currentTimeMillis())) {
-                    if (plugin.cfg.elytra_fuel != null &&
-                            plugin.cfg.elytra_fuel.getType() != Material.AIR) {
-                        if (!InventoryUtils.removeItem(player, plugin.cfg.elytra_fuel, 1)) {
-                            FuelMode.remove(player.getUniqueId());
-                            return;
-                        }
+                    if (!plugin.fuelManager.useFuel(player)) {
+                        FuelMode.remove(player.getUniqueId());
+                        return;
                     }
                     duration.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.cfg.elytra_power_duration * 1000));
                 }
@@ -71,6 +69,5 @@ public class ElytraEnhanceListener implements Listener {
         } else if (FuelMode.contains(player.getUniqueId())) {
             FuelMode.remove(player.getUniqueId());
         }
-
     }
 }

@@ -48,6 +48,9 @@ user:
     durability_notify: "Elytra %d durability remaining"
     fuelmode_on: "Fuel mode turned on"
     fuelmode_off: "Fuel mode turned off"
+    rpgitem: "RPGItem ID: %d"
+    save_success: "Save success"
+    remove: "Fuel has been remove"
   launch:
     usage: |
       /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]

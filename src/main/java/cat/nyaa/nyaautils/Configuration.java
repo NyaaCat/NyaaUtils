@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.utils.BasicItemMatcher;
@@ -63,8 +64,6 @@ public class Configuration implements ISerializable {
     @Serializable
     public boolean elytra_enhance_enabled = true;
     @Serializable
-    public ItemStack elytra_fuel = new ItemStack(Material.SULPHUR);
-    @Serializable
     public double elytra_min_velocity = 1.2;
     @Serializable
     public double elytra_max_velocity = 1.6;
@@ -93,7 +92,8 @@ public class Configuration implements ISerializable {
     public final RepairConfig repair;
     public final Acl acl;
     public final EnchantSrcConfig enchantSrcConfig;
-
+    public final FuelConfig fuelConfig;
+    
     private final NyaaUtils plugin;
 
     public Configuration(NyaaUtils plugin) {
@@ -102,6 +102,7 @@ public class Configuration implements ISerializable {
         this.repair = new RepairConfig(plugin);
         this.acl = new Acl(plugin);
         this.enchantSrcConfig = new EnchantSrcConfig(plugin);
+        this.fuelConfig = new FuelConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -155,6 +156,7 @@ public class Configuration implements ISerializable {
         repair.load();
         acl.load();
         enchantSrcConfig.load();
+        fuelConfig.load();
         if(!enchantSrc.isEmpty() && enchantSrcConfig.enchantSrc.isEmpty()){
             enchantSrcConfig.enchantSrc = enchantSrc;
         }
@@ -174,6 +176,7 @@ public class Configuration implements ISerializable {
         repair.save();
         acl.save();
         enchantSrcConfig.save();
+        fuelConfig.save();
     }
 
     public enum LootProtectMode {

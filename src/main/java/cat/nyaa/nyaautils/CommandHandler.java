@@ -1,9 +1,13 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
-import cat.nyaa.utils.*;
+import cat.nyaa.utils.BasicItemMatcher;
+import cat.nyaa.utils.CommandReceiver;
+import cat.nyaa.utils.Internationalization;
+import cat.nyaa.utils.Message;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -13,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import think.rpgitems.item.ItemManager;
 
 import java.util.Map;
 import java.util.Random;
@@ -518,9 +523,31 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void commandAddFuel(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender).clone();
         if (item != null && item.getType() != Material.AIR) {
-            item.setAmount(1);
-            plugin.cfg.elytra_fuel = item;
+            if (plugin.rpgitem != null && ItemManager.toRPGItem(item) != null) {
+                plugin.cfg.fuelConfig.rpgitem_fuel.add(ItemManager.toRPGItem(item).getID());
+                msg(sender, "user.elytra_enhance.rpgitem", ItemManager.toRPGItem(item).getID());
+            } else {
+                item.setAmount(1);
+                plugin.cfg.fuelConfig.elytra_fuel = item.clone();
+            }
             NyaaUtils.instance.cfg.save();
+            msg(sender, "user.elytra_enhance.save_success");
+        }
+    }
+
+    @SubCommand(value = "removefuel", permission = "nu.addfuel")
+    public void commandRemoveFuel(CommandSender sender, Arguments args) {
+        ItemStack item = getItemInHand(sender).clone();
+        if (item != null && item.getType() != Material.AIR) {
+            if (plugin.rpgitem != null && ItemManager.toRPGItem(item) != null) {
+                if (plugin.cfg.fuelConfig.rpgitem_fuel.contains(ItemManager.toRPGItem(item).getID())) {
+                    plugin.cfg.fuelConfig.rpgitem_fuel.remove((Integer) ItemManager.toRPGItem(item).getID());
+                    msg(sender, "user.elytra_enhance.rpgitem", ItemManager.toRPGItem(item).getID());
+                    msg(sender, "user.elytra_enhance.remove");
+                    NyaaUtils.instance.cfg.save();
+                    msg(sender, "user.elytra_enhance.save_success");
+                }
+            }
         }
     }
 
