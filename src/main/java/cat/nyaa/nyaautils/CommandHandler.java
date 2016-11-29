@@ -4,10 +4,7 @@ import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
-import cat.nyaa.utils.BasicItemMatcher;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.Message;
+import cat.nyaa.utils.*;
 import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -441,7 +438,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             return;
         }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
-            repairCommands.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
+            ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
         }
         plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
         plugin.vaultUtil.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix));
@@ -485,7 +482,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             return;
         }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
-            repairCommands.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
+            ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
         }
         plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
         plugin.vaultUtil.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix));

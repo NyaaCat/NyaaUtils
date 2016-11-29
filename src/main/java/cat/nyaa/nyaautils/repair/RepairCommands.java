@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils.repair;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.CommandReceiver;
+import cat.nyaa.utils.ExperienceUtil;
 import cat.nyaa.utils.Internationalization;
 import cat.nyaa.utils.Message;
 import org.bukkit.Material;
@@ -104,7 +105,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
 
-        addPlayerExperience(p, -info.expConsumption);
+        ExperienceUtil.addPlayerExperience(p, -info.expConsumption);
 
         int dur = item.getDurability();
         dur -= info.durRecovered;
@@ -146,7 +147,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         int durMax = (int)Math.ceil(item.getDurability()/(double)info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
 
-        addPlayerExperience(p, -info.expConsumption*repairAmount);
+        ExperienceUtil.addPlayerExperience(p, -info.expConsumption*repairAmount);
         int dur = item.getDurability();
         dur -= info.durRecovered*repairAmount;
         if (dur < 0) dur = 0;
@@ -161,33 +162,5 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             p.getInventory().setItemInOffHand(material);
         }
         msg(p, "user.repair.repaired");
-    }
-
-    public static void addPlayerExperience(Player p, int exp) {
-        if (exp > 0) {
-            p.giveExp(exp);
-        } else if (exp < 0) {
-            exp = -exp;
-            int totalExp = p.getTotalExperience();
-            if (totalExp < exp) throw new IllegalArgumentException("Negative Exp Left");
-            totalExp -= exp;
-            int currentLevelExp = (int)(p.getExpToLevel() * p.getExp());
-            while(exp > 0) {
-                if (currentLevelExp <= 0) {
-                    if (p.getLevel() <= 0) return;
-                    p.setLevel(p.getLevel()-1);
-                    currentLevelExp = p.getExpToLevel();
-                }
-                if (exp > currentLevelExp) {
-                    exp -= currentLevelExp;
-                    currentLevelExp = 0;
-                } else {
-                    currentLevelExp -= exp;
-                    exp = 0;
-                }
-            }
-            p.setExp(currentLevelExp/(float)p.getExpToLevel());
-            p.setTotalExperience(totalExp);
-        }
     }
 }
