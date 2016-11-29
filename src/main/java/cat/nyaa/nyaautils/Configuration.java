@@ -3,12 +3,9 @@ package cat.nyaa.nyaautils;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.nyaautils.repair.RepairConfig;
-import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.ISerializable;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,10 +85,15 @@ public class Configuration implements ISerializable {
 
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
+    @StandaloneConfig(manualSerialization = true)
     public final MailboxLocations mailbox;
+    @StandaloneConfig
     public final RepairConfig repair;
+    @StandaloneConfig
     public final Acl acl;
+    @StandaloneConfig
     public final EnchantSrcConfig enchantSrcConfig;
+    @StandaloneConfig
     public final FuelConfig fuelConfig;
     
     private final NyaaUtils plugin;
@@ -121,21 +123,12 @@ public class Configuration implements ISerializable {
 
     @Override
     public void deserialize(ConfigurationSection config) {
+        // general values load & standalone config load
         ISerializable.deserialize(config, this);
+        // mailbox can only be deserialized when worlds are loaded.
+        if (plugin.isServerEnabled()) mailbox.load();
 
-        List<BasicItemMatcher> enchantSrc = new ArrayList<>();   
-        if (config.isConfigurationSection("enchantSrc")) {
-            ConfigurationSection src = config.getConfigurationSection("enchantSrc");
-            for (String key : src.getKeys(false)) {
-                if (src.isConfigurationSection(key)) {
-                    BasicItemMatcher tmp = new BasicItemMatcher();
-                    tmp.deserialize(src.getConfigurationSection(key));
-                    enchantSrc.add(tmp);
-                }
-            }
-            config.set("enchantSrc",null);
-        }
-
+        // Enchantment Max Level constraint
         enchantMaxLevel = new HashMap<>();
         for (Enchantment e : Enchantment.values()) {
             if (e == null || e.getName() == null) continue;
@@ -151,32 +144,21 @@ public class Configuration implements ISerializable {
                 }
             }
         }
-
-        if (plugin.isServerEnabled()) mailbox.load();
-        repair.load();
-        acl.load();
-        enchantSrcConfig.load();
-        fuelConfig.load();
-        if(!enchantSrc.isEmpty() && enchantSrcConfig.enchantSrc.isEmpty()){
-            enchantSrcConfig.enchantSrc = enchantSrc;
-        }
     }
 
     @Override
     public void serialize(ConfigurationSection config) {
+        // general values save & standalone config save
         ISerializable.serialize(config, this);
+        // mailbox can only be serialized when worlds are loaded.
+        if (plugin.isServerEnabled()) mailbox.save();
 
+        // Enchantment Max Level constraint
         ConfigurationSection list = config.createSection("enchantMaxLevel");
         for (Enchantment k : enchantMaxLevel.keySet()) {
             if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
-
-        if (plugin.isServerEnabled()) mailbox.save();
-        repair.save();
-        acl.save();
-        enchantSrcConfig.save();
-        fuelConfig.save();
     }
 
     public enum LootProtectMode {

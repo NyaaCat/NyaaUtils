@@ -25,6 +25,12 @@ public interface ISerializable {
         String[] alias() default {};
     }
 
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface StandaloneConfig {
+        boolean manualSerialization() default false;
+    }
+
     default void deserialize(ConfigurationSection config) {
         deserialize(config, this);
     }
@@ -36,6 +42,26 @@ public interface ISerializable {
     static void deserialize(ConfigurationSection config, Object obj) {
         Class<?> clz = obj.getClass();
         for (Field f : clz.getDeclaredFields()) {
+            // standalone config
+            StandaloneConfig standaloneAnno = f.getAnnotation(StandaloneConfig.class);
+            if (standaloneAnno != null && !standaloneAnno.manualSerialization()) {
+                if (FileConfigure.class.isAssignableFrom(f.getType())) {
+                    FileConfigure standaloneCfg = null;
+                    f.setAccessible(true);
+                    try {
+                        standaloneCfg = (FileConfigure) f.get(obj);
+                    } catch (ReflectiveOperationException ex) {
+                        Bukkit.getLogger().log(Level.SEVERE, "Failed to deserialize object", ex);
+                        standaloneCfg = null;
+                    }
+                    if (standaloneCfg != null) {
+                        standaloneCfg.load();
+                        continue;
+                    }
+                }
+            }
+
+            // Normal fields
             Serializable anno = f.getAnnotation(Serializable.class);
             if (anno == null) continue;
             f.setAccessible(true);
@@ -82,6 +108,26 @@ public interface ISerializable {
     static void serialize(ConfigurationSection config, Object obj) {
         Class<?> clz = obj.getClass();
         for (Field f : clz.getDeclaredFields()) {
+            // standalone config
+            StandaloneConfig standaloneAnno = f.getAnnotation(StandaloneConfig.class);
+            if (standaloneAnno != null && !standaloneAnno.manualSerialization()) {
+                if (FileConfigure.class.isAssignableFrom(f.getType())) {
+                    FileConfigure standaloneCfg = null;
+                    f.setAccessible(true);
+                    try {
+                        standaloneCfg = (FileConfigure) f.get(obj);
+                    } catch (ReflectiveOperationException ex) {
+                        Bukkit.getLogger().log(Level.SEVERE, "Failed to serialize object", ex);
+                        standaloneCfg = null;
+                    }
+                    if (standaloneCfg != null) {
+                        standaloneCfg.save();
+                        continue;
+                    }
+                }
+            }
+
+            // Normal fields
             Serializable anno = f.getAnnotation(Serializable.class);
             if (anno == null) continue;
             f.setAccessible(true);
