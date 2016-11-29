@@ -92,7 +92,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             }
 
             if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
-                if (!plugin.cfg.acl.canEnchant(main.getItemMeta().getLore())) {
+                if (!plugin.cfg.globalLoreBlacklist.canEnchant(main.getItemMeta().getLore())) {
                     sender.sendMessage(I18n._("user.enchant.invalid_item"));
                     return;
                 }

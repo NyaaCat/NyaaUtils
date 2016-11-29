@@ -6,25 +6,31 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Acl extends FileConfigure {
-    public boolean default_enchant = true;
-    public boolean default_repair = true;
-    public static class list implements ISerializable {
+/* Used by enchantment & repair system.
+ * Forbid certain items from being enchanted or repaired
+ * e.g. Much too powerful weapons
+ */
+public class GlobalLoreBlacklist extends FileConfigure {
+
+    // true  = enchant/repair allowed
+    // false = enchant/repair forbidden
+    private static class Flags implements ISerializable {
         @Serializable
         boolean enchant = true;
         @Serializable
         boolean repair = true;
-
-        public list normalize() {
-            return this;
-        }
     }
-    
-    private static final Map<String, list> aclMap = new HashMap<>();
+
+    private boolean default_enchant = true;
+    private boolean default_repair = true;
+    private static final Map<String, Flags> aclMap = new HashMap<>();
     private final NyaaUtils plugin;
-    public Acl(NyaaUtils plugin) {
+
+    public GlobalLoreBlacklist(NyaaUtils plugin) {
         this.plugin = plugin;
     }
 
@@ -41,33 +47,30 @@ public class Acl extends FileConfigure {
     @Override
     public void deserialize(ConfigurationSection config) {
         aclMap.clear();
+        // load default values
+        if (config.isConfigurationSection("default")) {
+            this.default_enchant = config.getBoolean("default.enchant", default_enchant);
+            this.default_repair = config.getBoolean("default.repair", default_repair);
+        }
+        // load all lores
         for (String key : config.getKeys(false)) {
-            if (key.equals("default")) {
-                ConfigurationSection Default = config.getConfigurationSection(key);
-                this.default_enchant = Default.getBoolean("enchant", this.default_enchant);
-                this.default_repair = Default.getBoolean("repair", this.default_repair);
-                continue;
+            if (!key.equals("default") && config.isConfigurationSection(key)) {
+                Flags flags = new Flags();
+                flags.deserialize(config.getConfigurationSection(key));
+                aclMap.put(key, flags);
             }
-            if (!config.isConfigurationSection(key)) continue;
-            list list = new list();
-            list.deserialize(config.getConfigurationSection(key));
-            aclMap.put(key, list.normalize());
         }
     }
 
     @Override
     public void serialize(ConfigurationSection config) {
-        Set<String> tmp = new HashSet<>(config.getKeys(false));
-        for (String key : tmp) { // clear section
-            config.set(key, null);
-        }
-        ConfigurationSection Default = config.createSection("default");
-        Default.set("enchant", this.default_enchant);
-        Default.set("repair", this.default_repair);
-
-        for (Map.Entry<String, list> pair : aclMap.entrySet()) {
-            ConfigurationSection section = config.createSection(pair.getKey());
-            pair.getValue().normalize().serialize(section);
+        // save default
+        ConfigurationSection sectionDefault = config.createSection("default");
+        sectionDefault.set("enchant", this.default_enchant);
+        sectionDefault.set("repair", this.default_repair);
+        // save lores
+        for (String lore : aclMap.keySet()) {
+            aclMap.get(lore).serialize(config.createSection(lore));
         }
     }
 

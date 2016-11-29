@@ -90,7 +90,7 @@ public class Configuration implements ISerializable {
     @StandaloneConfig
     public final RepairConfig repair;
     @StandaloneConfig
-    public final Acl acl;
+    public final GlobalLoreBlacklist globalLoreBlacklist;
     @StandaloneConfig
     public final EnchantSrcConfig enchantSrcConfig;
     @StandaloneConfig
@@ -102,7 +102,7 @@ public class Configuration implements ISerializable {
         this.plugin = plugin;
         this.mailbox = new MailboxLocations(plugin);
         this.repair = new RepairConfig(plugin);
-        this.acl = new Acl(plugin);
+        this.globalLoreBlacklist = new GlobalLoreBlacklist(plugin);
         this.enchantSrcConfig = new EnchantSrcConfig(plugin);
         this.fuelConfig = new FuelConfig(plugin);
         for (Enchantment e : Enchantment.values()) {

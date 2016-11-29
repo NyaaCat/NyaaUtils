@@ -27,7 +27,7 @@ public class RepairInstance {
         if (cfg == null) return;
         if (!(item.getItemMeta() instanceof Repairable)) return;
         if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
-            if (!plugin.cfg.acl.canRepair(item.getItemMeta().getLore())) {
+            if (!plugin.cfg.globalLoreBlacklist.canRepair(item.getItemMeta().getLore())) {
                 stat = RepairStat.UNREPAIRABLE;
                 return;
             }
