@@ -9,17 +9,13 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.10.2-R0.1-SNAPSHOT</version>
+      <version>1.11-R0.1-SNAPSHOT</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>
       <artifactId>VaultAPI</artifactId>
       <version>1.6</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <artifactId>LocketteProAPI</artifactId>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
