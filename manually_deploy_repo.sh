@@ -9,5 +9,5 @@ git add .
 git commit -m "manually generated maven repo"
 git push
 cd ..
-rm nyaautils-mvn
+rm -rf nyaautils-mvn
 cd nyaautils
