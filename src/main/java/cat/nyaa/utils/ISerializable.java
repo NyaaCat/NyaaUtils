@@ -23,6 +23,7 @@ public interface ISerializable {
     public @interface Serializable {
         String name() default "";
         String[] alias() default {};
+        boolean manualSerialization() default false;
     }
 
     @Target(ElementType.FIELD)
@@ -63,7 +64,7 @@ public interface ISerializable {
 
             // Normal fields
             Serializable anno = f.getAnnotation(Serializable.class);
-            if (anno == null) continue;
+            if (anno == null || anno.manualSerialization()) continue;
             f.setAccessible(true);
             String cfgName = anno.name().equals("") ? f.getName() : anno.name();
             try {
@@ -129,7 +130,7 @@ public interface ISerializable {
 
             // Normal fields
             Serializable anno = f.getAnnotation(Serializable.class);
-            if (anno == null) continue;
+            if (anno == null || anno.manualSerialization()) continue;
             f.setAccessible(true);
             String cfgName;
             if (anno.name().equals("")) {
