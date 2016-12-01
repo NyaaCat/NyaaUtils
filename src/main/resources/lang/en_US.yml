@@ -191,10 +191,6 @@ manual:
   no_description: "No description"
   no_usage: "No usage"
 
-  enchant:
-    description: "Enchant item"
-    usage: "/nu enchant [Enchantment] [Level]"
-
   help:
     description: "Show help message"
     usage: "/nu [subCommands...] help"
@@ -203,17 +199,21 @@ manual:
     description: "Reload config from config file. Unsaved changes will lost"
     usage: "/nu reload"
 
-  addenchsrc:
-    description: "Register Item in hand as a valid enchant source"
-    usage: "/nu addenchsrc"
-
-  launch:
-    description: "Launch player into sky"
-    usage: "/nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]"
+  show:
+    description: "Show off the item in hand"
+    usage: "/nu show"
 
   lp:
     description: "Toggle loot protect status"
     usage: "/nu lp"
+
+  launch:
+    description: "Launch player into sky and open their elytra"
+    usage: "/nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]"
+
+  project:
+    description: "Set player velocity"
+    usage: "/nu project <Yaw> <Pitch> <Speed> <duration> [Player]"
     
   prefix:
     description: "Set youself prefix"
@@ -230,11 +230,37 @@ manual:
   resetsuffix:
     description: "Reset youself suffix"
     usage: "/nu resetsuffix"
-    
-  enchantinfo:
-    description: "Show enchant info"
-    usage: "/nu enchantinfo"
-    
+
+  format:
+    description: "Show formatting codes examples"
+    usage: "/nu format"
+
+  el:
+    description: "Toggle fuel mode"
+    usage: "/nu el or /nu el help"
+    addfuel:
+      description: "Register an item as fuel"
+      usage: "/nu el addfuel"
+    removefuel:
+      description: "Unregister an item as fuel"
+      usage: "/nu el removefuel"
+    help:
+      description: "Show help messages"
+      usage: "/nu el help"
+
+  enchant:
+    description: "Enchant item"
+    usage: "/nu enchant [Enchantment] [Level] or /nu enchant help"
+    addsrc:
+      description: "Register Item in hand as a valid enchant source"
+      usage: "/nu enchant addsrc"
+    info:
+      description: "Show enchant info"
+      usage: "/nu enchant info"
+    help:
+      description: "Show help messages"
+      usage: "/nu enchant help"
+
   exhibition:
     description: "Create or modify exhibition items"
     usage: "/nu exhibition help"
@@ -251,14 +277,6 @@ manual:
       description: "Show help messages"
       usage: "/nu exhibition help"
 
-  project:
-    description: "Set player velocity"
-    usage: "/nu project <Yaw> <Pitch> <Speed> <duration> [Player]"
-
-  el:
-    description: "Toggle fuel mode"
-    usage: "/nu el"
-
   mailbox:
     description: "Set mailbox or send items"
     usage: "/nu mailbox help"
@@ -274,6 +292,12 @@ manual:
     send:
       description: "Send item in hand to another player"
       usage: "/nu mailbox send <player>"
+    sendchest:
+      description: "Send whole chest to another player"
+      usage: "/nu mailbox sendchest <player>"
+    help:
+      description: "Print help messages"
+      usage: "/nu mailbox help"
 
   repair:
     description: "Repair item"
@@ -290,3 +314,6 @@ manual:
     info:
       description: "Show repair info about the item in hand"
       usage: "/nu repair info"
+    help:
+      description: "Print help messages"
+      usage: "/nu repair help"
