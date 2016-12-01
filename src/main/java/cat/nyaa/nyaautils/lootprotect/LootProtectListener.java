@@ -1,5 +1,6 @@
-package cat.nyaa.nyaautils;
+package cat.nyaa.nyaautils.lootprotect;
 
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,12 +38,12 @@ public class LootProtectListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMobKilled(EntityDeathEvent ev) {
-        if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.OFF || ev.getEntity() instanceof Player)
+        if (plugin.cfg.lootProtectMode == LootProtectMode.OFF || ev.getEntity() instanceof Player)
             return;
         Player p = null;
-        if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.MAX_DAMAGE) {
+        if (plugin.cfg.lootProtectMode == LootProtectMode.MAX_DAMAGE) {
             p = plugin.dsListener.getMaxDamagePlayer(ev.getEntity());
-        } else if (plugin.cfg.lootProtectMode == Configuration.LootProtectMode.FINAL_DAMAGE) {
+        } else if (plugin.cfg.lootProtectMode == LootProtectMode.FINAL_DAMAGE) {
             p = ev.getEntity().getKiller();
         }
         if (p == null) return;

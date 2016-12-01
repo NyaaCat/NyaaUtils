@@ -29,5 +29,5 @@ public class FuelConfig extends FileConfigure {
     protected JavaPlugin getPlugin() {
         return this.plugin;
     }
-    
+
 }

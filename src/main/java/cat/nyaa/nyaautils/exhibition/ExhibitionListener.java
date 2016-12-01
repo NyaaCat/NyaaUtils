@@ -13,6 +13,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+
 import static org.bukkit.event.EventPriority.HIGHEST;
 
 public class ExhibitionListener implements Listener {

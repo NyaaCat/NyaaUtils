@@ -1,6 +1,6 @@
 package cat.nyaa.utils;
 
-public abstract class PluginConfigure extends FileConfigure{
+public abstract class PluginConfigure extends FileConfigure {
     @Override
     protected final String getFileName() {
         return "config.yml";

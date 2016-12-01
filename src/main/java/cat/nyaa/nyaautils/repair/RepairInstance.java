@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Repairable;
 
 public class RepairInstance {
-    public enum RepairStat{
+    public enum RepairStat {
         UNREPAIRABLE,
         UNREPAIRABLE_REPAIRED,
         UNREPAIRABLE_UNBREAKABLE,
@@ -32,8 +32,8 @@ public class RepairInstance {
                 return;
             }
         }
-        stat =  RepairStat.REPAIRABLE;
-        if (item.getItemMeta().spigot().isUnbreakable()){
+        stat = RepairStat.REPAIRABLE;
+        if (item.getItemMeta().spigot().isUnbreakable()) {
             stat = RepairStat.UNREPAIRABLE_UNBREAKABLE;
         }
         Repairable repairableMeta = (Repairable) item.getItemMeta();
@@ -53,8 +53,8 @@ public class RepairInstance {
         for (Integer i : item.getEnchantments().values()) enchLevel += i;
 
         int fullDurability = toolMaterial.getMaxDurability();
-        durRecovered = (int)Math.floor((double)fullDurability/((double)cfg.fullRepairCost + (double)enchLevel * cfg.enchantCostPerLv));
-        expConsumption = (int)Math.floor(cfg.expCost + cfg.enchantCostPerLv * enchLevel);
+        durRecovered = (int) Math.floor((double) fullDurability / ((double) cfg.fullRepairCost + (double) enchLevel * cfg.enchantCostPerLv));
+        expConsumption = (int) Math.floor(cfg.expCost + cfg.enchantCostPerLv * enchLevel);
         if (durRecovered <= 0) {
             stat = RepairStat.UNREPAIRABLE_LOWRECOVER;
         }

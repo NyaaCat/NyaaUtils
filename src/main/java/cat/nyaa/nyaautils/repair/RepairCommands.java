@@ -70,7 +70,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.repair.info_9", repairTime, info.repairLimit);
         }
         if (info.stat == REPAIRABLE) {
-            msg(sender, "user.repair.info_10", (int)Math.ceil(item.getDurability()/(double)info.durRecovered));
+            msg(sender, "user.repair.info_10", (int) Math.ceil(item.getDurability() / (double) info.durRecovered));
         }
     }
 
@@ -142,14 +142,14 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
 
-        int expMax = (int)Math.floor(p.getTotalExperience()/(double)info.expConsumption);
+        int expMax = (int) Math.floor(p.getTotalExperience() / (double) info.expConsumption);
         int materialMax = material.getAmount();
-        int durMax = (int)Math.ceil(item.getDurability()/(double)info.durRecovered);
+        int durMax = (int) Math.ceil(item.getDurability() / (double) info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
 
-        ExperienceUtil.addPlayerExperience(p, -info.expConsumption*repairAmount);
+        ExperienceUtil.addPlayerExperience(p, -info.expConsumption * repairAmount);
         int dur = item.getDurability();
-        dur -= info.durRecovered*repairAmount;
+        dur -= info.durRecovered * repairAmount;
         if (dur < 0) dur = 0;
         item.setDurability((short) dur);
         increaseReapirCount(item, 1);

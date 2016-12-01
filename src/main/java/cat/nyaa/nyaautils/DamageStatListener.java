@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.api.DamageStatistic;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class DamageStatListener implements Listener {
+public class DamageStatListener implements Listener, DamageStatistic {
     /* Cache<mobUUID, Map<playerUUID, damagesMade>> */
     public final LoadingCache<UUID, Map<UUID, Double>> entityList;
     public final NyaaUtils plugin;
@@ -67,10 +68,12 @@ public class DamageStatListener implements Listener {
         }
     }
 
+    @Override
     public Map<UUID, Double> getDamagePlayerList(UUID mobUUID) {
         return entityList.getUnchecked(mobUUID);
     }
 
+    @Override
     public Player getMaxDamagePlayer(Entity mobEntity) {
         Player p = null;
         double currentMax = -1;

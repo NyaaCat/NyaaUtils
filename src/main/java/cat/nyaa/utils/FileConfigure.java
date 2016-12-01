@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public abstract class FileConfigure implements ISerializable {
     protected abstract String getFileName();
+
     protected abstract JavaPlugin getPlugin();
 
     private File ensureFile() {
@@ -30,9 +31,9 @@ public abstract class FileConfigure implements ISerializable {
         try {
             cfg.save(ensureFile());
         } catch (IOException ex) {
-            getPlugin().getLogger().severe("Cannot save " + getFileName() +". Emergency dump:");
+            getPlugin().getLogger().severe("Cannot save " + getFileName() + ". Emergency dump:");
             getPlugin().getLogger().severe("\n" + cfg.saveToString());
-            getPlugin().getLogger().severe("Cannot save " + getFileName() +". Emergency dump End.");
+            getPlugin().getLogger().severe("Cannot save " + getFileName() + ". Emergency dump End.");
             throw new RuntimeException(ex);
         }
     }

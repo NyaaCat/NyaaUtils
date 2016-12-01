@@ -382,4 +382,11 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
 
         String permission() default "";
     }
+
+    // TODO: automatic call default subcommand when no match found
+    @Target({ElementType.METHOD, ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface DefaultCommand {
+        String permission() default "";
+    }
 }

@@ -1,5 +1,6 @@
-package cat.nyaa.nyaautils;
+package cat.nyaa.nyaautils.enchant;
 
+import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.BasicItemMatcher;
 import cat.nyaa.utils.FileConfigure;
 import cat.nyaa.utils.ISerializable;

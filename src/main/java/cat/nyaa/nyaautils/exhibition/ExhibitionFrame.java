@@ -197,6 +197,7 @@ public class ExhibitionFrame {
 
     private static final Base64.Encoder b64Encoder = Base64.getEncoder();
     private static final Base64.Decoder b64Decoder = Base64.getDecoder();
+
     private static String base64(String str) {
         try {
             return b64Encoder.encodeToString(str.getBytes("UTF-8"));
@@ -204,6 +205,7 @@ public class ExhibitionFrame {
             return "";
         }
     }
+
     private static String deBase64(String base64) {
         try {
             return new String(b64Decoder.decode(base64), "UTF-8");

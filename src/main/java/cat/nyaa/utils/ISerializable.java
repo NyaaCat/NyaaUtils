@@ -22,7 +22,9 @@ public interface ISerializable {
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Serializable {
         String name() default "";
+
         String[] alias() default {};
+
         boolean manualSerialization() default false;
     }
 
@@ -82,7 +84,7 @@ public interface ISerializable {
                     newValue = config.get(f.getName());
                     hasValue = true;
                 }
-                if (!hasValue && anno.name().length() >0 && config.contains(anno.name())) {
+                if (!hasValue && anno.name().length() > 0 && config.contains(anno.name())) {
                     newValue = config.get(anno.name());
                     hasValue = true;
                 }
@@ -92,7 +94,7 @@ public interface ISerializable {
 
                 if (f.getType().isEnum()) {
                     try {
-                        newValue = Enum.valueOf((Class<? extends Enum>) f.getType(), (String)newValue);
+                        newValue = Enum.valueOf((Class<? extends Enum>) f.getType(), (String) newValue);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         continue;

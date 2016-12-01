@@ -1,21 +1,24 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.elytra.FuelConfig;
+import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
+import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.utils.ISerializable;
+import cat.nyaa.utils.PluginConfigure;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static cat.nyaa.nyaautils.Configuration.LootProtectMode.OFF;
+import static cat.nyaa.nyaautils.lootprotect.LootProtectMode.OFF;
 
-public class Configuration implements ISerializable {
-
+public class Configuration extends PluginConfigure {
     @Serializable
     public String language = "en_US";
     @Serializable
@@ -82,10 +85,10 @@ public class Configuration implements ISerializable {
     public int mailCooldown = 20;
     @Serializable(name = "mail.timeoutTicks")
     public int mailTimeout = 200;
-
+    @Serializable(manualSerialization = true)
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
 
-    @StandaloneConfig(manualSerialization = true)
+    @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig
     public final RepairConfig repair;
@@ -95,8 +98,13 @@ public class Configuration implements ISerializable {
     public final EnchantSrcConfig enchantSrcConfig;
     @StandaloneConfig
     public final FuelConfig fuelConfig;
-    
+
     private final NyaaUtils plugin;
+
+    @Override
+    protected JavaPlugin getPlugin() {
+        return plugin;
+    }
 
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
@@ -116,17 +124,10 @@ public class Configuration implements ISerializable {
         }
     }
 
-    public void save() {
-        serialize(plugin.getConfig());
-        plugin.saveConfig();
-    }
-
     @Override
     public void deserialize(ConfigurationSection config) {
         // general values load & standalone config load
         ISerializable.deserialize(config, this);
-        // mailbox can only be deserialized when worlds are loaded.
-        if (plugin.isServerEnabled()) mailbox.load();
 
         // Enchantment Max Level constraint
         enchantMaxLevel = new HashMap<>();
@@ -150,8 +151,6 @@ public class Configuration implements ISerializable {
     public void serialize(ConfigurationSection config) {
         // general values save & standalone config save
         ISerializable.serialize(config, this);
-        // mailbox can only be serialized when worlds are loaded.
-        if (plugin.isServerEnabled()) mailbox.save();
 
         // Enchantment Max Level constraint
         ConfigurationSection list = config.createSection("enchantMaxLevel");
@@ -159,11 +158,5 @@ public class Configuration implements ISerializable {
             if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));
         }
-    }
-
-    public enum LootProtectMode {
-        OFF,
-        MAX_DAMAGE,
-        FINAL_DAMAGE;
     }
 }
