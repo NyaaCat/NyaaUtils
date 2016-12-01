@@ -24,7 +24,7 @@ public abstract class FileConfigure implements ISerializable {
         return cfgFile;
     }
 
-    public final void save() {
+    public void save() {
         YamlConfiguration cfg = new YamlConfiguration();
         serialize(cfg);
         try {
@@ -37,7 +37,7 @@ public abstract class FileConfigure implements ISerializable {
         }
     }
 
-    public final void load() {
+    public void load() {
         YamlConfiguration cfg = new YamlConfiguration();
         try {
             cfg.load(ensureFile());
