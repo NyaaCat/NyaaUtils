@@ -4,7 +4,6 @@ import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,19 +23,18 @@ public class ElytraCommands extends CommandReceiver<NyaaUtils> {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Arguments cmd = Arguments.parse(args);
-        if (cmd == null) return false;
+    public void acceptCommand(CommandSender sender, Arguments cmd) {
         String subCommand = cmd.top();
+        if (subCommand == null) subCommand = "";
         switch (subCommand) {
             case "addfuel":
             case "removefuel":
-                acceptCommand(sender, cmd);
+            case "help":
+                super.acceptCommand(sender, cmd);
                 break;
             default:
                 commandElytraToggle(sender, cmd);
         }
-        return true;
     }
 
     @SubCommand(value = "addfuel", permission = "nu.addfuel")

@@ -10,7 +10,6 @@ import cat.nyaa.utils.internationalizer.I16rEnchantment;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -38,19 +37,18 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Arguments cmd = Arguments.parse(args);
-        if (cmd == null) return false;
+    public void acceptCommand(CommandSender sender, Arguments cmd) {
         String subCommand = cmd.top();
+        if (subCommand == null) subCommand = "";
         switch (subCommand) {
             case "addsrc":
             case "info":
-                acceptCommand(sender, cmd);
+            case "help":
+                super.acceptCommand(sender, cmd);
                 break;
             default:
                 commandEnchantDefault(sender, cmd);
         }
-        return true;
     }
 
     @SubCommand(value = "addsrc", permission = "nu.addenchsrc")
