@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public abstract class SqliteDatabase {
+public abstract class SQLiteDatabase extends BaseDatabase {
     protected Connection dbConn;
 
     protected abstract String getFileName();
@@ -24,7 +24,8 @@ public abstract class SqliteDatabase {
         }
     }
 
-    protected void submit() {
-
+    @Override
+    final protected Connection getConnection() {
+        return dbConn;
     }
 }
