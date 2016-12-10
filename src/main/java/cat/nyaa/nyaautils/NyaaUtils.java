@@ -8,7 +8,6 @@ import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.utils.VaultUtil;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-import think.rpgitems.Plugin;
 
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
@@ -22,7 +21,6 @@ public class NyaaUtils extends JavaPlugin {
     public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
     public FuelManager fuelManager;
-    public Plugin rpgitem = null;
 
     @Override
     public void onEnable() {
@@ -39,10 +37,6 @@ public class NyaaUtils extends JavaPlugin {
         mailboxListener = new MailboxListener(this);
         vaultUtil = new VaultUtil(this);
         fuelManager = new FuelManager(this);
-        if (getServer().getPluginManager().getPlugin("RPGItems") != null) {
-            rpgitem = getPlugin(Plugin.class);
-            getLogger().info("RPGItems: " + rpgitem.getDescription().getVersion());
-        }
     }
 
     @Override

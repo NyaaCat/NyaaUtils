@@ -31,7 +31,6 @@ dependencies {
     compile 'org.spigotmc:spigot-api:1.11-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
     compile files('lib/LocketteProAPI.jar')
-    compile files('lib/RPGitems-reloaded-1.11-v3.5.146.jar')
 }
 
 publishing {

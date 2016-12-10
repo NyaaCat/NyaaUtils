@@ -48,7 +48,10 @@ user:
     durability_notify: "Elytra %d durability remaining"
     fuelmode_on: "Fuel mode turned on"
     fuelmode_off: "Fuel mode turned off"
-    rpgitem: "RPGItem ID: %d"
+    fuel_durability: "&b%d / %d"
+    fuel_not_found: "Fuel %s does not exist"
+    fuel_info: "fuelID: %d durability: %d"
+    player_not_found: "Player %s not found"
     save_success: "Save success"
     remove: "Fuel has been remove"
   launch:
@@ -240,10 +243,13 @@ manual:
     usage: "/nu el or /nu el help"
     addfuel:
       description: "Register an item as fuel"
-      usage: "/nu el addfuel"
+      usage: "/nu el addfuel [durability]"
     removefuel:
       description: "Unregister an item as fuel"
       usage: "/nu el removefuel"
+    givefuel:
+      description: "give fuel to a player"
+      usage: "/nu el givefuel [player] [fuelID] [amount]"
     help:
       description: "Show help messages"
       usage: "/nu el help"
