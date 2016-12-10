@@ -25,12 +25,18 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     private static class NoItemInHandException extends RuntimeException {
         public final boolean isOffHand;
 
+        /**
+         * @param ifh true if require item in offhand
+         */
         public NoItemInHandException(boolean ifh) {
             isOffHand = ifh;
         }
     }
 
     private static class NoPermissionException extends RuntimeException {
+        /**
+         * @param permission name for the permission node
+         */
         public NoPermissionException(String permission) {
             super(permission);
         }
@@ -39,6 +45,11 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     private static class BadCommandException extends RuntimeException {
         public final Object[] objs;
 
+        /**
+         * show formatted error message to player
+         * @param msg_internal msg template key. e.g. `internal.warn.***'
+         * @param args arguments
+         */
         public BadCommandException(String msg_internal, Object... args) {
             super(msg_internal);
             objs = args;
@@ -85,7 +96,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             if (!(params.length == 2 &&
                     params[0] == CommandSender.class &&
                     params[1] == Arguments.class)) {
-                plugin.getLogger().warning(i18n.get("internal.warn.bad_subcommand", m.toString()));
+                plugin.getLogger().warning(i18n.get("internal.error.bad_subcommand", m.toString()));
             } else {
                 m.setAccessible(true);
                 subCommands.put(anno.value().toLowerCase(), m);
@@ -109,12 +120,12 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                         f.set(this, obj);
                     }
                 } catch (ReflectiveOperationException ex) {
-                    plugin.getLogger().warning(i18n.get("internal.warn.bad_subcommand", f.toString()));
+                    plugin.getLogger().warning(i18n.get("internal.error.bad_subcommand", f.toString()));
                     obj = null;
                     ex.printStackTrace();
                 }
             } else {
-                plugin.getLogger().warning(i18n.get("internal.warn.bad_subcommand", f.toString()));
+                plugin.getLogger().warning(i18n.get("internal.error.bad_subcommand", f.toString()));
             }
         }
     }
@@ -164,18 +175,18 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 else
                     throw new RuntimeException("Failed to invoke subcommand", ex);
             }
-            if (!subClassCommand) msg(sender, "user.info.command_complete");
+            if (!subClassCommand) msg(sender, "internal.info.command_complete");
         } catch (NotPlayerException ex) {
-            msg(sender, "user.info.not_player");
+            msg(sender, "internal.error.not_player");
         } catch (NoItemInHandException ex) {
-            msg(sender, ex.isOffHand ? "user.info.no_item_offhand" : "user.info.no_item_hand");
+            msg(sender, ex.isOffHand ? "internal.error.no_item_offhand" : "internal.error.no_item_hand");
         } catch (BadCommandException ex) {
             sender.sendMessage(i18n.get(ex.getMessage(), ex.objs));
         } catch (NoPermissionException ex) {
-            msg(sender, "user.error.no_required_permission", ex.getMessage());
+            msg(sender, "internal.error.no_required_permission", ex.getMessage());
         } catch (Exception ex) {
             ex.printStackTrace();
-            msg(sender, "user.error.command_exception");
+            msg(sender, "internal.error.command_exception");
         }
     }
 
@@ -327,28 +338,28 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
 
         public int nextInt() {
             String str = next();
-            if (str == null) throw new BadCommandException("No more integers in argument");
+            if (str == null) throw new BadCommandException("internal.error.no_more_int");
             if (str.endsWith("k")) str = str.substring(0, str.length() - 1) + "000";
             try {
                 return Integer.parseInt(str);
             } catch (NumberFormatException ex) {
-                throw new BadCommandException("user.error.not_int", ex, str);
+                throw new BadCommandException("internal.error.bad_int", ex, str);
             }
         }
 
         public double nextDouble() {
             String str = next();
-            if (str == null) throw new BadCommandException("No more numbers in argument");
+            if (str == null) throw new BadCommandException("internal.error.no_more_double");
             try {
                 return Double.parseDouble(str);
             } catch (NumberFormatException ex) {
-                throw new BadCommandException("user.error.not_double", ex, str);
+                throw new BadCommandException("internal.error.bad_double", ex, str);
             }
         }
 
         public <T extends Enum<T>> T nextEnum(Class<T> cls) {
             String str = next();
-            if (str == null) throw new BadCommandException("No more EnumValues in argument");
+            if (str == null) throw new BadCommandException("internal.error.no_more_enum");
             try {
                 return Enum.valueOf(cls, str);
             } catch (IllegalArgumentException ex) {
@@ -360,13 +371,13 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 l.sort(Comparator.naturalOrder());
                 for (String k : l) vals += "\n" + k;
 
-                throw new BadCommandException("user.error.bad_enum", cls.getName(), vals);
+                throw new BadCommandException("internal.error.bad_enum", cls.getName(), vals);
             }
         }
 
         public boolean nextBoolean() {
             String str = next();
-            if (str == null) throw new BadCommandException("No more booleans in argument");
+            if (str == null) throw new BadCommandException("internal.error.no_more_bool");
             return Boolean.parseBoolean(str);
         }
 

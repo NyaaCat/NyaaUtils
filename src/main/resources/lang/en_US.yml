@@ -1,8 +1,24 @@
 internal:
   info:
     using_language: "Now using language: %s"
-  warn:
+    command_complete: "Command Executed!"
+  error:
     bad_subcommand: "Bad subcommand handler: %s"
+    not_player: "Only players can do this"
+    no_item_hand: "No item in main hand"
+    no_item_offhand: "No item in off hand"
+    command_exception: "Internal server error. Unable to run command."
+    no_required_permission: "You do not have the required permission: %s"
+
+    bad_int: "Not a valid integer"
+    bad_double: "Not a valid number"
+    bad_enum: "Not valid for enum type: %s. Values: %s"
+
+    no_more_int: "No more integers in argument"
+    no_more_double: "No more numbers in argument"
+    no_more_enum: "No more enum values in argument"
+    no_more_bool: "No more booleans in argument"
+
 user:
   info:
     command_complete: "Command Executed!"
