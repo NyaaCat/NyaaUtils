@@ -1,6 +1,7 @@
 package cat.nyaa.utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,10 +29,12 @@ public abstract class Internationalization {
         // setup common (internal) language section
         if (internalMap == null) {
             internalMap = new HashMap<>();
-            File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
-            if (localLangFile.exists()) {
-                ConfigurationSection section = YamlConfiguration.loadConfiguration(localLangFile);
-                loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
+            if (System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("true")) {
+                File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
+                if (localLangFile.exists()) {
+                    ConfigurationSection section = YamlConfiguration.loadConfiguration(localLangFile);
+                    loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
+                }
             }
             InputStream stream = plugin.getResource("lang/" + language + ".yml");
             if (stream != null) {
@@ -46,8 +49,10 @@ public abstract class Internationalization {
         }
         // load modified language file from disk
         File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
-        if (localLangFile.exists()) {
-            loadLanguageSection(map, YamlConfiguration.loadConfiguration(localLangFile), "", false);
+        if (System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("true")) {
+            if (localLangFile.exists()) {
+                loadLanguageSection(map, YamlConfiguration.loadConfiguration(localLangFile), "", false);
+            }
         }
         // load same language from jar
         InputStream stream = plugin.getResource("lang/" + language + ".yml");
