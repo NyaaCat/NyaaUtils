@@ -28,6 +28,11 @@ public abstract class Internationalization {
         // setup common (internal) language section
         if (internalMap == null) {
             internalMap = new HashMap<>();
+            File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
+            if (localLangFile.exists()) {
+                ConfigurationSection section = YamlConfiguration.loadConfiguration(localLangFile);
+                loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
+            }
             InputStream stream = plugin.getResource("lang/" + language + ".yml");
             if (stream != null) {
                 ConfigurationSection section = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
