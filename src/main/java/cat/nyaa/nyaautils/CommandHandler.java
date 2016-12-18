@@ -5,6 +5,7 @@ import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
+import cat.nyaa.nyaautils.timer.TimerCommands;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.ExperienceUtil;
 import cat.nyaa.utils.Internationalization;
@@ -41,6 +42,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public EnchantCommands enchantCommands;
     @SubCommand("el")
     public ElytraCommands elytraCommands;
+    @SubCommand("timer")
+    public TimerCommands timerCommands;
 
     /* Show off the item in player's hand */
     @SubCommand(value = "show", permission = "nu.show")

@@ -5,6 +5,8 @@ import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
+import cat.nyaa.nyaautils.timer.TimerListener;
+import cat.nyaa.nyaautils.timer.TimerManager;
 import cat.nyaa.utils.VaultUtil;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,6 +23,8 @@ public class NyaaUtils extends JavaPlugin {
     public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
     public FuelManager fuelManager;
+    public TimerManager timerManager;
+    public TimerListener timerListener;
 
     @Override
     public void onEnable() {
@@ -37,6 +41,8 @@ public class NyaaUtils extends JavaPlugin {
         mailboxListener = new MailboxListener(this);
         vaultUtil = new VaultUtil(this);
         fuelManager = new FuelManager(this);
+        timerManager = new TimerManager(this);
+        timerListener = new TimerListener(this);
     }
 
     @Override

@@ -2,7 +2,7 @@ name: NyaaUtils
 main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
 version: 2.0
-depend: [Vault]
+depend: [Vault,WorldEdit]
 softdepend: [LockettePro]
 authors: [RecursiveG]
 website: "https://github.com/NyaaCat/nyaautils"
@@ -78,4 +78,7 @@ permissions:
     default: true
   nu.addrepair:
     description: Add repairable item
+    default: op
+  nu.createtimer:
+    description: Add and remove timer
     default: op

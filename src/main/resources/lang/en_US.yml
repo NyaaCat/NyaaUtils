@@ -9,6 +9,8 @@ user:
     not_player: "Only players can do this"
     no_item_hand: "No item in main hand"
     no_item_offhand: "No item in off hand"
+    enabled: "Enabled"
+    disabled: "Disabled"
   error:
     bad_command: "Wrong command: %s"
     not_int: "Not a valid integer"
@@ -189,7 +191,28 @@ user:
       UNREPAIRABLE_RLE: "Repair count limit exceeded."
       UNREPAIRABLE_LOWRECOVER: "Durability not recoverable."
     repaired: "You've repaired your item."
-
+  timer:
+    timer_create: "Create success"
+    timer_remove: "Timer %s has been removed"
+    timer_exist: "Timer %s already exist"
+    timer_not_found: "Timer %s not found"
+    timer_enable: "Timer %s enabled"
+    timer_disable: "Timer %s has been disabled"
+    timer_info: "Timer: %s, Checkpoints: %d, status: %s, Broadcast: %s"
+    broadcast_enable: "Broadcast enabled"
+    broadcast_disable: "Broadcast disabled"
+    checkpoint_remove: "Checkpoint %s has been removed"
+    checkpoint_not_found: "Checkpoint %s not found"
+    checkpoint_broadcast: "[%s] Player %s reache checkpoint %d, time [ %d min %.2fs ] "
+    checkpoint_info: "Checkpoint %d world: %s (%d, %d, %d) (%d, %d, %d)"
+    select: "Please select a area first"
+    checkpoint_conflict: "Area conflict with checkpoint %d"
+    start: "[%s] Start"
+    invalid: "[%s] You need go to checkpoint %d"
+    finish_0: "Player %s's timer at %s:"
+    finish_1: "time to checkpoint %d [ %d min %.2fs ]"
+    finish_2: "time total [ %d min %.2fs ]"
+    list: "timers: %d"
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -323,3 +346,34 @@ manual:
     help:
       description: "Print help messages"
       usage: "/nu repair help"
+  timer:
+    create:
+      description: "Create timer"
+      usage: "/nu timer create [timer name]"
+    remove:
+      description: "Remove timer"
+      usage: "/nu timer remove [timer name]"
+    enable:
+      description: "Enable a timer"
+      usage: "/nu timer enable [timer name]"
+    disable:
+      description: "Disable a timer"
+      usage: "/nu timer disable [timer name]"
+    togglebroadcast:
+      description: "Toggle broadcast"
+      usage: "/nu timer togglebroadcast [timer name]"
+    addcheckpoint:
+      description: "Add checkpoint to timer"
+      usage: "/nu timer addcheckpoint [timer name] or /nu timer addcheckpoint [timer name] [checkpoint id]"
+    removecheckpoint:
+      description: "Remove checkpoint from timer"
+      usage: "/nu timer addcheckpoint [timer name] [checkpoint id]"
+    info:
+      description: "Show timer info"
+      usage: "/nu timer info [timer name]"
+    list:
+      description: "list all timers"
+      usage: "/nu timer list"
+    help:
+      description: "Print help messages"
+      usage: "/nu mailbox help"

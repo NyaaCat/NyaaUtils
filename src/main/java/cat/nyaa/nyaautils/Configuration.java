@@ -5,6 +5,7 @@ import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.nyaautils.repair.RepairConfig;
+import cat.nyaa.nyaautils.timer.TimerConfig;
 import cat.nyaa.utils.ISerializable;
 import cat.nyaa.utils.PluginConfigure;
 import org.bukkit.configuration.ConfigurationSection;
@@ -87,6 +88,8 @@ public class Configuration extends PluginConfigure {
     public int mailTimeout = 200;
     @Serializable(manualSerialization = true)
     public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
+    @Serializable
+    public int timerCheckInterval = -1;
 
     @StandaloneConfig
     public final MailboxLocations mailbox;
@@ -98,6 +101,8 @@ public class Configuration extends PluginConfigure {
     public final EnchantSrcConfig enchantSrcConfig;
     @StandaloneConfig
     public final FuelConfig fuelConfig;
+    @StandaloneConfig
+    public final TimerConfig timerConfig;
 
     private final NyaaUtils plugin;
 
@@ -113,6 +118,7 @@ public class Configuration extends PluginConfigure {
         this.globalLoreBlacklist = new GlobalLoreBlacklist(plugin);
         this.enchantSrcConfig = new EnchantSrcConfig(plugin);
         this.fuelConfig = new FuelConfig(plugin);
+        this.timerConfig = new TimerConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
