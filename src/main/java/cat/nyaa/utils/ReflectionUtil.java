@@ -22,6 +22,7 @@ package cat.nyaa.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -171,5 +172,25 @@ public final class ReflectionUtil {
 
         // Return a string representation of the serialized object
         return itemAsJsonObject.toString();
+    }
+
+    public static boolean isValidItem(ItemStack item) {
+        Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
+        Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+        Object nmsItemStackObj = null;
+        try {
+            nmsItemStackObj = asNMSCopyMethod.invoke(null, item);
+            if (nmsItemStackObj == null) {
+                return false;
+            } else {
+                Method isEmptyMethod = ReflectionUtil.getMethod(nmsItemStackObj.getClass(), "isEmpty");
+                return !((boolean) isEmptyMethod.invoke(nmsItemStackObj));
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
