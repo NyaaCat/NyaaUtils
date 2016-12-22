@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FuelManager {
     private final NyaaUtils plugin;
@@ -66,7 +67,7 @@ public class FuelManager {
 
     public void updateItem(ItemStack item, int fuelID, int durability) {
         FuelItem fuel = plugin.cfg.fuelConfig.fuel.get(fuelID);
-        String hex = toHexString(fuelID) + toHexString(durability);
+        String hex = toHexString(fuelID) + toHexString(durability) + toHexString(new Random().nextInt(65535));
         String str = "";
         for (int i = 0; i < hex.length(); i++) {
             str += ChatColor.COLOR_CHAR + hex.substring(i, i + 1);
@@ -92,7 +93,7 @@ public class FuelManager {
     public int getFuelID(ItemStack item) {
         if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
             String lore = item.getItemMeta().getLore().get(0);
-            if (lore != null && lore.length() >= (lore_prefix.length() + 16 + 2) && lore.contains(lore_prefix)) {
+            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.contains(lore_prefix)) {
                 try {
                     return Integer.parseInt(lore.substring(lore_prefix.length(),
                             lore_prefix.length() + 8).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), ""), 16);
@@ -107,7 +108,7 @@ public class FuelManager {
     public int getFuelDurability(ItemStack item) {
         if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
             String lore = item.getItemMeta().getLore().get(0);
-            if (lore != null && lore.length() >= (lore_prefix.length() + 16 + 2) && lore.contains(lore_prefix)) {
+            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.contains(lore_prefix)) {
                 try {
                     return Integer.parseInt(lore.substring(lore_prefix.length() + 8,
                             lore_prefix.length() + 16).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), ""), 16);

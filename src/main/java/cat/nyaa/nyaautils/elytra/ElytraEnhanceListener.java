@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +70,17 @@ public class ElytraEnhanceListener implements Listener {
             return;
         } else if (FuelMode.contains(player.getUniqueId())) {
             FuelMode.remove(player.getUniqueId());
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryClickEvent(InventoryClickEvent event) {
+        if (event.getCurrentItem() != null && plugin.fuelManager.getFuelID(event.getCurrentItem()) != -1) {
+            ItemStack item = event.getCurrentItem();
+            int id = plugin.fuelManager.getFuelID(item);
+            int durability = plugin.fuelManager.getFuelDurability(item);
+            plugin.fuelManager.updateItem(item, id, durability);
+            event.setCurrentItem(item);
         }
     }
 }
