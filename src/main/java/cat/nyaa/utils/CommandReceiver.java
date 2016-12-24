@@ -33,7 +33,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         }
     }
 
-    private static class NoPermissionException extends RuntimeException {
+    protected static class NoPermissionException extends RuntimeException {
         /**
          * @param permission name for the permission node
          */
@@ -42,7 +42,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         }
     }
 
-    private static class BadCommandException extends RuntimeException {
+    protected static class BadCommandException extends RuntimeException {
         public final Object[] objs;
 
         /**
