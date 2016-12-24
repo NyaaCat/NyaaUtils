@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -178,7 +179,10 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "reload", permission = "nu.reload")
     public void commandReload(CommandSender sender, Arguments args) {
         NyaaUtils p = NyaaUtils.instance;
-        p.onDisable();
+        p.getServer().getScheduler().cancelTasks(p);
+        p.getCommand("nyaautils").setExecutor(null);
+        HandlerList.unregisterAll(p);
+        p.i18n.reset();
         p.onEnable();
     }
 
