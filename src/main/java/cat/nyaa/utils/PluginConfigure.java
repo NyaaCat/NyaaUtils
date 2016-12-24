@@ -16,6 +16,7 @@ public abstract class PluginConfigure extends FileConfigure {
     @Override
     public void load() {
         getPlugin().saveDefaultConfig();
+        getPlugin().reloadConfig();
         deserialize(getPlugin().getConfig());
         save();
     }
