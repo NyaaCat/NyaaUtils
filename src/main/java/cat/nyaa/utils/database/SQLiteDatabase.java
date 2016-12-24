@@ -7,7 +7,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public abstract class SQLiteDatabase extends BaseDatabase {
+public abstract class SQLiteDatabase extends BaseDatabase implements Cloneable {
+    protected SQLiteDatabase() {
+        super();
+    }
+
     protected Connection dbConn;
 
     protected abstract String getFileName();
@@ -21,6 +25,7 @@ public abstract class SQLiteDatabase extends BaseDatabase {
             String connStr = "jdbc:sqlite:" + dbFile.getAbsolutePath();
             getPlugin().getLogger().info("Connecting database: " + connStr);
             dbConn = DriverManager.getConnection(connStr);
+            createTables();
         } catch (ClassNotFoundException | SQLException ex) {
             dbConn = null;
             throw new RuntimeException(ex);
@@ -40,5 +45,15 @@ public abstract class SQLiteDatabase extends BaseDatabase {
     @Override
     final protected Connection getConnection() {
         return dbConn;
+    }
+
+    /**
+     * Remember to close the new connection cloned.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Object obj = super.clone();
+        ((SQLiteDatabase) obj).connect();
+        return obj;
     }
 }

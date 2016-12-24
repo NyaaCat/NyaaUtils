@@ -1,40 +1,16 @@
 package cat.nyaa.utils.database;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 public enum ColumnType {
     TEXT,
-    INTEGER,
+    INTEGER, // use long in java
     REAL; //use double in java
 
     public static ColumnType from(Class cls) {
-        if (cls == int.class || cls == Integer.class) return INTEGER;
+        if (cls == long.class || cls == Long.class) return INTEGER;
         if (cls == boolean.class || cls == Boolean.class) return INTEGER;
         if (cls == double.class || cls == Double.class) return REAL;
         if (cls == String.class) return TEXT;
-        return null;
-    }
-
-    public static void setPreparedStatement(PreparedStatement stat, int index, Object obj) throws SQLException {
-        Class cls = obj.getClass();
-        if (cls == int.class || cls == Integer.class) {
-            stat.setInt(index, (int) obj);
-            return;
-        }
-        if (cls == boolean.class || cls == Boolean.class) {
-            stat.setInt(index, ((boolean) obj) ? 1 : 0);
-            return;
-        }
-        if (cls == double.class || cls == Double.class) {
-            stat.setFloat(index, (float) obj);
-            return;
-        }
-        if (cls == String.class) {
-            stat.setString(index, (String) obj);
-            return;
-        }
-        throw new IllegalArgumentException("Unknown object type: " + obj.getClass().toString());
+        throw new IllegalArgumentException("Unsupported type");
     }
 
     /**
@@ -42,21 +18,25 @@ public enum ColumnType {
      * Currently used for convert int to bool
      *
      * @param obj         the object returned from database: integer/float/string
-     * @param desiredType integer/float/string/boolean
+     * @param desiredType long/double/string/boolean
      * @return
      */
     public static Object toSystemType(Object obj, Class desiredType) {
         if (obj == null) return null;
-        if ((desiredType == boolean.class || desiredType == Boolean.class) && obj.getClass() == Integer.class) {
-            return (Integer) obj != 0;
+        if (desiredType == boolean.class || desiredType == Boolean.class) {
+            if (obj.getClass() == Long.class) {
+                return (Long) obj != 0;
+            } else {
+                throw new IllegalArgumentException("object cannot be parsed as boolean");
+            }
         } else {
             return obj;
         }
     }
 
     /**
-     * Convert between database object and java object.
-     * Currently used for int <--> bool
+     * Convert to Database type
+     * Current used for bool --> long
      */
     public Object toDatabaseType(Object obj) {
         if (obj == null) return null;
@@ -64,7 +44,7 @@ public enum ColumnType {
             case INTEGER: {
                 Class cls = obj.getClass();
                 if (cls == boolean.class || cls == Boolean.class) {
-                    return (boolean) obj ? 1 : 0;
+                    return (boolean) obj ? 1L : 0L;
                 } else {
                     return obj;
                 }
