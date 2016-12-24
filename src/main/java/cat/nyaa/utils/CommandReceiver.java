@@ -211,6 +211,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         List<String> cmds = getSubcommands();
         String tmp = "";
         for (String cmd : cmds) {
+            if (subCommandPermission.containsKey(cmd) && !sender.hasPermission(subCommandPermission.get(cmd)))
+                continue;
             tmp += "\n    " + cmd + ":  " + getHelpContent("description", getHelpPrefix(), cmd);
             tmp += "\n    " + cmd + ":  " + getHelpContent("usage", getHelpPrefix(), cmd);
         }
