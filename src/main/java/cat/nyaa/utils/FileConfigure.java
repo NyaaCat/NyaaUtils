@@ -12,6 +12,10 @@ public abstract class FileConfigure implements ISerializable {
 
     protected abstract JavaPlugin getPlugin();
 
+    protected void ensureConfigIntegrity() {
+
+    }
+
     private File ensureFile() {
         File cfgFile = new File(getPlugin().getDataFolder(), getFileName());
         if (!cfgFile.exists()) {
@@ -26,6 +30,7 @@ public abstract class FileConfigure implements ISerializable {
     }
 
     public void save() {
+        ensureConfigIntegrity();
         YamlConfiguration cfg = new YamlConfiguration();
         serialize(cfg);
         try {

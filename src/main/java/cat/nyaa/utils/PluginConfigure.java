@@ -8,6 +8,7 @@ public abstract class PluginConfigure extends FileConfigure {
 
     @Override
     public void save() {
+        ensureConfigIntegrity();
         serialize(getPlugin().getConfig());
         getPlugin().saveConfig();
     }
