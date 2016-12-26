@@ -45,6 +45,11 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     protected static class BadCommandException extends RuntimeException {
         public final Object[] objs;
 
+        public BadCommandException() {
+            super("");
+            objs = null;
+        }
+
         /**
          * show formatted error message to player
          * @param msg_internal msg template key. e.g. `internal.warn.***'
@@ -147,8 +152,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
     }
 
     public void acceptCommand(CommandSender sender, Arguments cmd) {
+        String subCommand = cmd.next();
         try {
-            String subCommand = cmd.next();
             if (subCommand == null) subCommand = "help";
             boolean hasCommand = subCommands.containsKey(subCommand.toLowerCase()) || subCommandClasses.containsKey(subCommand.toLowerCase());
             boolean subClassCommand = subCommandClasses.containsKey(subCommand.toLowerCase());
@@ -181,7 +186,12 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         } catch (NoItemInHandException ex) {
             msg(sender, ex.isOffHand ? "internal.error.no_item_offhand" : "internal.error.no_item_hand");
         } catch (BadCommandException ex) {
-            sender.sendMessage(i18n.get(ex.getMessage(), ex.objs));
+            String msg = ex.getMessage();
+            if (msg != null && msg.equals("")) {
+                msg(sender, msg, ex.objs);
+            }
+            msg(sender, "internal.error.invalid_command_arg",
+                    getHelpContent("usage", getHelpPrefix(), subCommand));
         } catch (NoPermissionException ex) {
             msg(sender, "internal.error.no_required_permission", ex.getMessage());
         } catch (Exception ex) {
