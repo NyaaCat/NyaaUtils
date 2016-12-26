@@ -43,12 +43,14 @@ public enum I16rEnchantment {
     THORNS(Enchantment.THORNS, "enchantment.thorns"),
     DEPTH_STRIDER(Enchantment.DEPTH_STRIDER, "enchantment.waterWalker"),
     FROST_WALKER(Enchantment.FROST_WALKER, "enchantment.frostWalker"),
+    BINDING_CURSE(Enchantment.BINDING_CURSE, "enchantment.binding_curse"),
     DAMAGE_ALL(Enchantment.DAMAGE_ALL, "enchantment.damage.all"),
     DAMAGE_UNDEAD(Enchantment.DAMAGE_UNDEAD, "enchantment.damage.undead"),
     DAMAGE_ARTHROPODS(Enchantment.DAMAGE_ARTHROPODS, "enchantment.damage.arthropods"),
     KNOCKBACK(Enchantment.KNOCKBACK, "enchantment.knockback"),
     FIRE_ASPECT(Enchantment.FIRE_ASPECT, "enchantment.fire"),
     LOOT_BONUS_MOBS(Enchantment.LOOT_BONUS_MOBS, "enchantment.lootBonus"),
+    SWEEPING_EDGE(Enchantment.SWEEPING_EDGE, "enchantment.sweeping"),
     DIG_SPEED(Enchantment.DIG_SPEED, "enchantment.digging"),
     SILK_TOUCH(Enchantment.SILK_TOUCH, "enchantment.untouching"),
     DURABILITY(Enchantment.DURABILITY, "enchantment.durability"),
@@ -59,7 +61,8 @@ public enum I16rEnchantment {
     ARROW_INFINITE(Enchantment.ARROW_INFINITE, "enchantment.arrowInfinite"),
     LUCK(Enchantment.LUCK, "enchantment.lootBonusFishing"),
     LURE(Enchantment.LURE, "enchantment.fishingSpeed"),
-    MENDING(Enchantment.MENDING, "enchantment.mending");
+    MENDING(Enchantment.MENDING, "enchantment.mending"),
+    VANISHING_CURSE(Enchantment.VANISHING_CURSE, "enchantment.vanishing_curse");
 
     private static final Map<Enchantment, I16rEnchantment> lookup = new HashMap<>();
 

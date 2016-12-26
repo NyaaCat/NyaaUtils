@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.11-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
     compile files('lib/LocketteProAPI.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'

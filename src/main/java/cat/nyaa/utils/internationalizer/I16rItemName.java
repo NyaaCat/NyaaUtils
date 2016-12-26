@@ -663,7 +663,8 @@ public enum I16rItemName {
     ORANGE_SHIELD(Material.SHIELD, 15, "item.shield.orange.name"),
     WHITE_SHIELD(Material.SHIELD, 16, "item.shield.white.name"),
     TOTEM(Material.TOTEM, "item.totem.name"),
-    SHULKER_SHELL(Material.SHULKER_SHELL, "item.shulkerShell.name");
+    SHULKER_SHELL(Material.SHULKER_SHELL, "item.shulkerShell.name"),
+    IRON_NUGGET(Material.IRON_NUGGET, "item.ironNugget.name");
 
     private static final Map<String, I16rItemName> lookup = new HashMap<>();
 

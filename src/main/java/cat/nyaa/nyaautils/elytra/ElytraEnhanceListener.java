@@ -36,11 +36,16 @@ public class ElytraEnhanceListener implements Listener {
                 !plugin.cfg.disabled_world.contains(player.getWorld().getName()) &&
                 player.getLocation().getBlock().getType() == Material.AIR &&
                 player.getEyeLocation().getBlock().getType() == Material.AIR &&
-                !disableFuelMode.contains(player.getUniqueId())) {
+                !disableFuelMode.contains(player.getUniqueId()) &&
+                !player.isSneaking()) {
             if (!FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() >= 0.75 &&
                     plugin.fuelManager.getFuelAmount(player) > 0) {
                 FuelMode.add(player.getUniqueId());
+            }
+            if (duration.containsKey(player.getUniqueId()) &&
+                    duration.get(player.getUniqueId()) >= System.currentTimeMillis()) {
+                player.setVelocity(player.getEyeLocation().getDirection().multiply(plugin.cfg.elytra_max_velocity));
             }
             if (FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() <= plugin.cfg.elytra_min_velocity &&
@@ -54,18 +59,20 @@ public class ElytraEnhanceListener implements Listener {
                         player.sendMessage(I18n._("user.elytra_enhance.durability_notify", durability));
                     }
                 }
+                if (!plugin.fuelManager.useFuel(player)) {
+                    FuelMode.remove(player.getUniqueId());
+                    if (duration.containsKey(player.getUniqueId())) {
+                        duration.remove(player.getUniqueId());
+                    }
+                    return;
+                } else {
+                    duration.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.cfg.elytra_power_duration * 1000));
+                    player.setVelocity(player.getEyeLocation().getDirection().multiply(plugin.cfg.elytra_max_velocity));
+                }
                 int fuelAmount = plugin.fuelManager.getFuelAmount(player);
                 if (fuelAmount <= plugin.cfg.elytra_fuel_notify) {
                     player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", fuelAmount));
                 }
-                if (!(duration.containsKey(player.getUniqueId()) && duration.get(player.getUniqueId()) >= System.currentTimeMillis())) {
-                    if (!plugin.fuelManager.useFuel(player)) {
-                        FuelMode.remove(player.getUniqueId());
-                        return;
-                    }
-                    duration.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.cfg.elytra_power_duration * 1000));
-                }
-                player.setVelocity(player.getVelocity().normalize().multiply(plugin.cfg.elytra_max_velocity));
             }
             return;
         } else if (FuelMode.contains(player.getUniqueId())) {
