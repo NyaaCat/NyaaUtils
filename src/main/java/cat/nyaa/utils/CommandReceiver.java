@@ -187,10 +187,16 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             msg(sender, ex.isOffHand ? "internal.error.no_item_offhand" : "internal.error.no_item_hand");
         } catch (BadCommandException ex) {
             String msg = ex.getMessage();
-            if (msg != null && msg.equals("")) {
-                msg(sender, msg, ex.objs);
+            if (msg != null && !msg.equals("")) {
+                if (ex.objs == null) {
+                    msg(sender, msg);
+                } else {
+                    msg(sender, msg, ex.objs);
+                }
+            } else {
+                msg(sender, "internal.error.invalid_command_arg");
             }
-            msg(sender, "internal.error.invalid_command_arg",
+            msg(sender, "internal.info.usage_prompt",
                     getHelpContent("usage", getHelpPrefix(), subCommand));
         } catch (NoPermissionException ex) {
             msg(sender, "internal.error.no_required_permission", ex.getMessage());
@@ -363,7 +369,10 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             String str = next();
             if (str == null) throw new BadCommandException("internal.error.no_more_double");
             try {
-                return Double.parseDouble(str);
+                double d = Double.parseDouble(str);
+                if (Double.isInfinite(d) || Double.isNaN(d))
+                    throw new BadCommandException("internal.error.no_more_double");
+                return d;
             } catch (NumberFormatException ex) {
                 throw new BadCommandException("internal.error.bad_double", ex, str);
             }

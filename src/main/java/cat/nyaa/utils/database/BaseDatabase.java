@@ -139,6 +139,7 @@ public abstract class BaseDatabase implements Cloneable {
             return objects;
         }
 
+        /** Pick CURRENT result from the result set */
         T getObjectFromResultSet(ResultSet rs) throws ReflectiveOperationException, SQLException {
             T obj = tableClass.newInstance();
             for (String colName : columnNames) {

@@ -24,13 +24,19 @@ public enum ColumnType {
     public static Object toSystemType(Object obj, Class desiredType) {
         if (obj == null) return null;
         if (desiredType == boolean.class || desiredType == Boolean.class) {
-            if (obj.getClass() == Long.class) {
-                return (Long) obj != 0;
+            if (obj instanceof Number) {
+                return ((Number) obj).longValue() != 0;
             } else {
                 throw new IllegalArgumentException("object cannot be parsed as boolean");
             }
+        } else if (desiredType == long.class || desiredType == Long.class){
+            return ((Number)obj).longValue();
+        } else if (desiredType == double.class || desiredType == Double.class) {
+            return ((Number)obj).doubleValue();
+        } else if (desiredType == String.class) {
+            return (String) obj;
         } else {
-            return obj;
+            throw new IllegalArgumentException("Unacceptable desiredType: " + desiredType.toString());
         }
     }
 

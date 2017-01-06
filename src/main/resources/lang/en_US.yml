@@ -2,6 +2,7 @@ internal:
   info:
     using_language: "Now using language: %s"
     command_complete: "Command Executed!"
+    usage_prompt: "Usage: %s"
   error:
     bad_subcommand: "Bad subcommand handler: %s"
     not_player: "Only players can do this"
@@ -9,9 +10,7 @@ internal:
     no_item_offhand: "No item in off hand"
     command_exception: "Internal server error. Unable to run command."
     no_required_permission: "You do not have the required permission: %s"
-    invalid_command_arg: |
-      Invalid command line arguments.
-      Usage: %s
+    invalid_command_arg: "Invalid command line arguments."
 
     bad_int: "Not a valid integer"
     bad_double: "Not a valid number"
