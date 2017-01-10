@@ -1,5 +1,6 @@
 package cat.nyaa.utils;
 
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,7 +17,11 @@ import java.util.Map;
 public abstract class Internationalization {
     private final String DEFAULT_LANGUAGE = "en_US";
     private final Map<String, String> map = new HashMap<>();
-    private static Map<String, String> internalMap = null;
+    // internal language keys will only be loaded from NyaaUtils
+    // but share across all dependent plugins
+    // TODO do not depend on NyaaUtils
+    // TODO HEH load before NU ?!
+    private final static Map<String, String> internalMap = new HashMap<>();
 
     protected abstract JavaPlugin getPlugin();
     protected abstract String getLanguage();
@@ -25,33 +30,49 @@ public abstract class Internationalization {
         String language = getLanguage();
         JavaPlugin plugin = getPlugin();
         if (language == null) language = DEFAULT_LANGUAGE;
-        map.clear();
-        // setup common (internal) language section
-        if (internalMap == null) {
-            internalMap = new HashMap<>();
-            if (System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("true")) {
-                File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
-                if (localLangFile.exists()) {
-                    ConfigurationSection section = YamlConfiguration.loadConfiguration(localLangFile);
-                    loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
-                }
-            }
-            InputStream stream = plugin.getResource("lang/" + language + ".yml");
-            if (stream != null) {
-                ConfigurationSection section = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
-                loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
-            }
-            stream = plugin.getResource("lang/" + DEFAULT_LANGUAGE + ".yml");
-            if (stream != null) {
-                ConfigurationSection section = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
+        // internal map
+        if (plugin instanceof NyaaUtils) {
+            loadInternalMap((NyaaUtils)plugin, language);
+        }
+        // language map
+        loadLanguageMap(plugin, language);
+        // save (probably) modified language file back to disk
+        saveLanguageMap(plugin, language);
+
+        plugin.getLogger().info(get("internal.info.using_language", language));
+    }
+
+    private void loadInternalMap(NyaaUtils plugin, String language) {
+        internalMap.clear();
+        boolean forceJar = System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("false");
+        if (!forceJar) { // load from disk
+            File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
+            if (localLangFile.exists()) {
+                ConfigurationSection section = YamlConfiguration.loadConfiguration(localLangFile);
                 loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
             }
         }
-        // load modified language file from disk
-        File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
-        if (System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("true")) {
-            if (localLangFile.exists()) {
-                loadLanguageSection(map, YamlConfiguration.loadConfiguration(localLangFile), "", false);
+        InputStream stream = plugin.getResource("lang/" + language + ".yml");
+        if (stream != null) {
+            ConfigurationSection section = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
+            loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
+        }
+        stream = plugin.getResource("lang/" + DEFAULT_LANGUAGE + ".yml");
+        if (stream != null) {
+            ConfigurationSection section = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
+            loadLanguageSection(internalMap, section.getConfigurationSection("internal"), "internal.", false);
+        }
+    }
+
+    private void loadLanguageMap(JavaPlugin plugin, String language) {
+        map.clear();
+        boolean forceJar = System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("false");
+        if (!forceJar) {
+            File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
+            if (System.getProperty("nyaautils.i18n.loadFromDisk", "true").equals("true")) {
+                if (localLangFile.exists()) {
+                    loadLanguageSection(map, YamlConfiguration.loadConfiguration(localLangFile), "", true);
+                }
             }
         }
         // load same language from jar
@@ -60,17 +81,24 @@ public abstract class Internationalization {
         // load default language from jar
         stream = plugin.getResource("lang/" + DEFAULT_LANGUAGE + ".yml");
         if (stream != null) loadLanguageSection(map, YamlConfiguration.loadConfiguration(new InputStreamReader(stream)), "", true);
-        // save (probably) modified language file back to disk
+    }
+
+    private void saveLanguageMap(JavaPlugin plugin, String language) {
+        File localLangFile = new File(plugin.getDataFolder(), language + ".yml");
         try {
             YamlConfiguration yaml = new YamlConfiguration();
             for (String key : map.keySet()) {
                 yaml.set(key, map.get(key));
             }
+            if (plugin instanceof NyaaUtils) {  // save internal section if is NyaaUtils
+                for (String key : internalMap.keySet()) {
+                    yaml.set(key, internalMap.get(key));
+                }
+            }
             yaml.save(localLangFile);
         } catch (IOException ex) {
             plugin.getLogger().warning("Cannot save language file: " + language + ".yml");
         }
-        plugin.getLogger().info(get("internal.info.using_language", language));
     }
 
     /**
@@ -118,6 +146,7 @@ public abstract class Internationalization {
     }
 
     public void reset() {
+        if (getPlugin() instanceof NyaaUtils) internalMap.clear();
         map.clear();
     }
 }
