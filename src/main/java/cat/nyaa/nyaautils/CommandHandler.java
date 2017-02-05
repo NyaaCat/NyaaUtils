@@ -1,7 +1,6 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.nyaautils.api.events.PrefixChangeEvent;
-import cat.nyaa.nyaautils.api.events.SuffixChangeEvent;
+import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
@@ -237,12 +236,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        PrefixChangeEvent event = new PrefixChangeEvent(p, plugin.vaultUtil.getPlayerPrefix(p), prefix,
-                plugin.cfg.custom_fixes_prefix_expCost, plugin.cfg.custom_fixes_prefix_moneyCost);
+        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_prefix_moneyCost);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
             ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
         }
@@ -288,12 +283,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        SuffixChangeEvent event = new SuffixChangeEvent(p, plugin.vaultUtil.getPlayerSuffix(p), suffix,
-                plugin.cfg.custom_fixes_suffix_expCost, plugin.cfg.custom_fixes_suffix_moneyCost);
+        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_suffix_moneyCost);
         plugin.getServer().getPluginManager().callEvent(event);
-        if (event.isCancelled()) {
-            return;
-        }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
             ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
         }
