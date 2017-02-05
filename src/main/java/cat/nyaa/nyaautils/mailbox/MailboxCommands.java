@@ -1,6 +1,8 @@
 package cat.nyaa.nyaautils.mailbox;
 
 import cat.nyaa.nyaautils.NyaaUtils;
+import cat.nyaa.nyaautils.api.events.MailboxSendChestEvent;
+import cat.nyaa.nyaautils.api.events.MailboxSendItemEvent;
 import cat.nyaa.utils.CommandReceiver;
 import cat.nyaa.utils.Internationalization;
 import cat.nyaa.utils.InventoryUtils;
@@ -206,6 +208,11 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                 msg(recp, "user.mailbox.mailbox_no_space", sender.getName());
             }
         } else {
+            MailboxSendItemEvent event = new MailboxSendItemEvent(p, recipient, toLocation, plugin.cfg.mailHandFee);
+            plugin.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                return;
+            }
             InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
             msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailHandFee);
@@ -300,6 +307,8 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                         }
                     }
                     if (itemMoved) {
+                        MailboxSendChestEvent event = new MailboxSendChestEvent(p, recipient, boxLocation, toLocationFinal, plugin.cfg.mailChestFee);
+                        plugin.getServer().getPluginManager().callEvent(event);
                         toInventory.setStorageContents(to);
                         msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailChestFee);
                         if (recpFinal != null) {
