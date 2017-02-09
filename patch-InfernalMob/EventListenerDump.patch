@@ -1,5 +1,5 @@
---- EventListener.java	2016-09-23 17:51:38.465887570 -0500
-+++ EventListenerDump.java	2016-09-23 17:40:57.633407594 -0500
+--- EventListener.java	2017-02-09 14:20:40.246105500 +0800
++++ EventListenerDump.java	2017-02-09 14:21:44.793797400 +0800
 @@ -1,8 +1,11 @@
 -package asm.io.hotmail.com.jacob_vejvoda.infernal_mobs;
  import java.util.*;
@@ -13,7 +13,7 @@
  public static byte[] dump () throws Exception {
  
  ClassWriter cw = new ClassWriter(0);
-@@ -1255,15 +1258,10 @@
+@@ -1272,15 +1275,10 @@
  mv.visitInsn(ICONST_1);
  mv.visitJumpInsn(IF_ICMPNE, l28);
  mv.visitVarInsn(ALOAD, 1);
