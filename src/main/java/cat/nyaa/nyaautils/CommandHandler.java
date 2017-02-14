@@ -15,11 +15,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.UUID;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
@@ -119,7 +122,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         }
     }
 
-    /* launch the player into the air without open their elytra */
+    /* launch the entity into the air without open their elytra */
     @SubCommand(value = "project", permission = "nu.project")
     public void commandProject(CommandSender sender, Arguments args) {
         if (args.top() == null) {
@@ -130,33 +133,42 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             double speed = args.nextDouble();
             int duration = args.nextInt();
             String pName = args.next();
-            if (pName == null) {
-                if (sender instanceof Player) {
-                    pName = sender.getName();
-                } else {
-                    sender.sendMessage(I18n._("user.project.missing_name"));
+            Entity ent;
+            final Entity p;
+            UUID uid;
+            try {
+                uid = UUID.fromString(pName);
+                ent = Bukkit.getEntity(uid);
+            } catch(Exception e){
+                if (pName == null) {
+                    if (sender instanceof Player) {
+                        pName = sender.getName();
+                    } else {
+                        sender.sendMessage(I18n._("user.project.missing_name"));
+                        return;
+                    }
+                }
+                ent = Bukkit.getPlayer(pName);
+                if (ent == null) {
+                    sender.sendMessage(I18n._("user.project.player_not_online", pName));
                     return;
                 }
             }
-            Player p = Bukkit.getPlayer(pName);
-            if (p == null) {
-                sender.sendMessage(I18n._("user.project.player_not_online", pName));
-                return;
-            }
+            p = ent;
 
             new BukkitRunnable() {
                 final int d = duration;
                 final Vector v = toVector(yaw, pitch, speed);
-                final Player player = p;
+                final Entity entity = p;
                 int current = 0;
 
 
                 @Override
                 public void run() {
-                    if (player.isOnline()) {
+                    if (!(entity instanceof Player) || ((Player)entity).isOnline()) {
                         if (current < d) {
                             current++;
-                            player.setVelocity(v);
+                            entity.setVelocity(v);
                         } else {
                             cancel();
                         }
