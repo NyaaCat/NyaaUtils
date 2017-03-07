@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.commandwarpper.Teleport;
 import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
 import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
@@ -22,6 +23,7 @@ public class NyaaUtils extends JavaPlugin {
     public MailboxListener mailboxListener;
     public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
+    public Teleport Teleport;
     public FuelManager fuelManager;
     public TimerManager timerManager;
     public TimerListener timerListener;
@@ -37,6 +39,7 @@ public class NyaaUtils extends JavaPlugin {
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
         elytraEnhanceListener = new ElytraEnhanceListener(this);
+        Teleport = new Teleport(this);
         exhibitionListener = new ExhibitionListener(this);
         mailboxListener = new MailboxListener(this);
         vaultUtil = new VaultUtil(this);
