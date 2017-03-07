@@ -21,15 +21,24 @@ repositories {
         name 'sk89q'
         url 'http://maven.sk89q.com/artifactory/repo/'
     }
+
     maven {
         name 'vault-repo'
         url 'http://nexus.hc.to/content/repositories/pub_releases'
+    }
+
+    maven {
+        name 'ess-repo'
+        url 'http://repo.ess3.net/content/groups/essentials'
     }
 }
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
+    compile('net.ess3:Essentials:2.13-SNAPSHOT') {
+        transitive = false
+    }
     compile files('lib/LocketteProAPI.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
 }
