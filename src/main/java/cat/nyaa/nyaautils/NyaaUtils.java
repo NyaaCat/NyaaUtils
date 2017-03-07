@@ -23,7 +23,7 @@ public class NyaaUtils extends JavaPlugin {
     public MailboxListener mailboxListener;
     public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
-    public Teleport Teleport;
+    public Teleport teleport;
     public FuelManager fuelManager;
     public TimerManager timerManager;
     public TimerListener timerListener;
@@ -39,7 +39,7 @@ public class NyaaUtils extends JavaPlugin {
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
         elytraEnhanceListener = new ElytraEnhanceListener(this);
-        Teleport = new Teleport(this);
+        teleport = new Teleport(this);
         exhibitionListener = new ExhibitionListener(this);
         mailboxListener = new MailboxListener(this);
         vaultUtil = new VaultUtil(this);
