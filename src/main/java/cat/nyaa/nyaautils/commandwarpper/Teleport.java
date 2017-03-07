@@ -115,6 +115,7 @@ public class Teleport implements Listener {
             } else {
                 fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
             }
+            if(fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
             fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
             if (!plugin.vaultUtil.enoughMoney(p, fee)) {
                 msg(p, "user.teleport.money_insufficient", fee);
@@ -138,6 +139,7 @@ public class Teleport implements Listener {
         } else {
             fee += homeLoc.distance(curLoc) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
         }
+        if(fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
         if (!plugin.vaultUtil.enoughMoney(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);

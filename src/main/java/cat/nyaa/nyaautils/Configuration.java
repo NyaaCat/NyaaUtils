@@ -93,6 +93,8 @@ public class Configuration extends PluginConfigure {
 
     @Serializable(name = "teleport.enable")
     public boolean teleportEnable = true;
+    @Serializable(name = "teleport.home.max")
+    public int homeMax = 300;
     @Serializable(name = "teleport.home.base")
     public int homeBase = 10;
     @Serializable(name = "teleport.home.world")
@@ -113,6 +115,8 @@ public class Configuration extends PluginConfigure {
     public int setHomeWorld = 50;
     @Serializable(name = "teleport.sethome.default_world")
     public String setHomeDefaultWorld = "world";
+    @Serializable(name = "teleport.back.max")
+    public int backMax = 300;
     @Serializable(name = "teleport.back.base")
     public int backBase = 100;
     @Serializable(name = "teleport.back.world")
