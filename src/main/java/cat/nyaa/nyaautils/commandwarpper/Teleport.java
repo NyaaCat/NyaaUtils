@@ -6,6 +6,7 @@ import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 
 import java.text.DecimalFormat;
 
+import net.ess3.api.InvalidWorldException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -37,35 +38,56 @@ public class Teleport implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommandPreProcess(PlayerCommandPreprocessEvent e) {
         if (!plugin.cfg.teleportEnable) return;
-        String cmd = e.getMessage().toLowerCase();
+        String cmd = e.getMessage().toLowerCase().trim();
         Player p = e.getPlayer();
         IUser iu = ess.getUser(p);
         if (cmd.equals("/home") || cmd.startsWith("/home ")) {
             e.setCancelled(true);
             List<String> homes = iu.getHomes();
+            //For /home bed
+            if (cmd.equals("/home bed") || (cmd.equals("/home") && homes.size() < 1)) {
+                Location bedLoc = p.getBedSpawnLocation();
+                if (bedLoc == null) {
+                    msg(p, "user.teleport.bed_not_set_yet");
+                    return;
+                }
+                callEssHome(p, bedLoc, p.getLocation(), "bed");
+                return;
+            }
+
             if (homes.size() < 1) {
                 msg(p, "user.teleport.not_set_yet");
             } else if (homes.size() == 1 && cmd.equals("/home")) {
-                Location hl = null;
+                Location homeLoc;
                 try {
-                    hl = iu.getHome(homes.get(0));
+                    homeLoc = iu.getHome(homes.get(0));
+                } catch (InvalidWorldException ex) {
+                    msg(p, "user.teleport.invalid_home");
+                    return;
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    msg(p, "user.teleport.error");
+                    return;
                 }
-                Location cl = p.getLocation();
-                callEssHome(p, hl, cl, null);
-            } else if (homes.size() > 1) {
+                Location curLoc = p.getLocation();
+                callEssHome(p, homeLoc, curLoc, null);
+            } else {
                 String to = cmd.substring(5).trim();
                 for (String home : homes) {
                     if (home.equals(to)) {
-                        Location hl = null;
+                        Location homeLoc;
                         try {
-                            hl = iu.getHome(to);
+                            homeLoc = iu.getHome(to);
+                        } catch (InvalidWorldException ex) {
+                            msg(p, "user.teleport.invalid_home");
+                            return;
                         } catch (Exception ex) {
                             ex.printStackTrace();
+                            msg(p, "user.teleport.error");
+                            return;
                         }
                         Location cl = p.getLocation();
-                        callEssHome(p, hl, cl, to);
+                        callEssHome(p, homeLoc, cl, to);
                         return;
                     }
                 }
@@ -115,7 +137,7 @@ public class Teleport implements Listener {
             } else {
                 fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
             }
-            if(fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
+            if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
             fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
             if (!plugin.vaultUtil.enoughMoney(p, fee)) {
                 msg(p, "user.teleport.money_insufficient", fee);
@@ -139,7 +161,7 @@ public class Teleport implements Listener {
         } else {
             fee += homeLoc.distance(curLoc) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
         }
-        if(fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
+        if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
         if (!plugin.vaultUtil.enoughMoney(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
@@ -150,7 +172,6 @@ public class Teleport implements Listener {
         msg(p, "user.teleport.ok", fee, I18n._("user.teleport.home"));
         PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
         attachment.setPermission("essentials.home", true);
-        attachment.setPermission("essentials.home.bed", true);
         Bukkit.dispatchCommand(p, home == null ? "essentials:home" : "essentials:home " + home);
         plugin.vaultUtil.withdraw(p, fee);
     }

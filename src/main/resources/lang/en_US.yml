@@ -239,6 +239,9 @@ user:
     not_set_yet: "You has not set a home"
     no_loc: "No valid location found"
     money_insufficient: "You don't have enough money(%.2f) to use this command"
+    error: "That home seems to be broken, seek pm for help"
+    invalid_home: "That home is in a removed world"
+    bed_not_set_yet: "You has not set a bed"
 manual:
   no_description: "No description"
   no_usage: "No usage"
