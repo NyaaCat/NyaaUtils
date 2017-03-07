@@ -38,7 +38,6 @@ public class Teleport implements Listener {
         String cmd = e.getMessage().toLowerCase();
         Player p = e.getPlayer();
         IUser iu = ess.getUser(p);
-        p.sendMessage(iu.getLastLocation().toString());
         if(cmd.equals("/home") || cmd.startsWith("/home ")) {
             e.setCancelled(true);
             List<String> homes = iu.getHomes();
@@ -94,7 +93,7 @@ public class Teleport implements Listener {
             }
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
-            msg(p, "user.teleport.ok", fee, "set home");
+            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.sethome"));
             PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
             attachment.setPermission("essentials.sethome", true);
             Bukkit.dispatchCommand(p, cmd.substring(1).replace("sethome", "essentials:sethome"));
@@ -103,6 +102,10 @@ public class Teleport implements Listener {
             e.setCancelled(true);
             Location curLoc = p.getLocation();
             Location lastLoc = iu.getLastLocation();
+            if(lastLoc == null){
+                msg(p, "user.teleport.no_loc");
+                return;
+            }
             double fee = plugin.cfg.backBase;
             if(curLoc.getWorld() != lastLoc.getWorld()){
                 fee += plugin.cfg.backWorld;
@@ -117,7 +120,7 @@ public class Teleport implements Listener {
             }
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
-            msg(p, "user.teleport.ok", fee, "back");
+            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.back"));
             PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
             attachment.setPermission("essentials.back", true);
             Bukkit.dispatchCommand(p, "essentials:back");
@@ -140,7 +143,7 @@ public class Teleport implements Listener {
         }
         HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
         plugin.getServer().getPluginManager().callEvent(event);
-        msg(p, "user.teleport.ok", fee, "home");
+        msg(p, "user.teleport.ok", fee, I18n._("user.teleport.home"));
         PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
         attachment.setPermission("essentials.home", true);
         attachment.setPermission("essentials.home.bed", true);

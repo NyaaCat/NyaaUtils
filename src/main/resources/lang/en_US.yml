@@ -232,8 +232,12 @@ user:
     finish_2: "time total [ %d min %.2fs ]"
     list: "timers: %d"
   teleport:
-    ok: "You spend %.2f this time to %s"
+    home: "home"
+    sethome: "set home"
+    back: "back"
+    ok: "You spend %.2f to %s"
     not_set_yet: "You has not set a home"
+    no_loc: "No valid location found"
     money_insufficient: "You don't have enough money(%.2f) to use this command"
 manual:
   no_description: "No description"
