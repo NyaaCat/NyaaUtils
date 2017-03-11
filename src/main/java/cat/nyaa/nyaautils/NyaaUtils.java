@@ -9,6 +9,7 @@ import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
 import cat.nyaa.utils.VaultUtil;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,6 +37,7 @@ public class NyaaUtils extends JavaPlugin {
         i18n = new I18n(this, cfg.language);
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
+        getCommand("nyaautils").setTabCompleter((TabCompleter) commandHandler);
         lpListener = new LootProtectListener(this);
         dsListener = new DamageStatListener(this);
         elytraEnhanceListener = new ElytraEnhanceListener(this);
@@ -52,6 +54,7 @@ public class NyaaUtils extends JavaPlugin {
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
         getCommand("nyaautils").setExecutor(null);
+        getCommand("nyaautils").setTabCompleter(null);
         HandlerList.unregisterAll(this);
         cfg.save();
         i18n.reset();

@@ -405,4 +405,4 @@ manual:
       usage: "/nu timer list"
     help:
       description: "Print help messages"
-      usage: "/nu mailbox help"
+      usage: "/nu timer help"

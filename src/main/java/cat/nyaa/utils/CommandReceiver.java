@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public abstract class CommandReceiver<T extends JavaPlugin> implements CommandExecutor {
+public abstract class CommandReceiver<T extends JavaPlugin> implements CommandExecutor, TabCompleter {
     //==== Error Definitions ====//
     private static class NotPlayerException extends RuntimeException {
     }
@@ -66,10 +67,13 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         }
     }
 
+    // Language class is passed in for message support
     private final Internationalization i18n;
-    // final T plugin;
+    // Subcommands exists in this class
     private final Map<String, Method> subCommands = new HashMap<>();
+    // Commands to be passed to other classes
     private final Map<String, CommandReceiver> subCommandClasses = new HashMap<>();
+    // Permissions required for each subclass. Bypass check if no permission specified
     private final Map<String, String> subCommandPermission = new HashMap<>();
 
     private Set<Method> getAllMethods(Class cls) {
@@ -90,6 +94,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         return ret;
     }
 
+    // Scan recursively into parent class to find annotated methods when constructing
     public CommandReceiver(T plugin, Internationalization i18n) {
         //this.plugin = plugin;
         this.i18n = i18n;
@@ -143,6 +148,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         return ret;
     }
 
+    // Only directly registered command handler need this
+    // acceptCommand() will be called directly in subcommand classes
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Arguments cmd = Arguments.parse(args);
@@ -151,6 +158,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         return true;
     }
 
+    // Determine subcommand method or class and Exception collection.
+    // Can be overrided for finer subcommand routing
     public void acceptCommand(CommandSender sender, Arguments cmd) {
         String subCommand = cmd.next();
         try {
@@ -204,6 +213,37 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             ex.printStackTrace();
             msg(sender, "internal.error.command_exception");
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        try {
+            Arguments cmd = Arguments.parse(args);
+            if (cmd == null) return null;
+            return acceptTabComplete(sender, cmd);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public List<String> acceptTabComplete(CommandSender sender, Arguments args) throws Exception {
+        String cmd = args.next();
+        if (cmd == null) cmd = "";
+        if (subCommands.containsKey(cmd.toLowerCase())) return null;
+        if (subCommandClasses.containsKey(cmd.toLowerCase()))
+            return subCommandClasses.get(cmd.toLowerCase()).acceptTabComplete(sender, args);
+        List<String> arr = new ArrayList<>();
+        for (String s : getSubcommands()) {
+            if (subCommandPermission.containsKey(s)) {
+                if (!sender.hasPermission(subCommandPermission.get(s))) {
+                    continue;
+                }
+            }
+            if (s.toLowerCase().startsWith(cmd.toLowerCase())) {
+                arr.add(s);
+            }
+        }
+        return arr;
     }
 
     public abstract String getHelpPrefix();
