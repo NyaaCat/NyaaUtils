@@ -59,9 +59,13 @@ public class ExhibitionListener implements Listener {
         ItemFrame f = (ItemFrame) ev.getEntity();
         if (f.getItem() == null || f.getItem().getType() == Material.AIR) return;
         if (ExhibitionFrame.fromItemFrame(f).isSet()) {
-            plugin.getLogger().warning(String.format("Exhibition broken: Location: %s, item: %s", f.getLocation().toString(),
-                    f.getItem().toString()));
-            f.setItem(new ItemStack(Material.AIR));
+            if (ev.getCause() == HangingBreakEvent.RemoveCause.EXPLOSION) { // Explosion protect
+                ev.setCancelled(true);
+            } else {
+                plugin.getLogger().warning(String.format("Exhibition broken: Location: %s, item: %s", f.getLocation().toString(),
+                        f.getItem().toString()));
+                f.setItem(new ItemStack(Material.AIR));
+            }
         }
     }
 
