@@ -50,8 +50,6 @@ public class LootProtectListener implements Listener {
         if (bypassPlayer.contains(p.getUniqueId())) return;
         Map<Integer, ItemStack> leftItem =
                 p.getInventory().addItem(ev.getDrops().toArray(new ItemStack[0]));
-        p.giveExp(ev.getDroppedExp());
-        ev.setDroppedExp(0);
         ev.getDrops().clear();
         ev.getDrops().addAll(leftItem.values());
     }
