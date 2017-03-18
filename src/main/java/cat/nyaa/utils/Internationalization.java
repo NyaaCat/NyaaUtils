@@ -2,7 +2,6 @@ package cat.nyaa.utils;
 
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +23,7 @@ public abstract class Internationalization {
     private final static Map<String, String> internalMap = new HashMap<>();
 
     protected abstract JavaPlugin getPlugin();
+
     protected abstract String getLanguage();
 
     public void load() {
@@ -32,7 +32,7 @@ public abstract class Internationalization {
         if (language == null) language = DEFAULT_LANGUAGE;
         // internal map
         if (plugin instanceof NyaaUtils) {
-            loadInternalMap((NyaaUtils)plugin, language);
+            loadInternalMap((NyaaUtils) plugin, language);
         }
         // language map
         loadLanguageMap(plugin, language);
@@ -77,10 +77,12 @@ public abstract class Internationalization {
         }
         // load same language from jar
         InputStream stream = plugin.getResource("lang/" + language + ".yml");
-        if (stream != null) loadLanguageSection(map, YamlConfiguration.loadConfiguration(new InputStreamReader(stream)), "", true);
+        if (stream != null)
+            loadLanguageSection(map, YamlConfiguration.loadConfiguration(new InputStreamReader(stream)), "", true);
         // load default language from jar
         stream = plugin.getResource("lang/" + DEFAULT_LANGUAGE + ".yml");
-        if (stream != null) loadLanguageSection(map, YamlConfiguration.loadConfiguration(new InputStreamReader(stream)), "", true);
+        if (stream != null)
+            loadLanguageSection(map, YamlConfiguration.loadConfiguration(new InputStreamReader(stream)), "", true);
     }
 
     private void saveLanguageMap(JavaPlugin plugin, String language) {
@@ -105,8 +107,8 @@ public abstract class Internationalization {
      * add all language items from section into language map recursively
      * existing items won't be overwritten
      *
-     * @param section source section
-     * @param prefix used in recursion to determine the proper prefix
+     * @param section        source section
+     * @param prefix         used in recursion to determine the proper prefix
      * @param ignoreInternal ignore keys prefixed with `internal'
      */
     private void loadLanguageSection(Map<String, String> map, ConfigurationSection section, String prefix, boolean ignoreInternal) {

@@ -53,8 +53,9 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
 
         /**
          * show formatted error message to player
+         *
          * @param msg_internal msg template key. e.g. `internal.warn.***'
-         * @param args arguments
+         * @param args         arguments
          */
         public BadCommandException(String msg_internal, Object... args) {
             super(msg_internal);

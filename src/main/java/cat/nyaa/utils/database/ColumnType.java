@@ -29,10 +29,10 @@ public enum ColumnType {
             } else {
                 throw new IllegalArgumentException("object cannot be parsed as boolean");
             }
-        } else if (desiredType == long.class || desiredType == Long.class){
-            return ((Number)obj).longValue();
+        } else if (desiredType == long.class || desiredType == Long.class) {
+            return ((Number) obj).longValue();
         } else if (desiredType == double.class || desiredType == Double.class) {
-            return ((Number)obj).doubleValue();
+            return ((Number) obj).doubleValue();
         } else if (desiredType == String.class) {
             return (String) obj;
         } else {

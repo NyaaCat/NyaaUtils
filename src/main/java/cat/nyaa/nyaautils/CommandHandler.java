@@ -54,7 +54,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "show", permission = "nu.show")
     public void commandShow(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
-        new Message("").append(item, I18n._("user.showitem.message", sender.getName())).broadcast();
+        new Message("").append(I18n._("user.showitem.message", sender.getName()), item).broadcast();
     }
 
     /* launch the player into the air and open their elytra */
@@ -139,7 +139,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             try {
                 uid = UUID.fromString(pName);
                 ent = Bukkit.getEntity(uid);
-            } catch(Exception e){
+            } catch (Exception e) {
                 if (pName == null) {
                     if (sender instanceof Player) {
                         pName = sender.getName();
@@ -165,7 +165,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
 
                 @Override
                 public void run() {
-                    if (!(entity instanceof Player) || ((Player)entity).isOnline()) {
+                    if (!(entity instanceof Player) || ((Player) entity).isOnline()) {
                         if (current < d) {
                             current++;
                             entity.setVelocity(v);
