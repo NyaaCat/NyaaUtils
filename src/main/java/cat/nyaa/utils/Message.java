@@ -121,6 +121,7 @@ public final class Message {
 
     public Message broadcast() {
         Bukkit.getServer().spigot().broadcast(inner);
+        Bukkit.getConsoleSender().sendMessage(inner.toLegacyText());
         return this;
     }
 
