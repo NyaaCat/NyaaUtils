@@ -242,6 +242,9 @@ user:
     error: "That home seems to be broken, seek pm for help"
     invalid_home: "That home is in a removed world"
     bed_not_set_yet: "You has not set a bed"
+    unsafe: "The teleport destination is unsafe"
+    invalid_name: "Invalid home name"
+    home_limit: "You cannot set more than %d homes"
 manual:
   no_description: "No description"
   no_usage: "No usage"

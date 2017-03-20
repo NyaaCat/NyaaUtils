@@ -3,8 +3,11 @@ package cat.nyaa.nyaautils.commandwarpper;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
+import com.earth2me.essentials.Trade;
+import com.earth2me.essentials.User;
+import com.earth2me.essentials.utils.LocationUtil;
+import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.api.IUser;
 import net.ess3.api.InvalidWorldException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.permissions.PermissionAttachment;
 
 import java.text.DecimalFormat;
@@ -38,7 +42,8 @@ public class Teleport implements Listener {
         if (!plugin.cfg.teleportEnable) return;
         String cmd = e.getMessage().toLowerCase().trim();
         Player p = e.getPlayer();
-        IUser iu = ess.getUser(p);
+        User iu = ess.getUser(p);
+        Location curLoc = p.getLocation();
         if (cmd.equals("/home") || cmd.startsWith("/home ")) {
             e.setCancelled(true);
             List<String> homes = iu.getHomes();
@@ -49,7 +54,7 @@ public class Teleport implements Listener {
                     msg(p, "user.teleport.bed_not_set_yet");
                     return;
                 }
-                callEssHome(p, bedLoc, p.getLocation(), "bed");
+                doHome(p, iu, bedLoc, curLoc);
                 return;
             }
 
@@ -67,8 +72,7 @@ public class Teleport implements Listener {
                     msg(p, "user.teleport.error");
                     return;
                 }
-                Location curLoc = p.getLocation();
-                callEssHome(p, homeLoc, curLoc, null);
+                doHome(p, iu, homeLoc, curLoc);
             } else {
                 String to = cmd.substring(5).trim();
                 for (String home : homes) {
@@ -84,74 +88,110 @@ public class Teleport implements Listener {
                             msg(p, "user.teleport.error");
                             return;
                         }
-                        Location cl = p.getLocation();
-                        callEssHome(p, homeLoc, cl, to);
+                        doHome(p, iu, homeLoc, curLoc);
                         return;
                     }
                 }
+                //The command will just list home the player have, won't actually teleports player home.
                 PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
                 attachment.setPermission("essentials.home", true);
                 Bukkit.dispatchCommand(p, "essentials:home");
             }
         } else if (cmd.equals("/sethome") || cmd.startsWith("/sethome ")) {
             e.setCancelled(true);
-            Location curLoc = p.getLocation();
-            World defaultWorld = Bukkit.getWorld(plugin.cfg.setHomeDefaultWorld);
-            if (defaultWorld == null) {
-                defaultWorld = Bukkit.getWorlds().get(0);
+            String name = cmd.replace("/sethome", "").trim();
+            if (name.equals("")) {
+                name = "home";
             }
-            double fee = plugin.cfg.setHomeMax;
-            if (curLoc.getWorld() != defaultWorld) {
-                fee += plugin.cfg.setHomeWorld;
-                fee -= curLoc.distance(curLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
-            } else {
-                fee -= curLoc.distance(defaultWorld.getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
-            }
-            if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
-            fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-            if (!plugin.vaultUtil.enoughMoney(p, fee)) {
-                msg(p, "user.teleport.money_insufficient", fee);
-                return;
-            }
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-            plugin.getServer().getPluginManager().callEvent(event);
-            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.sethome"));
-            PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
-            attachment.setPermission("essentials.sethome", true);
-            Bukkit.dispatchCommand(p, cmd.substring(1).replace("sethome", "essentials:sethome"));
-            plugin.vaultUtil.withdraw(p, fee);
+            doSetHome(p, iu, curLoc, name);
         } else if (cmd.equals("/back")) {
             e.setCancelled(true);
-            Location curLoc = p.getLocation();
             Location lastLoc = iu.getLastLocation();
             if (lastLoc == null) {
                 msg(p, "user.teleport.no_loc");
                 return;
             }
-            double fee = plugin.cfg.backBase;
-            if (curLoc.getWorld() != lastLoc.getWorld()) {
-                fee += plugin.cfg.backWorld;
-                fee += lastLoc.distance(lastLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
-            } else {
-                fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
-            }
-            if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
-            fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-            if (!plugin.vaultUtil.enoughMoney(p, fee)) {
-                msg(p, "user.teleport.money_insufficient", fee);
-                return;
-            }
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-            plugin.getServer().getPluginManager().callEvent(event);
-            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.back"));
-            PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
-            attachment.setPermission("essentials.back", true);
-            Bukkit.dispatchCommand(p, "essentials:back");
-            plugin.vaultUtil.withdraw(p, fee);
+            doBack(p, iu, curLoc, lastLoc);
         }
     }
 
-    private void callEssHome(Player p, Location homeLoc, Location curLoc, String home) {
+    private void doSetHome(Player p, User iu, Location curLoc, String name) {
+        int n = checkHomeLimit(iu, name);
+        System.out.println(n);
+        if (n == 1) {
+            name = "home";
+        } else if (n != 0) {
+            msg(p, "user.teleport.home_limit", n);
+            return;
+        }
+        if ("bed".equals(name) || NumberUtil.isInt(name)) {
+            msg(p, "user.teleport.invalid_name");
+            return;
+        }
+        if (!ess.getSettings().isTeleportSafetyEnabled() && LocationUtil.isBlockUnsafeForUser(iu, curLoc.getWorld(), curLoc.getBlockX(), curLoc.getBlockY(), curLoc.getBlockZ())) {
+            msg(p, "user.teleport.unsafe");
+            return;
+        }
+
+        double fee = plugin.cfg.setHomeMax;
+        World defaultWorld = Bukkit.getWorld(plugin.cfg.setHomeDefaultWorld);
+        if (defaultWorld == null) {
+            defaultWorld = Bukkit.getWorlds().get(0);
+        }
+        if (curLoc.getWorld() != defaultWorld) {
+            fee += plugin.cfg.setHomeWorld;
+            fee -= curLoc.distance(curLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
+        } else {
+            fee -= curLoc.distance(defaultWorld.getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
+        }
+        if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
+        fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
+        if (!plugin.vaultUtil.withdraw(p, fee)) {
+            msg(p, "user.teleport.money_insufficient", fee);
+            return;
+        }
+        iu.setHome(name, curLoc);
+        msg(p, "user.teleport.ok", fee, I18n._("user.teleport.sethome"));
+        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
+        plugin.getServer().getPluginManager().callEvent(event);
+    }
+
+    private void doBack(Player p, User iu, Location curLoc, Location lastLoc) {
+        if (iu.getWorld() != lastLoc.getWorld() && ess.getSettings().isWorldTeleportPermissions() && !iu.isAuthorized("essentials.worlds." + lastLoc.getWorld().getName())) {
+            msg(p, "internal.error.no_required_permission", "essentials.worlds." + lastLoc.getWorld().getName());
+            return;
+        }
+
+        double fee = plugin.cfg.backBase;
+        if (curLoc.getWorld() != lastLoc.getWorld()) {
+            fee += plugin.cfg.backWorld;
+            fee += lastLoc.distance(lastLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
+        } else {
+            fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
+        }
+        if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
+        fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
+        if (!plugin.vaultUtil.withdraw(p, fee)) {
+            msg(p, "user.teleport.money_insufficient", fee);
+            return;
+        }
+        try {
+            iu.getTeleport().back(new Trade(0, ess));
+            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.back"));
+            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
+            plugin.getServer().getPluginManager().callEvent(event);
+        } catch (Exception e) {
+            plugin.vaultUtil.deposit(p, fee);
+            p.sendMessage(e.getMessage());
+        }
+    }
+
+    private void doHome(Player p, User iu, Location homeLoc, Location curLoc) {
+        if (iu.getWorld() != homeLoc.getWorld() && ess.getSettings().isWorldHomePermissions() && !iu.isAuthorized("essentials.worlds." + homeLoc.getWorld().getName())) {
+            msg(p, "internal.error.no_required_permission", "essentials.worlds." + homeLoc.getWorld().getName());
+            return;
+        }
+        
         double fee = plugin.cfg.homeBase;
         if (homeLoc.getWorld() != curLoc.getWorld()) {
             fee += plugin.cfg.homeWorld;
@@ -161,17 +201,35 @@ public class Teleport implements Listener {
         }
         if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-        if (!plugin.vaultUtil.enoughMoney(p, fee)) {
+        if (!plugin.vaultUtil.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
         }
-        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-        plugin.getServer().getPluginManager().callEvent(event);
-        msg(p, "user.teleport.ok", fee, I18n._("user.teleport.home"));
-        PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
-        attachment.setPermission("essentials.home", true);
-        Bukkit.dispatchCommand(p, home == null ? "essentials:home" : "essentials:home " + home);
-        plugin.vaultUtil.withdraw(p, fee);
+        try {
+            iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
+            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.home"));
+            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
+            plugin.getServer().getPluginManager().callEvent(event);
+        } catch (Exception e) {
+            plugin.vaultUtil.deposit(p, fee);
+            p.sendMessage(e.getMessage());
+        }
+    }
+
+    private int checkHomeLimit(final User user, String name) {
+        if (!user.isAuthorized("essentials.sethome.multiple.unlimited")) {
+            int limit = ess.getSettings().getHomeLimit(user);
+            if (user.getHomes().size() == limit && user.getHomes().contains(name)) {
+                return 0;
+            }
+            if (user.getHomes().size() >= limit) {
+                return limit;
+            }
+            if (limit == 1) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     private void msg(CommandSender target, String template, Object... args) {
