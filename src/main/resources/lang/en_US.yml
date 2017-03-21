@@ -15,6 +15,7 @@ internal:
     bad_int: "Not a valid integer"
     bad_double: "Not a valid number"
     bad_enum: "Not valid for enum type: %s. Values: %s"
+    bad_decimal_pattern: "Not a valid pattern"
 
     no_more_int: "No more integers in argument"
     no_more_double: "No more numbers in argument"

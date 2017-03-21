@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public abstract class CommandReceiver<T extends JavaPlugin> implements CommandExecutor, TabCompleter {
@@ -416,6 +417,21 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 return d;
             } catch (NumberFormatException ex) {
                 throw new BadCommandException("internal.error.bad_double", ex, str);
+            }
+        }
+
+        public double nextDouble(String pattern) {
+            String str = next();
+            if (str == null) throw new BadCommandException("No more numbers in argument");
+            try {
+                double d = Double.parseDouble(str);
+                if (Double.isInfinite(d) || Double.isNaN(d))
+                    throw new BadCommandException("internal.error.no_more_double");
+                return Double.parseDouble(new DecimalFormat(pattern).format(d));
+            } catch (NumberFormatException ex) {
+                throw new BadCommandException("internal.error.bad_double", ex, str);
+            } catch (IllegalArgumentException ex){
+                throw new BadCommandException("internal.error.bad_decimal_pattern", ex, pattern);
             }
         }
 
