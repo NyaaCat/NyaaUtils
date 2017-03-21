@@ -117,8 +117,9 @@ public class Teleport implements Listener {
 
     private void doSetHome(Player p, User iu, Location curLoc, String name) {
         int n = checkHomeLimit(iu, name);
-        System.out.println(n);
         if (n == 1) {
+            if(!name.equals("home"))
+                msg(p, "user.teleport.home_limit_one");
             name = "home";
         } else if (n != 0) {
             msg(p, "user.teleport.home_limit", n);
@@ -191,7 +192,7 @@ public class Teleport implements Listener {
             msg(p, "internal.error.no_required_permission", "essentials.worlds." + homeLoc.getWorld().getName());
             return;
         }
-        
+
         double fee = plugin.cfg.homeBase;
         if (homeLoc.getWorld() != curLoc.getWorld()) {
             fee += plugin.cfg.homeWorld;

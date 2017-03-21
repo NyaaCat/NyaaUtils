@@ -246,6 +246,7 @@ user:
     unsafe: "The teleport destination is unsafe"
     invalid_name: "Invalid home name"
     home_limit: "You cannot set more than %d homes"
+    home_limit_one: "You can set only one home. Renaming to home."
 manual:
   no_description: "No description"
   no_usage: "No usage"
