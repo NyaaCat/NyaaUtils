@@ -55,7 +55,7 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
     public void commandAddEnchSrc(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
         if (BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, item)) {
-            sender.sendMessage(I18n._("user.enchant.enchantsrc_already_exists"));
+            sender.sendMessage(I18n.format("user.enchant.enchantsrc_already_exists"));
             return;
         }
         BasicItemMatcher matcher = new BasicItemMatcher();
@@ -73,7 +73,7 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
         ItemStack item = getItemInOffHand(sender);
 
         if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, item)) {
-            sender.sendMessage(I18n._("user.enchant.invalid_src"));
+            sender.sendMessage(I18n.format("user.enchant.invalid_src"));
             return;
         }
 
@@ -85,19 +85,19 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
             enchant = item.getEnchantments();
         }
 
-        sender.sendMessage(I18n._("user.enchant.list_ench_header"));
+        sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
         for (Enchantment e : enchant.keySet()) {
             if (I16rEnchantment.fromEnchantment(e) != null) {
                 Message msg = new Message(e.getName() + ": ");
                 msg.append(I16rEnchantment.fromEnchantment(e).getUnlocalizedName());
-                msg.append(" " + I18n._("user.enchantinfo.enchant_level", enchant.get(e)));
+                msg.append(" " + I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
                 p.spigot().sendMessage(msg.inner);
             } else {
                 if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
                     continue;
                 }
                 p.sendMessage(e.getName() + ": " + e.getName() + " " +
-                        I18n._("user.enchantinfo.enchant_level", enchant.get(e)));
+                        I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
             }
         }
         long cooldown = 0;
@@ -127,38 +127,38 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
     public void commandEnchantDefault(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         if (args.top() == null) {
-            sender.sendMessage(I18n._("user.enchant.list_ench_header"));
+            sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
             for (Enchantment e : Enchantment.values()) {
                 if (I16rEnchantment.fromEnchantment(e) != null) {
                     Message msg = new Message(e.getName() + ": ");
                     msg.append(I16rEnchantment.fromEnchantment(e).getUnlocalizedName());
-                    msg.append(" " + I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
+                    msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                     p.spigot().sendMessage(msg.inner);
                 } else {
                     if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
                         continue;
                     }
                     p.sendMessage(e.getName() + ": " + e.getName() + " " +
-                            I18n._("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
+                            I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                 }
             }
-            sender.sendMessage(I18n._("manual.enchant.usage"));
+            sender.sendMessage(I18n.format("manual.enchant.usage"));
         } else {
             ItemStack main = getItemInHand(sender);
             ItemStack off = getItemInOffHand(sender);
             if (!BasicItemMatcher.containsMatch(NyaaUtils.instance.cfg.enchantSrcConfig.enchantSrc, off)) {
-                sender.sendMessage(I18n._("user.enchant.invalid_src"));
+                sender.sendMessage(I18n.format("user.enchant.invalid_src"));
                 return;
             }
 
             if (main.getAmount() != 1 || !(main.getType().getMaxDurability() > 0)) {
-                sender.sendMessage(I18n._("user.enchant.invalid_item"));
+                sender.sendMessage(I18n.format("user.enchant.invalid_item"));
                 return;
             }
 
             if (main.hasItemMeta() && main.getItemMeta().hasLore()) {
                 if (!plugin.cfg.globalLoreBlacklist.canEnchant(main.getItemMeta().getLore())) {
-                    sender.sendMessage(I18n._("user.enchant.invalid_item"));
+                    sender.sendMessage(I18n.format("user.enchant.invalid_item"));
                     return;
                 }
             }
@@ -166,14 +166,14 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
             String enchStr = args.next().toUpperCase();
             Enchantment ench = Enchantment.getByName(enchStr);
             if (ench == null) {
-                sender.sendMessage(I18n._("user.enchant.invalid_ench", enchStr));
+                sender.sendMessage(I18n.format("user.enchant.invalid_ench", enchStr));
                 return;
             }
 
             int level = args.nextInt();
 
             if (level <= 0 || level > plugin.cfg.enchantMaxLevel.get(ench)) {
-                sender.sendMessage(I18n._("user.enchant.invalid_level"));
+                sender.sendMessage(I18n.format("user.enchant.invalid_level"));
                 return;
             }
             long cooldown = 0;
@@ -214,7 +214,7 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
                 int realLvl = meta.getStoredEnchantLevel(ench);
                 if (level > realLvl
                         || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
-                    sender.sendMessage(I18n._("user.enchant.invalid_level"));
+                    sender.sendMessage(I18n.format("user.enchant.invalid_level"));
                     return;
                 } else {
                     meta.removeStoredEnchant(ench);
@@ -228,7 +228,7 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
                 int realLvl = off.getEnchantmentLevel(ench);
                 if (level > realLvl
                         || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
-                    sender.sendMessage(I18n._("user.enchant.invalid_level"));
+                    sender.sendMessage(I18n.format("user.enchant.invalid_level"));
                     return;
                 } else {
                     off.removeEnchantment(ench);
@@ -249,11 +249,11 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
                 }
             }
             if (success) {
-                p.sendMessage(I18n._("user.enchant.success"));
+                p.sendMessage(I18n.format("user.enchant.success"));
                 p.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, p.getEyeLocation(), 300);
                 p.getWorld().playSound(p.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
             } else {
-                p.sendMessage(I18n._("user.enchant.fail"));
+                p.sendMessage(I18n.format("user.enchant.fail"));
                 p.getWorld().spawnParticle(Particle.SLIME, p.getEyeLocation(), 200);
                 if (deleteItem) {
                     main = new ItemStack(Material.AIR);

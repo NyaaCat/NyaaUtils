@@ -31,8 +31,8 @@ public class ExhibitionListener implements Listener {
         if (f.getItem() == null || f.getItem().getType() == Material.AIR) return;
         ExhibitionFrame fr = ExhibitionFrame.fromItemFrame(f);
         if (fr.isSet()) {
-            new Message(I18n._("user.exhibition.looking_at")).append(fr.getItemInFrame()).send(ev.getPlayer());
-            ev.getPlayer().sendMessage(I18n._("user.exhibition.provided_by", fr.getOwnerName()));
+            new Message(I18n.format("user.exhibition.looking_at")).append(fr.getItemInFrame()).send(ev.getPlayer());
+            ev.getPlayer().sendMessage(I18n.format("user.exhibition.provided_by", fr.getOwnerName()));
             for (String line : fr.getDescriptions()) {
                 ev.getPlayer().sendMessage(line);
             }
@@ -48,7 +48,7 @@ public class ExhibitionListener implements Listener {
         if (ExhibitionFrame.fromItemFrame(f).isSet()) {
             ev.setCancelled(true);
             if (ev.getDamager() instanceof Player) {
-                ev.getDamager().sendMessage(I18n._("user.exhibition.frame_protected"));
+                ev.getDamager().sendMessage(I18n.format("user.exhibition.frame_protected"));
             }
         }
     }

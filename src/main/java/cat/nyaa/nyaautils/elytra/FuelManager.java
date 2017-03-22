@@ -78,10 +78,10 @@ public class FuelManager {
         if (meta.hasLore()) {
             lore = meta.getLore();
             lore.set(0, lore_prefix + str + lore.get(0));
-            lore.add(lore_prefix + I18n._("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
+            lore.add(lore_prefix + I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
         } else {
             lore = new ArrayList<>();
-            lore.add(lore_prefix + str + I18n._("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
+            lore.add(lore_prefix + str + I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
         }
         item.setType(fuel.getItem().getType());
         item.setDurability(fuel.getItem().getDurability());

@@ -152,7 +152,7 @@ public class Teleport implements Listener {
             return;
         }
         iu.setHome(name, curLoc);
-        msg(p, "user.teleport.ok", fee, I18n._("user.teleport.sethome"));
+        msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.sethome"));
         HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
         plugin.getServer().getPluginManager().callEvent(event);
     }
@@ -178,7 +178,7 @@ public class Teleport implements Listener {
         }
         try {
             iu.getTeleport().back(new Trade(0, ess));
-            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.back"));
+            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
@@ -208,7 +208,7 @@ public class Teleport implements Listener {
         }
         try {
             iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
-            msg(p, "user.teleport.ok", fee, I18n._("user.teleport.home"));
+            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
@@ -234,6 +234,6 @@ public class Teleport implements Listener {
     }
 
     private void msg(CommandSender target, String template, Object... args) {
-        target.sendMessage(I18n._(template, args));
+        target.sendMessage(I18n.format(template, args));
     }
 }

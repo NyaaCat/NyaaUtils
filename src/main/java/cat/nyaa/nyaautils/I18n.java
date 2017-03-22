@@ -25,7 +25,7 @@ public class I18n extends Internationalization {
         load();
     }
 
-    public static String _(String key, Object... args) {
+    public static String format(String key, Object... args) {
         return instance.get(key, args);
     }
 }

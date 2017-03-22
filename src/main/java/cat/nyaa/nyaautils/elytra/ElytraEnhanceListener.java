@@ -56,7 +56,7 @@ public class ElytraEnhanceListener implements Listener {
                     int durability = player.getInventory().getChestplate().getType().getMaxDurability() -
                             player.getInventory().getChestplate().getDurability();
                     if (durability <= plugin.cfg.elytra_durability_notify) {
-                        player.sendMessage(I18n._("user.elytra_enhance.durability_notify", durability));
+                        player.sendMessage(I18n.format("user.elytra_enhance.durability_notify", durability));
                     }
                 }
                 if (!plugin.fuelManager.useFuel(player)) {
@@ -71,7 +71,7 @@ public class ElytraEnhanceListener implements Listener {
                 }
                 int fuelAmount = plugin.fuelManager.getFuelAmount(player);
                 if (fuelAmount <= plugin.cfg.elytra_fuel_notify) {
-                    player.sendMessage(I18n._("user.elytra_enhance.fuel_notify", fuelAmount));
+                    player.sendMessage(I18n.format("user.elytra_enhance.fuel_notify", fuelAmount));
                 }
             }
             return;

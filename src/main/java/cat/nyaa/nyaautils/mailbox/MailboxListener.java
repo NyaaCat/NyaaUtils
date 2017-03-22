@@ -60,7 +60,7 @@ public class MailboxListener implements Listener {
             public void run() {
                 callbackMap.remove(p);
                 if (p.isOnline()) {
-                    p.sendMessage(I18n._("user.mailbox.right_click_timeout"));
+                    p.sendMessage(I18n.format("user.mailbox.right_click_timeout"));
                 }
             }
         };

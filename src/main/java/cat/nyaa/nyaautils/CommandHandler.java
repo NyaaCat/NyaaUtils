@@ -54,14 +54,14 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "show", permission = "nu.show")
     public void commandShow(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
-        new Message("").append(I18n._("user.showitem.message", sender.getName()), item).broadcast();
+        new Message("").append(I18n.format("user.showitem.message", sender.getName()), item).broadcast();
     }
 
     /* launch the player into the air and open their elytra */
     @SubCommand(value = "launch", permission = "nu.launch")
     public void commandLaunch(CommandSender sender, Arguments args) {
         if (args.top() == null) {
-            sender.sendMessage(I18n._("user.launch.usage"));
+            sender.sendMessage(I18n.format("user.launch.usage"));
         } else {
             double yaw = args.nextDouble();
             double pitch = args.nextDouble();
@@ -73,20 +73,20 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 if (sender instanceof Player) {
                     pName = sender.getName();
                 } else {
-                    sender.sendMessage(I18n._("user.launch.missing_name"));
+                    sender.sendMessage(I18n.format("user.launch.missing_name"));
                     return;
                 }
             }
             Player p = Bukkit.getPlayer(pName);
             if (p == null) {
-                sender.sendMessage(I18n._("user.launch.player_not_online", pName));
+                sender.sendMessage(I18n.format("user.launch.player_not_online", pName));
                 return;
             }
 
             ItemStack chestPlate = p.getInventory().getChestplate();
             if (chestPlate == null || chestPlate.getType() != Material.ELYTRA) {
-                sender.sendMessage(I18n._("user.launch.not_ready_to_fly_sender"));
-                p.sendMessage(I18n._("user.launch.not_ready_to_fly"));
+                sender.sendMessage(I18n.format("user.launch.not_ready_to_fly_sender"));
+                p.sendMessage(I18n.format("user.launch.not_ready_to_fly"));
                 return;
             }
 
@@ -126,7 +126,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "project", permission = "nu.project")
     public void commandProject(CommandSender sender, Arguments args) {
         if (args.top() == null) {
-            sender.sendMessage(I18n._("user.project.usage"));
+            sender.sendMessage(I18n.format("user.project.usage"));
         } else {
             double yaw = args.nextDouble();
             double pitch = args.nextDouble();
@@ -144,13 +144,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                     if (sender instanceof Player) {
                         pName = sender.getName();
                     } else {
-                        sender.sendMessage(I18n._("user.project.missing_name"));
+                        sender.sendMessage(I18n.format("user.project.missing_name"));
                         return;
                     }
                 }
                 ent = Bukkit.getPlayer(pName);
                 if (ent == null) {
-                    sender.sendMessage(I18n._("user.project.player_not_online", pName));
+                    sender.sendMessage(I18n.format("user.project.player_not_online", pName));
                     return;
                 }
             }
@@ -204,11 +204,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void commandLootProtectToggle(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         if (plugin.lpListener.toggleStatus(p.getUniqueId())) {
-            p.sendMessage(I18n._("user.lp.turned_on"));
+            p.sendMessage(I18n.format("user.lp.turned_on"));
         } else {
-            p.sendMessage(I18n._("user.lp.turned_off"));
+            p.sendMessage(I18n.format("user.lp.turned_off"));
         }
-        p.sendMessage(I18n._("user.lp.mode_" + plugin.cfg.lootProtectMode.name()));
+        p.sendMessage(I18n.format("user.lp.mode_" + plugin.cfg.lootProtectMode.name()));
     }
 
     /* change player's prefix */

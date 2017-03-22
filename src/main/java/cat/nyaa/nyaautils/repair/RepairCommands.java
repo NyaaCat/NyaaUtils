@@ -51,16 +51,16 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
     public void repairInfo(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
-        new Message(I18n._("user.repair.info_1")).append(item).send(asPlayer(sender));
+        new Message(I18n.format("user.repair.info_1")).append(item).send(asPlayer(sender));
         msg(sender, "user.repair.info_2", item.getType().name());
         if (info.stat != REPAIRABLE) {
-            msg(sender, "user.repair.info_3", I18n._("user.repair.unrepairable." + info.stat.name()));
+            msg(sender, "user.repair.info_3", I18n.format("user.repair.unrepairable." + info.stat.name()));
         }
         if (info.stat == UNREPAIRABLE) return;
         int fullDur = item.getType().getMaxDurability();
         int currDur = fullDur - item.getDurability();
         msg(sender, "user.repair.info_4", currDur, fullDur, (double) currDur / (double) fullDur * 100);
-        new Message(I18n._("user.repair.info_5")).append(new ItemStack(info.repairMaterial)).send(asPlayer(sender));
+        new Message(I18n.format("user.repair.info_5")).append(new ItemStack(info.repairMaterial)).send(asPlayer(sender));
         msg(sender, "user.repair.info_6", info.expConsumption);
         msg(sender, "user.repair.info_7", info.durRecovered, (double) info.durRecovered / (double) fullDur * 100);
         if (info.repairLimit <= 0) {
@@ -92,7 +92,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         ItemStack material = getItemInOffHand(sender);
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
-            msg(sender, "user.repair.info_3", I18n._("user.repair.unrepairable." + info.stat.name()));
+            msg(sender, "user.repair.info_3", I18n.format("user.repair.unrepairable." + info.stat.name()));
             return;
         }
         if (material.getType() != info.repairMaterial || material.getAmount() <= 0) {
@@ -129,7 +129,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         ItemStack material = getItemInOffHand(sender);
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
-            msg(sender, "user.repair.info_3", I18n._("user.repair.unrepairable." + info.stat.name()));
+            msg(sender, "user.repair.info_3", I18n.format("user.repair.unrepairable." + info.stat.name()));
             return;
         }
         if (material.getType() != info.repairMaterial || material.getAmount() <= 0) {

@@ -197,8 +197,8 @@ public class TimerCommands extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        String broadcast = I18n._("user.info." + (timer.broadcast ? "enabled" : "disabled"));
-        String status = I18n._("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
+        String broadcast = I18n.format("user.info." + (timer.broadcast ? "enabled" : "disabled"));
+        String status = I18n.format("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
         msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, broadcast);
         for (Checkpoint c : timer.getCheckpointList()) {
             msg(sender, "user.timer.checkpoint_info", c.getCheckpointID(), c.getMaxPos().getWorld().getName(),
@@ -212,8 +212,8 @@ public class TimerCommands extends CommandReceiver<NyaaUtils> {
         HashMap<String, Timer> timers = plugin.cfg.timerConfig.timers;
         msg(sender, "user.timer.list", timers.size());
         for (Timer timer : timers.values()) {
-            String broadcast = I18n._("user.info." + (timer.broadcast ? "enabled" : "disabled"));
-            String status = I18n._("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
+            String broadcast = I18n.format("user.info." + (timer.broadcast ? "enabled" : "disabled"));
+            String status = I18n.format("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
             msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, broadcast);
         }
     }
