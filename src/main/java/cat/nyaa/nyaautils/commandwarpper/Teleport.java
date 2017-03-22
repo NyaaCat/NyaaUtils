@@ -118,7 +118,7 @@ public class Teleport implements Listener {
     private void doSetHome(Player p, User iu, Location curLoc, String name) {
         int n = checkHomeLimit(iu, name);
         if (n == 1) {
-            if(!name.equals("home"))
+            if (!name.equals("home"))
                 msg(p, "user.teleport.home_limit_one");
             name = "home";
         } else if (n != 0) {

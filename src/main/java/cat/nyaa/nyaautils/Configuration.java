@@ -22,62 +22,70 @@ import static cat.nyaa.nyaautils.lootprotect.LootProtectMode.OFF;
 public class Configuration extends PluginConfigure {
     @Serializable
     public String language = "en_US";
-    @Serializable
+    /* Enchantment Configurations */
+    @Serializable(name = "enchant.cooldown", alias = "enchantCooldown")
     public long enchantCooldown = 60 * 20;
-    @Serializable
+    @Serializable(name = "enchant.chance_success", alias = "chanceSuccess")
     public int chanceSuccess = 1;
-    @Serializable
+    @Serializable(name = "enchant.chance_moderate", alias = "chanceModerate")
     public int chanceModerate = 1;
-    @Serializable
+    @Serializable(name = "enchant.chance_fail", alias = "chanceFail")
     public int chanceFail = 1;
-    @Serializable
+    @Serializable(name = "enchant.chance_destroy", alias = "chanceDestroy")
     public int chanceDestroy = 1;
+    @Serializable(manualSerialization = true)
+    public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
+    /* Loot Protect */
     @Serializable
     public LootProtectMode lootProtectMode = OFF;
-    @Serializable
+    /* Player Damage Statistic */
+    @Serializable(name = "damage_statistic.ttl_minutes", alias = "damageStatCacheTTL")
     public int damageStatCacheTTL = 30; // in minutes, restart is required if changed
-    @Serializable
+    @Serializable(name = "damage_statistic.enabled", alias = "damageStatEnabled")
     public boolean damageStatEnabled = true;
-    @Serializable
+    /* Custom Affixes */
+    @Serializable(name = "custom_prefix.format", alias = "custom_fixes_prefix_format")
     public String custom_fixes_prefix_format = "&r{prefix}&r ";
-    @Serializable
+    @Serializable(name = "custom_prefix.money_cost", alias = "custom_fixes_prefix_moneyCost")
     public int custom_fixes_prefix_moneyCost = 100;
-    @Serializable
+    @Serializable(name = "custom_prefix.exp_cost", alias = "custom_fixes_prefix_expCost")
     public int custom_fixes_prefix_expCost = 100;
-    @Serializable
+    @Serializable(name = "custom_prefix.max_length", alias = "custom_fixes_prefix_maxlength")
     public int custom_fixes_prefix_maxlength = 10;
-    @Serializable
+    @Serializable(name = "custom_prefix.disabled_color_codes", alias = "custom_fixes_prefix_disabledFormattingCodes")
     public List<String> custom_fixes_prefix_disabledFormattingCodes = new ArrayList<>();
-    @Serializable
+    @Serializable(name = "custom_prefix.censored_words", alias = "custom_fixes_prefix_blockedWords")
     public List<String> custom_fixes_prefix_blockedWords = new ArrayList<>();
-    @Serializable
+    @Serializable(name = "custom_suffix.format", alias = "custom_fixes_suffix_format")
     public String custom_fixes_suffix_format = " &r{suffix}&r";
-    @Serializable
+    @Serializable(name = "custom_suffix.money_cost", alias = "custom_fixes_suffix_moneyCost")
     public int custom_fixes_suffix_moneyCost = 100;
-    @Serializable
+    @Serializable(name = "custom_suffix.exp_cost", alias = "custom_fixes_suffix_expCost")
     public int custom_fixes_suffix_expCost = 100;
-    @Serializable
+    @Serializable(name = "custom_suffix.max_length", alias = "custom_fixes_suffix_maxlength")
     public int custom_fixes_suffix_maxlength = 10;
-    @Serializable
+    @Serializable(name = "custom_suffix.disabled_color_codes", alias = "custom_fixes_suffix_disabledFormattingCodes")
     public List<String> custom_fixes_suffix_disabledFormattingCodes = new ArrayList<>();
-    @Serializable
+    @Serializable(name = "custom_suffix.censored_words", alias = "custom_fixes_suffix_blockedWords")
     public List<String> custom_fixes_suffix_blockedWords = new ArrayList<>();
-    @Serializable
+    /* Elytra Enhancement */
+    @Serializable(name = "elytra_enhance.enabled", alias = "elytra_enhance_enabled")
     public boolean elytra_enhance_enabled = true;
-    @Serializable
+    @Serializable(name = "elytra_enhance.min_speed", alias = "elytra_min_velocity")
     public double elytra_min_velocity = 1.2;
-    @Serializable
+    @Serializable(name = "elytra_enhance.max_speed", alias = "elytra_max_velocity")
     public double elytra_max_velocity = 1.6;
-    @Serializable
+    @Serializable(name = "elytra_enhance.power_duration", alias = "elytra_power_duration")
     public int elytra_power_duration = 3;
-    @Serializable
+    @Serializable(name = "elytra_enhance.max_height", alias = "elytra_boost_max_height")
     public int elytra_boost_max_height = 256;
-    @Serializable
+    @Serializable(name = "elytra_enhance.durability_notify_threshold", alias = "elytra_durability_notify")
     public int elytra_durability_notify = 10;
-    @Serializable
+    @Serializable(name = "elytra_enhance.fuel_notify_threshold", alias = "elytra_fuel_notify")
     public int elytra_fuel_notify = 10;
-    @Serializable
+    @Serializable(name = "elytra_enhance.disabled_worlds", alias = "disabled_world")
     public List<String> disabled_world = new ArrayList<String>(Arrays.asList("world1", "world2"));
+    /* Mailing System */
     @Serializable(name = "mail.handFee")
     public int mailHandFee = 10;
     @Serializable(name = "mail.chestFee")
@@ -86,11 +94,10 @@ public class Configuration extends PluginConfigure {
     public int mailCooldown = 20;
     @Serializable(name = "mail.timeoutTicks")
     public int mailTimeout = 200;
-    @Serializable(manualSerialization = true)
-    public HashMap<Enchantment, Integer> enchantMaxLevel = new HashMap<>();
+    /* Timer */
     @Serializable
     public int timerCheckInterval = -1;
-
+    /* Teleport */
     @Serializable(name = "teleport.enable")
     public boolean teleportEnable = true;
     @Serializable(name = "teleport.home.max")
@@ -177,8 +184,9 @@ public class Configuration extends PluginConfigure {
             if (e == null || e.getName() == null) continue;
             enchantMaxLevel.put(e, e.getMaxLevel());
         }
-        if (config.isConfigurationSection("enchantMaxLevel")) {
-            ConfigurationSection list = config.getConfigurationSection("enchantMaxLevel");
+        ConfigurationSection list = config.getConfigurationSection("enchant.max_level");
+        if (list == null) list = config.getConfigurationSection("enchantMaxLevel");
+        if (list != null) {
             for (String enchName : list.getKeys(false)) {
                 Enchantment e = Enchantment.getByName(enchName);
                 if (e == null || e.getName() == null) continue;
@@ -195,7 +203,7 @@ public class Configuration extends PluginConfigure {
         ISerializable.serialize(config, this);
 
         // Enchantment Max Level constraint
-        ConfigurationSection list = config.createSection("enchantMaxLevel");
+        ConfigurationSection list = config.createSection("enchant.max_level");
         for (Enchantment k : enchantMaxLevel.keySet()) {
             if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));

@@ -430,7 +430,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
                 return Double.parseDouble(new DecimalFormat(pattern).format(d));
             } catch (NumberFormatException ex) {
                 throw new BadCommandException("internal.error.bad_double", ex, str);
-            } catch (IllegalArgumentException ex){
+            } catch (IllegalArgumentException ex) {
                 throw new BadCommandException("internal.error.bad_decimal_pattern", ex, pattern);
             }
         }
