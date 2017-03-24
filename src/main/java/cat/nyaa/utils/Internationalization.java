@@ -145,11 +145,14 @@ public abstract class Internationalization {
             } catch (IllegalFormatConversionException e){
                 e.printStackTrace();
                 getPlugin().getLogger().warning("Corrupted language key: " + key);
-                StringBuilder keyBuilder = new StringBuilder("CORRUPTED_LANG<" + key + ">");
+                getPlugin().getLogger().warning("val: " + val);
+                StringBuilder keyBuilder = new StringBuilder("");
                 for (Object obj : para) {
                     keyBuilder.append("#<").append(obj.toString()).append(">");
                 }
-                return keyBuilder.toString();
+                String params = keyBuilder.toString();
+                getPlugin().getLogger().warning("params: " + params);
+                return "CORRUPTED_LANG<" + key + ">" + params;
             }
         }
     }
