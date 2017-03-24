@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.IllegalFormatConversionException;
 import java.util.Map;
 
 public abstract class Internationalization {
@@ -133,13 +134,23 @@ public abstract class Internationalization {
         if (val == null || val.startsWith("internal.")) val = internalMap.get(key);
         if (val == null) {
             getPlugin().getLogger().warning("Missing language key: " + key);
-            key = "MISSING_LANG<" + key + ">";
+            StringBuilder keyBuilder = new StringBuilder("MISSING_LANG<" + key + ">");
             for (Object obj : para) {
-                key += "#<" + obj.toString() + ">";
+                keyBuilder.append("#<").append(obj.toString()).append(">");
             }
-            return key;
+            return keyBuilder.toString();
         } else {
-            return String.format(val, para);
+            try{
+                return String.format(val, para);
+            } catch (IllegalFormatConversionException e){
+                e.printStackTrace();
+                getPlugin().getLogger().warning("Corrupted language key: " + key);
+                StringBuilder keyBuilder = new StringBuilder("CORRUPTED_LANG<" + key + ">");
+                for (Object obj : para) {
+                    keyBuilder.append("#<").append(obj.toString()).append(">");
+                }
+                return keyBuilder.toString();
+            }
         }
     }
 
