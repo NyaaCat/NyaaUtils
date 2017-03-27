@@ -379,6 +379,9 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             return ret;
         }
 
+        /**
+         * @deprecated hard coded indexes are not recommended
+         */
         public String at(int index) {
             return parsedArguments.get(index);
         }
@@ -481,6 +484,80 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             if (top == null || string == null) throw new BadCommandException("internal.error.assert_fail", string, top);
             if (!string.equals(top)) throw new BadCommandException("internal.error.assert_fail", string, top);
             return this;
+        }
+
+        // Note: all `arg*()` functions will rearrange argument order
+        // and mess up indexes. Thus, it's not recommended to use together with `at()` function
+
+        /**
+         * fetch an named argument from remaining list
+         * if multiple arguments, the first one will be returned
+         * the returned argument will be removed from further consideration
+         * named arguments looks like this: `argument_name:argument_value`
+         *
+         * @param key argument name
+         * @return the value as string
+         */
+        public String argString(String key) {
+            int j = index;
+            while (j < length() && !parsedArguments.get(j).startsWith(key + ":")) {
+                j++;
+            }
+            if (j >= length()) throw new BadCommandException("internal.named_argument.missing_arg", key);
+            String fullArgument = parsedArguments.get(j);
+            String value = fullArgument.substring(key.length() + 1);
+
+            // rearrange order
+            parsedArguments.remove(j);
+            parsedArguments.add(index, fullArgument);
+            index++;
+            return value;
+        }
+
+        /**
+         * get named argument as string
+         *
+         * @param key argument name
+         * @param def default value
+         * @return argument value
+         */
+        public String argString(String key, String def) {
+            try {
+                return argString(key);
+            } catch (BadCommandException ex) {
+                return def;
+            }
+        }
+
+        /**
+         * get named argument as integer
+         *
+         * @param key argument name
+         * @return int value
+         */
+        public int argInt(String key) {
+            String str = argString(key);
+            if (str.endsWith("k")) str = str.substring(0, str.length() - 1) + "000";
+            try {
+                return Integer.parseInt(str);
+            } catch (NumberFormatException ex) {
+                throw new BadCommandException("internal.named_argument.not_int", ex, key, str);
+            }
+        }
+
+        /**
+         * get named argument as integer
+         *
+         * @param key argument name
+         * @param def default value
+         * @return int value
+         */
+        public int argInt(String key, int def) {
+            try {
+                return argInt(key);
+            } catch (BadCommandException ex) {
+                return def;
+            }
         }
 
         public int length() {

@@ -26,6 +26,10 @@ internal:
 
     assert_fail: "Command assertion fail, Expect: %s, Actual: %s"
     player_not_found: "Cannot find player \"%s\""
+  named_argument:
+    missing_arg: "Missing argument: %s"
+    not_int: "Argument \"%s\" is not an integer: %s"
+    not_double: "Argument \"%s\" is not a double: %s"
 
 user:
   info:
