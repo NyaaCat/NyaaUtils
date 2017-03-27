@@ -133,6 +133,22 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "teleport.back.increment")
     public int backIncrement = 20;
 
+    @Serializable(name = "rename.character_limit")
+    public int renameCharacterLimit = 50;
+    @Serializable(name = "rename.disabled_color_codes")
+    public List<String> renameDisabledFormattingCodes = new ArrayList<>();
+    @Serializable(name = "rename.censored_words")
+    public List<String> renameBlockedWords = new ArrayList<>();
+    @Serializable(name = "rename.censored_words")
+    public List<String> renameBlockedMaterials = new ArrayList<>();
+    @Serializable(name = "rename.exp_cost_base")
+    public int renameExpCostBase = 10;
+    @Serializable(name = "rename.money_cost_base")
+    public int renameMoneyCostBase = 20;
+    @Serializable(name = "rename.exp_cost_per_item")
+    public int renameExpCostPer = 10;
+    @Serializable(name = "rename.money_cost_per_item")
+    public int renameMoneyCostPer = 10;
 
     @StandaloneConfig
     public final MailboxLocations mailbox;

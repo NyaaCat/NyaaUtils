@@ -39,6 +39,7 @@ user:
     no_required_permission: "You do not have the required permission: %s"
   warn:
     blocked_words: "You can't use this word: %s"
+    blocked_materials: "You can't use this material: %s"
     blocked_format_codes: "You can't use format codes %s"
     no_enough_money: "You do not have that much money"
     not_enough_exp: "You do not have enough experience"
@@ -246,7 +247,15 @@ user:
     unsafe: "The teleport destination is unsafe"
     invalid_name: "Invalid home name"
     home_limit: "You cannot set more than %d homes"
-    home_limit_one: "You can set only one home. Renaming to home."
+    home_limit_one: "You can set only one home. Renaming to home"
+  rename:
+    name_too_long: "Name '%s' is too long! Should less than %d chars"
+    success: "Rename success"
+  setlore:
+    success: "Lore set"
+  setbook:
+    no_book: "No book in your main hand"
+    success: "Book information set"
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -294,6 +303,30 @@ manual:
   format:
     description: "Show formatting codes examples"
     usage: "/nu format"
+
+  rename:
+    description: "Rename item in hand"
+    usage: "/nu rename [name]"
+
+  setlore:
+    description: "Set item lore"
+    usage: "/nu setlore [lore]"
+
+  addlore:
+    description: "Append item lore"
+    usage: "/nu addlore [lore]"
+
+  setbookauthor:
+    description: "Set book author"
+    usage: "/nu setbookauthor [author]"
+
+  setbooktitle:
+    description: "Set book title"
+    usage: "/nu setbooktitle [title]"
+
+  setbookunsign:
+    description: "Unsign book"
+    usage: "/nu setbookunsign"
 
   el:
     description: "Toggle fuel mode"

@@ -82,3 +82,15 @@ permissions:
   nu.createtimer:
     description: Add and remove timer
     default: op
+  nu.rename:
+    description: Rename item
+    default: op
+  nu.rename.blacklist:
+    description: Bypass blacklist in renaming item
+    default: false
+  nu.setlore:
+    description: Set or append item lore
+    default: op
+  nu.setbook:
+    description: Set book author, title or unsign book
+    default: op

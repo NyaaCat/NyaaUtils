@@ -19,9 +19,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
@@ -333,5 +337,174 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "format", permission = "nu.format")
     public void commandFormat(CommandSender sender, Arguments args) {
         msg(sender, "user.format.message");
+    }
+
+    @SubCommand(value = "rename", permission = "nu.rename")
+    public void rename(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.rename.usage");
+            return;
+        }
+        Player p = asPlayer(sender);
+        String name = args.next().replace("§", "");
+        if(plugin.cfg.renameCharacterLimit != 0 && ChatColor.stripColor(name).length() > NyaaUtils.instance.cfg.renameCharacterLimit){
+            msg(p, "user.rename.name_too_long", name);
+            return;
+        }
+        for (String k : plugin.cfg.renameDisabledFormattingCodes) {
+            if (name.toUpperCase().contains("&" + k.toUpperCase())&& !p.hasPermission("nu.rename.blacklist")) {
+                msg(p, "user.warn.blocked_format_codes", "&" + k);
+                return;
+            }
+        }
+        name = ChatColor.translateAlternateColorCodes('&', name);
+        for (String k : plugin.cfg.renameBlockedWords) {
+            if (ChatColor.stripColor(name).toUpperCase().contains(k.toUpperCase()) && !p.hasPermission("nu.rename.blacklist")) {
+                msg(p, "user.warn.blocked_words", k);
+                return;
+            }
+        }
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null ||item.getType().equals(Material.AIR)){
+            msg(sender, "user.info.no_item_hand");
+            return;
+        }
+        int num = item.getAmount();
+        for (String sab : plugin.cfg.renameBlockedMaterials) {
+            if (Material.matchMaterial(sab) == item.getType() && !p.hasPermission("nu.rename.blacklist") ) {
+                msg(sender, "user.warn.blocked_materials", sab);
+                return;
+            }
+        }
+        int expCost = plugin.cfg.renameExpCostBase + plugin.cfg.renameExpCostPer * num;
+        int moneyCost = plugin.cfg.renameMoneyCostBase + plugin.cfg.renameMoneyCostPer * num;
+        if (expCost > 0 &&
+                !(p.getTotalExperience() >= expCost)) {
+            msg(sender, "user.warn.not_enough_exp");
+            return;
+        }
+        if (moneyCost > 0 &&
+                !plugin.vaultUtil.enoughMoney(p, moneyCost)) {
+            msg(sender, "user.warn.no_enough_money");
+            return;
+        }
+        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(moneyCost);
+        plugin.getServer().getPluginManager().callEvent(event);
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        item.setItemMeta(itemStackMeta);
+        if (expCost > 0) {
+            ExperienceUtil.addPlayerExperience(p, -expCost);
+        }
+        plugin.vaultUtil.withdraw(p, moneyCost);
+        msg(sender, "user.rename.success", name);
+    }
+
+    @SubCommand(value = "setlore", permission = "nu.setlore")
+    public void setlore(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.setlore.usage");
+            return;
+        }
+        String lore = args.next().replace("§", "");
+        Player p = asPlayer(sender);
+        lore = ChatColor.translateAlternateColorCodes('&', lore);
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null ||item.getType().equals(Material.AIR)){
+            msg(sender, "user.info.no_item_hand");
+            return;
+        }
+        String[] line = lore.split("/n");
+        List<String> lines = new ArrayList<>();
+        for(String s : line){
+            lines.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.setLore(lines);
+        item.setItemMeta(itemStackMeta);
+        msg(sender, "user.setlore.success", lore);
+    }
+
+    @SubCommand(value = "addlore", permission = "nu.setlore")
+    public void addlore(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.addlore.usage");
+            return;
+        }
+        String lore = args.next().replace("§", "");
+        Player p = asPlayer(sender);
+        lore = ChatColor.translateAlternateColorCodes('&', lore);
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null ||item.getType().equals(Material.AIR)){
+            msg(sender, "user.info.no_item_hand");
+            return;
+        }
+        String[] line = lore.split("/n");
+        List<String> lines = item.getItemMeta().getLore() == null? new ArrayList<>() : item.getItemMeta().getLore();
+        for(String s : line){
+            lines.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.setLore(lines);
+        item.setItemMeta(itemStackMeta);
+        msg(sender, "user.setlore.success", lore);
+    }
+
+    @SubCommand(value = "setbookauthor", permission = "nu.setbook")
+    public void setbookauthor(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.setbookauthor.usage");
+            return;
+        }
+        String author = args.next();
+        Player p = asPlayer(sender);
+        author = ChatColor.translateAlternateColorCodes('&', author);
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+            msg(sender, "user.setbook.no_book");
+            return;
+        }
+        BookMeta meta = (BookMeta) item.getItemMeta();
+        meta.setAuthor(author);
+        item.setItemMeta(meta);
+        msg(sender, "user.setbook.success");
+    }
+
+    @SubCommand(value = "setbooktitle", permission = "nu.setbook")
+    public void setbooktitle(CommandSender sender, Arguments args) {
+        if (!(args.length() > 1)) {
+            msg(sender, "manual.setbooktitle.usage");
+            return;
+        }
+        String title = args.next();
+        Player p = asPlayer(sender);
+        title = ChatColor.translateAlternateColorCodes('&', title);
+
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+            msg(sender, "user.setbook.no_book");
+            return;
+        }
+        BookMeta meta = (BookMeta) item.getItemMeta();
+        meta.setTitle(title);
+        item.setItemMeta(meta);
+        msg(sender, "user.setbook.success");
+    }
+
+    @SubCommand(value = "setbookunsigned", permission = "nu.setbook")
+    public void setbookunsigned(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        ItemStack item = p.getInventory().getItemInMainHand();
+        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+            msg(sender, "user.setbook.no_book");
+            return;
+        }
+        BookMeta meta = (BookMeta) item.getItemMeta();
+        ItemStack newbook = new ItemStack(Material.BOOK_AND_QUILL, 1);
+        BookMeta newbookMeta = (BookMeta) newbook.getItemMeta();
+        newbookMeta.setPages(meta.getPages());
+        newbook.setItemMeta(newbookMeta);
+        p.getInventory().setItemInMainHand(newbook);
+        msg(sender, "user.setbook.success");
     }
 }
