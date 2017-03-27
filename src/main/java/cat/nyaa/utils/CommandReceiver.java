@@ -1,5 +1,6 @@
 package cat.nyaa.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -420,9 +421,16 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             }
         }
 
+        // throw exception if no string found
+        public String nextString() {
+            String str = next();
+            if (str == null) throw new BadCommandException("internal.error.no_more_string");
+            return str;
+        }
+
         public double nextDouble(String pattern) {
             String str = next();
-            if (str == null) throw new BadCommandException("No more numbers in argument");
+            if (str == null) throw new BadCommandException("internal.error.no_more_double");
             try {
                 double d = Double.parseDouble(str);
                 if (Double.isInfinite(d) || Double.isNaN(d))
@@ -457,6 +465,22 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
             String str = next();
             if (str == null) throw new BadCommandException("internal.error.no_more_bool");
             return Boolean.parseBoolean(str);
+        }
+
+        public Player nextPlayer() {
+            String name = next();
+            if (name == null) throw new BadCommandException("internal.error.no_more_player");
+            Player p = Bukkit.getPlayer(name);
+            if (p == null) throw new BadCommandException("internal.error.player_not_found", name);
+            return p;
+        }
+
+        public Arguments nextAssert(String string) {
+            String top = next();
+            if (top == null && string == null) return this;
+            if (top == null || string == null) throw new BadCommandException("internal.error.assert_fail", string, top);
+            if (!string.equals(top)) throw new BadCommandException("internal.error.assert_fail", string, top);
+            return this;
         }
 
         public int length() {

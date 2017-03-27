@@ -21,6 +21,11 @@ internal:
     no_more_double: "No more numbers in argument"
     no_more_enum: "No more enum values in argument"
     no_more_bool: "No more booleans in argument"
+    no_more_string: "No more strings in argument"
+    no_more_player: "No more player name in argument"
+
+    assert_fail: "Command assertion fail, Expect: %s, Actual: %s"
+    player_not_found: "Cannot find player \"%s\""
 
 user:
   info:
