@@ -726,4 +726,25 @@ public enum I16rItemName {
             return new TranslatableComponent(e.getUnlocalizedName());
         }
     }
+
+    public static String getPlayerSkullName(ItemStack skull, String locale) {
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        if (meta.hasOwner()) {
+            return String.format(LanguageHelper.translateToLocal("item.skull.player.name", locale),
+                    meta.getOwner());
+        } else return LanguageHelper.translateToLocal("item.skull.char.name", locale);
+    }
+
+    /**
+     * Get the index of an item based on ItemStack.
+     *
+     * @param item The item for search.
+     * @return The index of the item.
+     */
+    public static I16rItemName get(ItemStack item) {
+        I16rItemName result = lookup.get(item.getType().name() + ":" + Integer.toString(item.getDurability()));
+        if (result == null)
+            result = lookup.get(item.getType().name());
+        return result;
+    }
 }

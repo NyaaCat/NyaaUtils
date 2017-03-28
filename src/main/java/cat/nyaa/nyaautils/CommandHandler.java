@@ -29,18 +29,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandHandler extends CommandReceiver<NyaaUtils> {
-    private NyaaUtils plugin;
-
-    public CommandHandler(NyaaUtils plugin, Internationalization i18n) {
-        super(plugin, i18n);
-        this.plugin = plugin;
-    }
-
-    @Override
-    public String getHelpPrefix() {
-        return "";
-    }
-
     @SubCommand("exhibition")
     public ExhibitionCommands exhibitionCommands;
     @SubCommand("mailbox")
@@ -53,6 +41,24 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public ElytraCommands elytraCommands;
     @SubCommand("timer")
     public TimerCommands timerCommands;
+    private NyaaUtils plugin;
+    public CommandHandler(NyaaUtils plugin, Internationalization i18n) {
+        super(plugin, i18n);
+        this.plugin = plugin;
+    }
+
+    private static Vector toVector(double yaw, double pitch, double length) {
+        return new Vector(
+                Math.cos(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length,
+                Math.sin(pitch / 180 * Math.PI) * length,
+                Math.sin(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length
+        );
+    }
+
+    @Override
+    public String getHelpPrefix() {
+        return "";
+    }
 
     /* Show off the item in player's hand */
     @SubCommand(value = "show", permission = "nu.show")
@@ -131,65 +137,57 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void commandProject(CommandSender sender, Arguments args) {
         if (args.top() == null) {
             sender.sendMessage(I18n.format("user.project.usage"));
-        } else {
-            double yaw = args.nextDouble();
-            double pitch = args.nextDouble();
-            double speed = args.nextDouble();
-            int duration = args.nextInt();
-            String pName = args.next();
-            Entity ent;
-            final Entity p;
-            UUID uid;
-            try {
-                uid = UUID.fromString(pName);
-                ent = Bukkit.getEntity(uid);
-            } catch (Exception e) {
-                if (pName == null) {
-                    if (sender instanceof Player) {
-                        pName = sender.getName();
-                    } else {
-                        sender.sendMessage(I18n.format("user.project.missing_name"));
-                        return;
-                    }
-                }
-                ent = Bukkit.getPlayer(pName);
-                if (ent == null) {
-                    sender.sendMessage(I18n.format("user.project.player_not_online", pName));
-                    return;
-                }
+            return;
+        }
+        double yaw = args.nextDouble();
+        double pitch = args.nextDouble();
+        double speed = args.nextDouble();
+        int duration = args.nextInt();
+        String pName = args.next();
+        Entity ent;
+        final Entity p;
+        UUID uid;
+        if(pName == null){
+            if (sender instanceof Player) {
+                pName = ((Player) sender).getUniqueId().toString();
+            } else {
+                sender.sendMessage(I18n.format("user.project.missing_name"));
+                return;
             }
-            p = ent;
+        }
+        try {
+            uid = UUID.fromString(pName);
+            ent = Bukkit.getEntity(uid);
+        } catch (Exception e) {
+            ent = Bukkit.getPlayer(pName);
+            if (ent == null) {
+                sender.sendMessage(I18n.format("user.project.player_not_online", pName));
+                return;
+            }
+        }
+        p = ent;
 
-            new BukkitRunnable() {
-                final int d = duration;
-                final Vector v = toVector(yaw, pitch, speed);
-                final Entity entity = p;
-                int current = 0;
+        new BukkitRunnable() {
+            final int d = duration;
+            final Vector v = toVector(yaw, pitch, speed);
+            final Entity entity = p;
+            int current = 0;
 
 
-                @Override
-                public void run() {
-                    if (!(entity instanceof Player) || ((Player) entity).isOnline()) {
-                        if (current < d) {
-                            current++;
-                            entity.setVelocity(v);
-                        } else {
-                            cancel();
-                        }
+            @Override
+            public void run() {
+                if (!(entity instanceof Player) || ((Player) entity).isOnline()) {
+                    if (current < d) {
+                        current++;
+                        entity.setVelocity(v);
                     } else {
                         cancel();
                     }
+                } else {
+                    cancel();
                 }
-            }.runTaskTimer(plugin, 1, 1);
-        }
-    }
-
-    private static Vector toVector(double yaw, double pitch, double length) {
-        return new Vector(
-                Math.cos(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length,
-                Math.sin(pitch / 180 * Math.PI) * length,
-                Math.sin(yaw / 180 * Math.PI) * Math.cos(pitch / 180 * Math.PI) * length
-        );
+            }
+        }.runTaskTimer(plugin, 1, 1);
     }
 
     /* Reload the plugin */
@@ -347,12 +345,12 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         }
         Player p = asPlayer(sender);
         String name = args.next().replace("§", "");
-        if(plugin.cfg.renameCharacterLimit != 0 && ChatColor.stripColor(name).length() > NyaaUtils.instance.cfg.renameCharacterLimit){
+        if (plugin.cfg.renameCharacterLimit != 0 && ChatColor.stripColor(name).length() > NyaaUtils.instance.cfg.renameCharacterLimit) {
             msg(p, "user.rename.name_too_long", name);
             return;
         }
         for (String k : plugin.cfg.renameDisabledFormattingCodes) {
-            if (name.toUpperCase().contains("&" + k.toUpperCase())&& !p.hasPermission("nu.rename.blacklist")) {
+            if (name.toUpperCase().contains("&" + k.toUpperCase()) && !p.hasPermission("nu.rename.blacklist")) {
                 msg(p, "user.warn.blocked_format_codes", "&" + k);
                 return;
             }
@@ -365,13 +363,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             }
         }
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null ||item.getType().equals(Material.AIR)){
+        if (item == null || item.getType().equals(Material.AIR)) {
             msg(sender, "user.info.no_item_hand");
             return;
         }
         int num = item.getAmount();
         for (String sab : plugin.cfg.renameBlockedMaterials) {
-            if (Material.matchMaterial(sab) == item.getType() && !p.hasPermission("nu.rename.blacklist") ) {
+            if (Material.matchMaterial(sab) == item.getType() && !p.hasPermission("nu.rename.blacklist")) {
                 msg(sender, "user.warn.blocked_materials", sab);
                 return;
             }
@@ -410,13 +408,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         Player p = asPlayer(sender);
         lore = ChatColor.translateAlternateColorCodes('&', lore);
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null ||item.getType().equals(Material.AIR)){
+        if (item == null || item.getType().equals(Material.AIR)) {
             msg(sender, "user.info.no_item_hand");
             return;
         }
         String[] line = lore.split("/n");
         List<String> lines = new ArrayList<>();
-        for(String s : line){
+        for (String s : line) {
             lines.add(ChatColor.translateAlternateColorCodes('&', s));
         }
         ItemMeta itemStackMeta = item.getItemMeta();
@@ -435,13 +433,13 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         Player p = asPlayer(sender);
         lore = ChatColor.translateAlternateColorCodes('&', lore);
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null ||item.getType().equals(Material.AIR)){
+        if (item == null || item.getType().equals(Material.AIR)) {
             msg(sender, "user.info.no_item_hand");
             return;
         }
         String[] line = lore.split("/n");
-        List<String> lines = item.getItemMeta().getLore() == null? new ArrayList<>() : item.getItemMeta().getLore();
-        for(String s : line){
+        List<String> lines = item.getItemMeta().getLore() == null ? new ArrayList<>() : item.getItemMeta().getLore();
+        for (String s : line) {
             lines.add(ChatColor.translateAlternateColorCodes('&', s));
         }
         ItemMeta itemStackMeta = item.getItemMeta();
@@ -460,7 +458,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         Player p = asPlayer(sender);
         author = ChatColor.translateAlternateColorCodes('&', author);
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+        if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
             msg(sender, "user.setbook.no_book");
             return;
         }
@@ -481,7 +479,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         title = ChatColor.translateAlternateColorCodes('&', title);
 
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+        if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
             msg(sender, "user.setbook.no_book");
             return;
         }
@@ -495,7 +493,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public void setbookunsigned(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         ItemStack item = p.getInventory().getItemInMainHand();
-        if(item == null || !item.getType().equals(Material.WRITTEN_BOOK)){
+        if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
             msg(sender, "user.setbook.no_book");
             return;
         }

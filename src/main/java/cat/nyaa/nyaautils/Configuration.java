@@ -150,6 +150,9 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "rename.money_cost_per_item")
     public int renameMoneyCostPer = 10;
 
+    @Serializable(name = "i16r.lang_file_dir")
+    public String langFileDir = "/i16r/";
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig

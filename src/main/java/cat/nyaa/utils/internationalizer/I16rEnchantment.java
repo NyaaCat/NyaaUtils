@@ -96,8 +96,14 @@ public enum I16rEnchantment {
         return unlocalizedName;
     }
 
+    /**
+     * Get the index of an enchantment based on {@link I16rEnchantment}.
+     *
+     * @param ench The enchantment.
+     * @return The index of the item.
+     */
     public static I16rEnchantment fromEnchantment(Enchantment ench) {
-        return lookup.containsKey(ench) ? lookup.get(ench) : null;
+        return lookup.getOrDefault(ench, null);
     }
 
     public BaseComponent getUnlocalizedName() {
