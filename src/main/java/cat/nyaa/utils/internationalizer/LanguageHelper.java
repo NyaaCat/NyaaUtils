@@ -52,9 +52,9 @@ public class LanguageHelper {
     public static String getItemName(ItemStack item, String locale) {
         // Potion & SpawnEgg & Player Skull
         if (item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION || item.getType() == Material.LINGERING_POTION || item.getType() == Material.TIPPED_ARROW)
-            return EnumPotionEffect.getLocalizedName(item, locale);
+            return I16rPotionEffect.getLocalizedName(item, locale);
         else if (item.getType() == Material.MONSTER_EGG)
-            return EnumEntity.getSpawnEggName(item, locale);
+            return I16rEntity.getSpawnEggName(item, locale);
         else if (item.getType() == Material.SKULL_ITEM && item.getDurability() == 3) // is player's skull
             return I16rItemName.getPlayerSkullName(item, locale);
 
@@ -79,8 +79,8 @@ public class LanguageHelper {
      * @return The unlocalized name. If the entity doesn't have a unlocalized name, this method will return the EntityType of it.
      */
     public static String getEntityUnlocalizedName(Entity entity) {
-        EnumEntity enumEntity = EnumEntity.get(entity.getType());
-        return enumEntity != null ? enumEntity.getUnlocalizedName() : entity.getType().toString();
+        I16rEntity i16rEntity = I16rEntity.get(entity.getType());
+        return i16rEntity != null ? i16rEntity.getUnlocalizedName() : entity.getType().toString();
     }
 
     /**
@@ -90,8 +90,8 @@ public class LanguageHelper {
      * @return The unlocalized name. If the entity doesn't have a unlocalized name, this method will return the name of the EntityType.
      */
     public static String getEntityUnlocalizedName(EntityType entityType) {
-        EnumEntity enumEntity = EnumEntity.get(entityType);
-        return enumEntity != null ? enumEntity.getUnlocalizedName() : entityType.toString();
+        I16rEntity i16rEntity = I16rEntity.get(entityType);
+        return i16rEntity != null ? i16rEntity.getUnlocalizedName() : entityType.toString();
     }
 
     /**
@@ -135,7 +135,7 @@ public class LanguageHelper {
      * @return The unlocalized name.(if level is greater than 10, it will only return the number of the level)
      */
     public static String getEnchantmentLevelUnlocalizedName(int level) {
-        EnumEnchantmentLevel enumEnchLevel = EnumEnchantmentLevel.get(level);
+        I16rEnchantmentLevel enumEnchLevel = I16rEnchantmentLevel.get(level);
         return enumEnchLevel != null ? enumEnchLevel.getUnlocalizedName() : Integer.toString(level);
     }
 
@@ -205,11 +205,11 @@ public class LanguageHelper {
      * @return The localized entry. If the localized entry doesn't exist, it will first look up the fallback language map. If the entry still doesn't exist, then return the unlocalized name.
      */
     public static String translateToLocal(String unlocalizedName, String locale) {
-        String result = EnumLang.get(locale.toLowerCase()).getMap().get(unlocalizedName);
+        String result = I16rLang.get(locale.toLowerCase()).getMap().get(unlocalizedName);
         if (result != null)
             return result;
         else {
-            result = EnumLang.EN_US.getMap().get(unlocalizedName);
+            result = I16rLang.EN_US.getMap().get(unlocalizedName);
         }
         return result == null ? unlocalizedName : result;
     }

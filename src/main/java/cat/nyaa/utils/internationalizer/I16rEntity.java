@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author Meow J
  */
-public enum EnumEntity {
+public enum I16rEntity {
 
     ITEM(EntityType.DROPPED_ITEM, "entity.Item.name"),
     EXPERIENCE_ORB(EntityType.EXPERIENCE_ORB, "entity.XPOrb.name"),
@@ -93,17 +93,17 @@ public enum EnumEntity {
     MULE(EntityType.MULE, "entity.Mule.name");
     // Some entity subtypes are not included
 
-    private static final Map<EntityType, EnumEntity> lookup = new HashMap<EntityType, EnumEntity>();
+    private static final Map<EntityType, I16rEntity> lookup = new HashMap<EntityType, I16rEntity>();
 
     static {
-        for (EnumEntity entity : EnumSet.allOf(EnumEntity.class))
+        for (I16rEntity entity : EnumSet.allOf(I16rEntity.class))
             lookup.put(entity.getType(), entity);
     }
 
     private EntityType type;
     private String unlocalizedName;
 
-    EnumEntity(EntityType type, String unlocalizedName) {
+    I16rEntity(EntityType type, String unlocalizedName) {
         this.type = type;
         this.unlocalizedName = unlocalizedName;
     }
@@ -112,7 +112,7 @@ public enum EnumEntity {
      * @param entityType The Entity type.
      * @return The index of an entity based on entity type
      */
-    public static EnumEntity get(EntityType entityType) {
+    public static I16rEntity get(EntityType entityType) {
         return lookup.get(entityType);
     }
 
@@ -130,7 +130,7 @@ public enum EnumEntity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        EnumEntity entity = get(type);
+        I16rEntity entity = get(type);
         return entity != null ?
                 LanguageHelper.translateToLocal("item.monsterPlacer.name", locale) + " "
                         + LanguageHelper.translateToLocal(entity.getUnlocalizedName(), locale)

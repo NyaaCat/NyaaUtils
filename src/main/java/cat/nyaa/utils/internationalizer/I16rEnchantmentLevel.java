@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author <b>hexosse</b> (<a href="https://github.com/hexosse">hexosse on GitHub</a>).
  */
-public enum EnumEnchantmentLevel {
+public enum I16rEnchantmentLevel {
 
     LEVEL1(1, "enchantment.level.1"),
     LEVEL2(2, "enchantment.level.2"),
@@ -34,10 +34,10 @@ public enum EnumEnchantmentLevel {
     LEVEL9(9, "enchantment.level.9"),
     LEVEL10(10, "enchantment.level.10"),;
 
-    private static final Map<Integer, EnumEnchantmentLevel> lookup = new HashMap<Integer, EnumEnchantmentLevel>();
+    private static final Map<Integer, I16rEnchantmentLevel> lookup = new HashMap<Integer, I16rEnchantmentLevel>();
 
     static {
-        for (EnumEnchantmentLevel level : EnumSet.allOf(EnumEnchantmentLevel.class))
+        for (I16rEnchantmentLevel level : EnumSet.allOf(I16rEnchantmentLevel.class))
             lookup.put(level.getLevel(), level);
     }
 
@@ -47,7 +47,7 @@ public enum EnumEnchantmentLevel {
     /**
      * Create an index of enchantments.
      */
-    EnumEnchantmentLevel(int level, String unlocalizedName) {
+    I16rEnchantmentLevel(int level, String unlocalizedName) {
         this.level = level;
         this.unlocalizedName = unlocalizedName;
     }
@@ -56,7 +56,7 @@ public enum EnumEnchantmentLevel {
      * @param level Enchantment level.
      * @return The index of a level.
      */
-    public static EnumEnchantmentLevel get(Integer level) {
+    public static I16rEnchantmentLevel get(Integer level) {
         return lookup.get(level);
     }
 

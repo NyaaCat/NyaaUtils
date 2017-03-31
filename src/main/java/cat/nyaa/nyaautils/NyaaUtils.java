@@ -9,7 +9,7 @@ import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
 import cat.nyaa.utils.VaultUtil;
-import cat.nyaa.utils.internationalizer.EnumLang;
+import cat.nyaa.utils.internationalizer.I16rLang;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +36,7 @@ public class NyaaUtils extends JavaPlugin {
         cfg = new Configuration(this);
         cfg.load();
         i18n = new I18n(this, cfg.language);
-        EnumLang.init();
+        I16rLang.init();
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
         getCommand("nyaautils").setTabCompleter((TabCompleter) commandHandler);

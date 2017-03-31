@@ -25,16 +25,16 @@ import java.util.Map;
  *
  * @author Meow J
  */
-public enum EnumLang {
+public enum I16rLang {
 
     EN_US("en_us", new HashMap<>()),
     ZH_CN("zh_cn", new HashMap<>());
 
 
-    private static final Map<String, EnumLang> lookup = new HashMap<>();
+    private static final Map<String, I16rLang> lookup = new HashMap<>();
 
     static {
-        for (EnumLang lang : EnumSet.allOf(EnumLang.class))
+        for (I16rLang lang : EnumSet.allOf(I16rLang.class))
             lookup.put(lang.getLocale(), lang);
     }
 
@@ -44,7 +44,7 @@ public enum EnumLang {
     /**
      * Create an index of lang file.
      */
-    EnumLang(String locale, Map<String, String> map) {
+    I16rLang(String locale, Map<String, String> map) {
         this.locale = locale;
         this.map = map;
     }
@@ -53,8 +53,8 @@ public enum EnumLang {
      * @param locale The locale of the language
      * @return The index of a lang file based on locale.
      */
-    public static EnumLang get(String locale) {
-        EnumLang result = lookup.get(locale);
+    public static I16rLang get(String locale) {
+        I16rLang result = lookup.get(locale);
         return result == null ? EN_US : result;
     }
 
@@ -62,18 +62,18 @@ public enum EnumLang {
      * Initialize this class, load all the languages to the corresponding HashMap.
      */
     public static void init() {
-        for (EnumLang enumLang : EnumLang.values()) {
+        for (I16rLang i16rLang : I16rLang.values()) {
             try {
-                readFile(enumLang, new BufferedReader(new InputStreamReader(EnumLang.class.getResourceAsStream(NyaaUtils.instance.cfg.langFileDir + enumLang.locale + ".lang"), Charset.forName("UTF-8"))));
-                NyaaUtils.instance.getLogger().info(enumLang.getLocale() + " has been loaded.");
+                readFile(i16rLang, new BufferedReader(new InputStreamReader(I16rLang.class.getResourceAsStream(NyaaUtils.instance.cfg.langFileDir + i16rLang.locale + ".lang"), Charset.forName("UTF-8"))));
+                NyaaUtils.instance.getLogger().info(i16rLang.getLocale() + " has been loaded.");
             } catch (Exception e) {
-                NyaaUtils.instance.getLogger().warning("Failed to load language file " + enumLang.locale);
+                NyaaUtils.instance.getLogger().warning("Failed to load language file " + i16rLang.locale);
                 e.printStackTrace();
             }
         }
     }
 
-    public static void readFile(EnumLang enumLang, BufferedReader reader) throws IOException {
+    public static void readFile(I16rLang i16rLang, BufferedReader reader) throws IOException {
         String temp;
         String[] tempStringArr;
         try {
@@ -82,7 +82,7 @@ public enum EnumLang {
                 if (temp.startsWith("#")) continue;
                 if (temp.contains("=")) {
                     tempStringArr = temp.split("=");
-                    enumLang.map.put(tempStringArr[0], tempStringArr.length > 1 ? tempStringArr[1] : "");
+                    i16rLang.map.put(tempStringArr[0], tempStringArr.length > 1 ? tempStringArr[1] : "");
                 }
                 temp = reader.readLine();
             }
