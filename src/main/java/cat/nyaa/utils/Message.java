@@ -1,6 +1,7 @@
 package cat.nyaa.utils;
 
 import cat.nyaa.utils.internationalizer.I16rItemName;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,7 +137,26 @@ public final class Message {
     }
 
     public Message broadcast() {
-        Bukkit.getServer().spigot().broadcast(inner);
+        return broadcast(MessageType.CHAT);
+    }
+
+    public Message broadcast(MessageType type) {
+        if (type == MessageType.CHAT) {
+            Bukkit.spigot().broadcast();
+            Bukkit.getServer().spigot().broadcast(inner);
+        } else if (type == MessageType.ACTION_BAR) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                sendActionBarMessage(p, inner);
+            }
+        } else if (type == MessageType.TITLE) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                sendTitle(p, inner, new TextComponent(), 10, 50, 10);
+            }
+        } else if (type == MessageType.SUBTITLE) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                sendTitle(p, new TextComponent(), inner, 10, 50, 10);
+            }
+        }
         Bukkit.getConsoleSender().sendMessage(inner.toLegacyText());
         return this;
     }
@@ -206,5 +228,33 @@ public final class Message {
             return itemStack;
         }
         return item;
+    }
+
+    public static void sendActionBarMessage(Player player, BaseComponent msg) {
+        try {
+            Class craftPlayer = ReflectionUtil.getOBCClass("entity.CraftPlayer");
+            Method sendMessageMethod = craftPlayer.getMethod("sendMessage", ChatMessageType.class, BaseComponent[].class);
+            sendMessageMethod.invoke(player, ChatMessageType.ACTION_BAR, new BaseComponent[]{msg});
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendTitle(Player player, BaseComponent title, BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
+        try {
+            Class craftPlayer = ReflectionUtil.getOBCClass("entity.CraftPlayer");
+            Method showTitleMethod = craftPlayer.getMethod("showTitle", BaseComponent.class, BaseComponent.class, int.class, int.class, int.class);
+            showTitleMethod.invoke(player, title, subtitle, fadeInTicks, stayTicks, fadeOutTicks);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 }
