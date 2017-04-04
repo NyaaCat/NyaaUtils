@@ -38,6 +38,9 @@ permissions:
   nu.lootprotect:
     description: Toggle loot protect status
     default: true
+  nu.dropprotect:
+    description: Toggle drop protect status
+    default: true
   nu.exhibition.set:
     description: Exhibition modification
     default: true

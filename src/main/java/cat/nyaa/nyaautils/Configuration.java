@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaautils.dropprotect.DropProtectMode;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
@@ -149,6 +150,13 @@ public class Configuration extends PluginConfigure {
     public int renameExpCostPer = 10;
     @Serializable(name = "rename.money_cost_per_item")
     public int renameMoneyCostPer = 10;
+
+    @Serializable(name = "drop_protect.maximum_item_in_world")
+    public int dropProtectMaximumItem = 1000;
+    @Serializable(name = "drop_protect.proctect_second")
+    public int dropProtectSecond = 120;
+    @Serializable
+    public DropProtectMode dropProtectMode = DropProtectMode.ON;
 
     @Serializable(name = "i16r.lang_file_dir")
     public String langFileDir = "/i16r/";

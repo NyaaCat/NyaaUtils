@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaautils.commandwarpper.Teleport;
+import cat.nyaa.nyaautils.dropprotect.DropProtectListener;
 import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
 import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
@@ -20,6 +21,7 @@ public class NyaaUtils extends JavaPlugin {
     public CommandHandler commandHandler;
     public Configuration cfg;
     public LootProtectListener lpListener;
+    public DropProtectListener dpListener;
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
     public MailboxListener mailboxListener;
@@ -41,6 +43,7 @@ public class NyaaUtils extends JavaPlugin {
         getCommand("nyaautils").setExecutor(commandHandler);
         getCommand("nyaautils").setTabCompleter((TabCompleter) commandHandler);
         lpListener = new LootProtectListener(this);
+        dpListener = new DropProtectListener(this);
         dsListener = new DamageStatListener(this);
         elytraEnhanceListener = new ElytraEnhanceListener(this);
         teleport = new Teleport(this);

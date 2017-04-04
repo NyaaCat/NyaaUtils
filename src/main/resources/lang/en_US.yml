@@ -108,6 +108,11 @@ user:
       player: Can be @p in command block.
     missing_name: "Player name required"
     player_not_online: "Player %s is not online"
+  dp:
+    turned_off: "Death drop protect turned off"
+    turned_on: "Death drop protect turned on"
+    mode_OFF: "Death drop protect has been turned off globally"
+    mode_ON: "Item dropped on death will not despawn for %d second"
   lp:
     turned_off: "Loot protect turned off"
     turned_on: "Loot protect turned on"
@@ -284,6 +289,10 @@ manual:
   lp:
     description: "Toggle loot protect status"
     usage: "/nu lp"
+
+  dp:
+    description: "Toggle drop protect status"
+    usage: "/nu dp"
 
   launch:
     description: "Launch player into sky and open their elytra"

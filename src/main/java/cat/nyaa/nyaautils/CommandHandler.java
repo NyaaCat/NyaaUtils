@@ -201,6 +201,18 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         p.onEnable();
     }
 
+    /* Toggle drop protection ON/OFF for the player */
+    @SubCommand(value = "dp", permission = "nu.dropprotect")
+    public void commandDropProtectToggle(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        if (plugin.dpListener.toggleStatus(p.getUniqueId())) {
+            p.sendMessage(I18n.format("user.dp.turned_on"));
+        } else {
+            p.sendMessage(I18n.format("user.dp.turned_off"));
+        }
+        p.sendMessage(I18n.format("user.dp.mode_" + plugin.cfg.dropProtectMode.name(), plugin.cfg.dropProtectSecond));
+    }
+
     /* Toggle loot protection ON/OFF for the player */
     @SubCommand(value = "lp", permission = "nu.lootprotect")
     public void commandLootProtectToggle(CommandSender sender, Arguments args) {
