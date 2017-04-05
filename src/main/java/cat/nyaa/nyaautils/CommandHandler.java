@@ -5,6 +5,7 @@ import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
+import cat.nyaa.nyaautils.realm.RealmCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
 import cat.nyaa.nyaautils.timer.TimerCommands;
 import cat.nyaa.utils.CommandReceiver;
@@ -41,6 +42,9 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public ElytraCommands elytraCommands;
     @SubCommand("timer")
     public TimerCommands timerCommands;
+    @SubCommand("realm")
+    public RealmCommands realmCommands;
+    
     private NyaaUtils plugin;
     public CommandHandler(NyaaUtils plugin, Internationalization i18n) {
         super(plugin, i18n);

@@ -109,7 +109,7 @@ public class TimerCommands extends CommandReceiver<NyaaUtils> {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        Selection selection = plugin.timerManager.worldEditPlugin.getSelection(player);
+        Selection selection = plugin.worldEditPlugin.getSelection(player);
         if (selection == null) {
             msg(sender, "user.timer.select");
             return;

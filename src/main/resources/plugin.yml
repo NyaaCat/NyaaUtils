@@ -97,3 +97,9 @@ permissions:
   nu.setbook:
     description: Set book author, title or unsign book
     default: op
+  nu.realm.info:
+    description: View realm info
+    default: true
+  nu.realm.admin:
+    description: Create and remove realm
+    default: op

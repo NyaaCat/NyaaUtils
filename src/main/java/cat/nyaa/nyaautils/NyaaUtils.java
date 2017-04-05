@@ -7,10 +7,12 @@ import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
+import cat.nyaa.nyaautils.realm.RealmListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
 import cat.nyaa.utils.VaultUtil;
 import cat.nyaa.utils.internationalizer.I16rLang;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +33,8 @@ public class NyaaUtils extends JavaPlugin {
     public FuelManager fuelManager;
     public TimerManager timerManager;
     public TimerListener timerListener;
+    public WorldEditPlugin worldEditPlugin;
+    public RealmListener realmListener;
 
     @Override
     public void onEnable() {
@@ -53,6 +57,8 @@ public class NyaaUtils extends JavaPlugin {
         fuelManager = new FuelManager(this);
         timerManager = new TimerManager(this);
         timerListener = new TimerListener(this);
+        worldEditPlugin = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+        realmListener=new RealmListener(this);
     }
 
     @Override

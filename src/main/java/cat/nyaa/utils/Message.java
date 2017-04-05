@@ -132,7 +132,19 @@ public final class Message {
     }
 
     public Message send(Player p) {
-        p.spigot().sendMessage(inner);
+        return send(p, MessageType.CHAT);
+    }
+
+    public Message send(Player p, MessageType type) {
+        if (type == MessageType.CHAT) {
+            p.spigot().sendMessage(inner);
+        } else if (type == MessageType.ACTION_BAR) {
+            sendActionBarMessage(p, inner);
+        } else if (type == MessageType.TITLE) {
+            sendTitle(p, inner, new TextComponent(), 10, 40, 10);
+        } else if (type == MessageType.SUBTITLE) {
+            sendTitle(p, new TextComponent(), inner, 10, 40, 10);
+        }
         return this;
     }
 
@@ -141,21 +153,8 @@ public final class Message {
     }
 
     public Message broadcast(MessageType type) {
-        if (type == MessageType.CHAT) {
-            Bukkit.spigot().broadcast();
-            Bukkit.getServer().spigot().broadcast(inner);
-        } else if (type == MessageType.ACTION_BAR) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                sendActionBarMessage(p, inner);
-            }
-        } else if (type == MessageType.TITLE) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                sendTitle(p, inner, new TextComponent(), 10, 50, 10);
-            }
-        } else if (type == MessageType.SUBTITLE) {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                sendTitle(p, new TextComponent(), inner, 10, 50, 10);
-            }
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            send(p, type);
         }
         Bukkit.getConsoleSender().sendMessage(inner.toLegacyText());
         return this;

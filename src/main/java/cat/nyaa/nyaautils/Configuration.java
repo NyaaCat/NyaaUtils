@@ -5,10 +5,13 @@ import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
+import cat.nyaa.nyaautils.realm.RealmConfig;
 import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.nyaautils.timer.TimerConfig;
 import cat.nyaa.utils.ISerializable;
+import cat.nyaa.utils.MessageType;
 import cat.nyaa.utils.PluginConfigure;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -161,6 +164,11 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "i16r.lang_file_dir")
     public String langFileDir = "/i16r/";
 
+    @Serializable(name = "realm.default_name")
+    public String realm_default_name = ChatColor.GREEN + "Wilderness";
+    @Serializable(name = "realm.notification_type")
+    public MessageType realm_notification_type = MessageType.SUBTITLE;
+    
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig
@@ -173,6 +181,8 @@ public class Configuration extends PluginConfigure {
     public final FuelConfig fuelConfig;
     @StandaloneConfig
     public final TimerConfig timerConfig;
+    @StandaloneConfig
+    public final RealmConfig realmConfig;
 
     private final NyaaUtils plugin;
 
@@ -189,6 +199,7 @@ public class Configuration extends PluginConfigure {
         this.enchantSrcConfig = new EnchantSrcConfig(plugin);
         this.fuelConfig = new FuelConfig(plugin);
         this.timerConfig = new TimerConfig(plugin);
+        this.realmConfig = new RealmConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");

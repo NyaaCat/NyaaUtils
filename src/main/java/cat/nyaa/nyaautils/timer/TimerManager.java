@@ -9,11 +9,9 @@ import java.util.ArrayList;
 
 public class TimerManager {
     private final NyaaUtils plugin;
-    public WorldEditPlugin worldEditPlugin = null;
 
     public TimerManager(NyaaUtils pl) {
         plugin = pl;
-        worldEditPlugin = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
     }
 
     public boolean createTimer(String name) {

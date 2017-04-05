@@ -270,6 +270,28 @@ user:
   setbook:
     no_book: "No book in your main hand"
     success: "Book information set"
+  realm:
+    select: "Please select a area first"
+    create: "Create success"
+    remove: "Realm %s has been removed"
+    exist: "Realm %s already exist"
+    not_found: "Realm %s not found"
+    type_error: "Realm type error"
+    no_realm: "No realm"
+    current_location: "Current location: %s (X: %d, Y:%d, Z: %d)"
+    info_0: "Realm: %s, Type: %s, Priority: %d %s"
+    info_1: "World: %s, (%d, %d, %d) (%d, %d, %d)"
+    owner: ", Owner: %s"
+    realmtype:
+      PUBLIC: "Public"
+      PRIVATE: "Private"
+    notification:
+      public: "Realm: %s"
+      private: "Realm: %s Owner: %s"
+    setpriority: "Set priority to %d"
+    list:
+      info_0: "Realms (%d / %d)"
+      info_1: "%s, Type: %s, Priority: %d, owner: %s World: %s, (%d, %d, %d) (%d, %d, %d)"
 manual:
   no_description: "No description"
   no_usage: "No usage"
@@ -462,3 +484,22 @@ manual:
     help:
       description: "Print help messages"
       usage: "/nu timer help"
+  realm:
+    create:
+      description: "Create realm"
+      usage: "/nu realm create [name] [type] [player]"
+    remove:
+      description: "Remove realm"
+      usage: "/nu realm remove [name]"
+    info:
+      description: "Show realm info"
+      usage: "/nu realm info"
+    list:
+      description: "list all realms"
+      usage: "/nu realm list"
+    setpriority:
+      description: "Set realm priority"
+      usage: "/nu realm setpriority"
+    help:
+      description: "Print help messages"
+      usage: "/nu realm help"
