@@ -244,16 +244,6 @@ public final class Message {
     }
 
     public static void sendTitle(Player player, BaseComponent title, BaseComponent subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
-        try {
-            Class craftPlayer = ReflectionUtil.getOBCClass("entity.CraftPlayer");
-            Method showTitleMethod = craftPlayer.getMethod("showTitle", BaseComponent.class, BaseComponent.class, int.class, int.class, int.class);
-            showTitleMethod.invoke(player, title, subtitle, fadeInTicks, stayTicks, fadeOutTicks);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+        player.sendTitle(title.toLegacyText(), subtitle.toLegacyText(), fadeInTicks, stayTicks, fadeOutTicks);
     }
 }
