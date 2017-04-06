@@ -49,11 +49,11 @@ public class RealmListener implements Listener {
             if(plugin.cfg.realm_notification_type == MessageType.TITLE){
                 String title, subtitle;
                 if (realm.getType().equals(RealmType.PUBLIC)) {
-                    title = I18n.format("user.realm.notification.public_title").replace("{realm}", realm.getName());
-                    subtitle = I18n.format("user.realm.notification.public_subtitle").replace("{realm}", realm.getName());
+                    title = I18n.format("user.realm.notification.public_title", realm.getName());
+                    subtitle = I18n.format("user.realm.notification.public_subtitle");
                 } else {
-                    title = I18n.format("user.realm.notification.private_title").replace("{realm}", realm.getName()).replace("{owner}", realm.getOwner().getName());
-                    subtitle = I18n.format("user.realm.notification.private_title").replace("{realm}", realm.getName()).replace("{owner}", realm.getOwner().getName());
+                    title = I18n.format("user.realm.notification.private_title", realm.getName());
+                    subtitle = I18n.format("user.realm.notification.private_title", realm.getOwner().getName());
                 }
                 Message.sendTitle(player,
                         new Message(title).inner,
