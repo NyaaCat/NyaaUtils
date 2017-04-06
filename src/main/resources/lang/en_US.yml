@@ -289,9 +289,9 @@ user:
       public: "Realm: %s"
       private: "Realm: %s Owner: %s"
       public_title: "Realm:"
-      public_subtitle: "%s"
-      private_title: "Realm: %s"
-      private_subtitle: "Owner: %s "
+      public_subtitle: "{realm}"
+      private_title: "Realm: {realm}"
+      private_subtitle: "Owner: {owner}"
     setpriority: "Set priority to %d"
     list:
       info_0: "Realms (%d / %d)"
