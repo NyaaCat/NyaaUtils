@@ -53,7 +53,7 @@ public class RealmListener implements Listener {
                     subtitle = I18n.format("user.realm.notification.public_subtitle");
                 } else {
                     title = I18n.format("user.realm.notification.private_title", realm.getName());
-                    subtitle = I18n.format("user.realm.notification.private_title", realm.getOwner().getName());
+                    subtitle = I18n.format("user.realm.notification.private_subtitle", realm.getOwner().getName());
                 }
                 Message.sendTitle(player,
                         new Message(title).inner,
