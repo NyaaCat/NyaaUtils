@@ -288,6 +288,10 @@ user:
     notification:
       public: "Realm: %s"
       private: "Realm: %s Owner: %s"
+      public_title: "Realm: %s"
+      public_subtitle: "Public"
+      private_title: "Realm: %s"
+      private_subtitle: "Owner: %s"
     setpriority: "Set priority to %d"
     list:
       info_0: "Realms (%d / %d)"

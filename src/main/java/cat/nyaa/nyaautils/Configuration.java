@@ -168,7 +168,12 @@ public class Configuration extends PluginConfigure {
     public String realm_default_name = ChatColor.GREEN + "Wilderness";
     @Serializable(name = "realm.notification_type")
     public MessageType realm_notification_type = MessageType.SUBTITLE;
-    
+    @Serializable(name = "realm.notification_title_fadein_tick")
+    public int realm_notification_title_fadein_tick = 10;
+    @Serializable(name = "realm.notification_title_stay_tick")
+    public int realm_notification_title_stay_tick = 10;
+    @Serializable(name = "realm.notification_title_fadeout_tick")
+    public int realm_notification_title_fadeout_tick = 10;
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig
