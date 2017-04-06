@@ -4,6 +4,7 @@ package cat.nyaa.nyaautils.realm;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.Message;
+import cat.nyaa.utils.MessageType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,12 +46,30 @@ public class RealmListener implements Listener {
         }
         if (!currentRealmName.equals(realm.getName()) && !Realm.__DEFAULT__.equals(realm.getName())) {
             currentRealm.put(id, realm.getName());
-            if (realm.getType().equals(RealmType.PUBLIC)) {
-                new Message(I18n.format("user.realm.notification.public", realm.getName())).
-                        send(player, plugin.cfg.realm_notification_type);
-            } else {
-                new Message(I18n.format("user.realm.notification.private", realm.getName(),
-                        realm.getOwner().getName())).send(player, plugin.cfg.realm_notification_type);
+            if(plugin.cfg.realm_notification_type == MessageType.TITLE){
+                String title, subtitle;
+                if (realm.getType().equals(RealmType.PUBLIC)) {
+                    title = I18n.format("user.realm.notification.public_title").replace("{realm}", realm.getName());
+                    subtitle = I18n.format("user.realm.notification.public_subtitle").replace("{realm}", realm.getName());
+                } else {
+                    title = I18n.format("user.realm.notification.private_title").replace("{realm}", realm.getName()).replace("{owner}", realm.getOwner().getName());
+                    subtitle = I18n.format("user.realm.notification.private_title").replace("{realm}", realm.getName()).replace("{owner}", realm.getOwner().getName());
+                }
+                Message.sendTitle(player,
+                        new Message(title).inner,
+                        new Message(subtitle).inner,
+                        plugin.cfg.realm_notification_title_fadein_tick,
+                        plugin.cfg.realm_notification_title_stay_tick,
+                        plugin.cfg.realm_notification_title_fadeout_tick
+                );
+            }else{
+                if (realm.getType().equals(RealmType.PUBLIC)) {
+                    new Message(I18n.format("user.realm.notification.public", realm.getName())).
+                            send(player, plugin.cfg.realm_notification_type);
+                } else {
+                    new Message(I18n.format("user.realm.notification.private", realm.getName(),
+                            realm.getOwner().getName())).send(player, plugin.cfg.realm_notification_type);
+                }
             }
             return;
         } else if (!currentRealm.containsKey(id) || !Realm.__DEFAULT__.equals(currentRealmName)) {
