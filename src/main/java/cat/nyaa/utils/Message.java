@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -232,13 +233,25 @@ public final class Message {
     public static void sendActionBarMessage(Player player, BaseComponent msg) {
         try {
             Class craftPlayer = ReflectionUtil.getOBCClass("entity.CraftPlayer");
-            Method sendMessageMethod = craftPlayer.getMethod("sendMessage", ChatMessageType.class, BaseComponent[].class);
-            sendMessageMethod.invoke(player, ChatMessageType.ACTION_BAR, new BaseComponent[]{msg});
+            Method getHandleMethod = craftPlayer.getMethod("getHandle");
+            Object handle = getHandleMethod.invoke(player);
+            Class iChatBaseComponent = ReflectionUtil.getNMSClass("IChatBaseComponent");
+            Class packetPlayOutChat = ReflectionUtil.getNMSClass("PacketPlayOutChat");
+            Constructor constructor = packetPlayOutChat.getConstructor(iChatBaseComponent, byte.class);
+            Object packet = constructor.newInstance(null, (byte) ChatMessageType.ACTION_BAR.ordinal());
+            packet.getClass().getField("components").set(packet, new BaseComponent[]{msg});
+            Object playerConnection = handle.getClass().getField("playerConnection").get(handle);
+            playerConnection.getClass().getMethod("sendPacket", 
+                    ReflectionUtil.getNMSClass("Packet")).invoke(playerConnection, packet);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
     }
