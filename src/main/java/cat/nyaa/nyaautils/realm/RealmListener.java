@@ -5,6 +5,7 @@ import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.utils.Message;
 import cat.nyaa.utils.MessageType;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -74,7 +75,8 @@ public class RealmListener implements Listener {
             return;
         } else if (!currentRealm.containsKey(id) || !Realm.__DEFAULT__.equals(currentRealmName)) {
             currentRealm.put(id, Realm.__DEFAULT__);
-            new Message(plugin.cfg.realm_default_name).send(player, plugin.cfg.realm_notification_type);
+            new Message(ChatColor.translateAlternateColorCodes('&', plugin.cfg.realm_default_name))
+                    .send(player, plugin.cfg.realm_notification_type);
         }
         return;
     }
