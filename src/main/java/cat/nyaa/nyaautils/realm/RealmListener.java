@@ -14,12 +14,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class RealmListener implements Listener {
     public NyaaUtils plugin;
     public HashMap<UUID, String> currentRealm = new HashMap<>();
+    public ArrayList<UUID> muteList = new ArrayList<>();
 
     public RealmListener(NyaaUtils pl) {
         plugin = pl;
@@ -37,6 +39,9 @@ public class RealmListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         UUID id = player.getUniqueId();
+        if(muteList.contains(id)){
+            return;
+        }
         String currentRealmName = currentRealm.getOrDefault(id, "");
         Realm realm = getRealm(player.getLocation());
         if (realm == null) {

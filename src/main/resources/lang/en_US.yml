@@ -293,6 +293,8 @@ user:
       private_title: "Realm: %s"
       private_subtitle: "Owner: %s"
     setpriority: "Set priority to %d"
+    mute: "You will no longer receive realm notification."
+    unmute: "Unmute success."
     list:
       info_0: "Realms (%d / %d)"
       info_1: "%s, Type: %s, Priority: %d, owner: %s World: %s, (%d, %d, %d) (%d, %d, %d)"

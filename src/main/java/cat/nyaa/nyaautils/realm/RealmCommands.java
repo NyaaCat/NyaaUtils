@@ -158,4 +158,20 @@ public class RealmCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
     }
+
+    @SubCommand(value = "mute", permission = "nu.realm.mute")
+    public void commandMute(CommandSender sender, Arguments args) {
+        Player player = asPlayer(sender);
+        msg(sender, "user.realm.mute");
+        if (!this.plugin.realmListener.muteList.contains(player.getUniqueId())) {
+            this.plugin.realmListener.muteList.add(player.getUniqueId());
+        }
+    }
+
+    @SubCommand(value = "unmute", permission = "nu.realm.mute")
+    public void commandUnmute(CommandSender sender, Arguments args) {
+        Player player = asPlayer(sender);
+        this.plugin.realmListener.muteList.remove(player.getUniqueId());
+        msg(sender, "user.realm.unmute");
+    }
 }

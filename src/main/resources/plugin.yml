@@ -100,6 +100,9 @@ permissions:
   nu.realm.info:
     description: View realm info
     default: true
+  nu.realm.mute:
+    description: mute and unmute realm notification
+    default: true
   nu.realm.admin:
     description: Create and remove realm
     default: op
