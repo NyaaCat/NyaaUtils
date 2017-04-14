@@ -215,6 +215,7 @@ public enum I16rItemName {
     WOOD_BUTTON(Material.WOOD_BUTTON, "tile.button.name"),
     STONE_BUTTON(Material.STONE_BUTTON, "tile.button.name"),
     SNOW(Material.SNOW, "tile.snow.name"),
+    SNOW_BLOCK(Material.SNOW_BLOCK, "tile.snow.name"),
     BLACK_CARPET(Material.CARPET, 15, "tile.woolCarpet.black.name"),
     RED_CARPET(Material.CARPET, 14, "tile.woolCarpet.red.name"),
     GREEN_CARPET(Material.CARPET, 13, "tile.woolCarpet.green.name"),
