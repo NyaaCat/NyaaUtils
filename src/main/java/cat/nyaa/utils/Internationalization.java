@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.librazy.nyaautils_lang_checker.LangKey;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,7 +130,7 @@ public abstract class Internationalization {
     }
 
 
-    public String get(String key, Object... para) {
+    public String get(@LangKey String key, Object... para) {
         String val = map.get(key);
         if (val == null || val.startsWith("internal.")) val = internalMap.get(key);
         if (val == null) {

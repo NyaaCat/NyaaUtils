@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.permissions.PermissionAttachment;
+import org.librazy.nyaautils_lang_checker.LangKey;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -233,7 +234,7 @@ public class Teleport implements Listener {
         return 0;
     }
 
-    private void msg(CommandSender target, String template, Object... args) {
+    private void msg(CommandSender target, @LangKey String template, Object... args) {
         target.sendMessage(I18n.format(template, args));
     }
 }
