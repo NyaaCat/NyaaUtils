@@ -9,6 +9,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.librazy.nyaautils_lang_checker.LangKey;
+import org.librazy.nyaautils_lang_checker.LangKeyType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -198,7 +200,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         } catch (NoItemInHandException ex) {
             msg(sender, ex.isOffHand ? "internal.error.no_item_offhand" : "internal.error.no_item_hand");
         } catch (BadCommandException ex) {
-            String msg = ex.getMessage();
+            @LangKey String msg = ex.getMessage();
             if (msg != null && !msg.equals("")) {
                 if (ex.objs == null) {
                     msg(sender, msg);
@@ -251,8 +253,8 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
 
     public abstract String getHelpPrefix();
 
-    private String getHelpContent(String type, String... subkeys) {
-        String key = "manual";
+    private String getHelpContent(@LangKey(type = LangKeyType.SUFFIX, skipCheck = true) String type, String... subkeys) {
+        @LangKey String key = "manual";
         for (String s : subkeys) {
             if (s.length() > 0)
                 key += "." + s;
@@ -286,7 +288,7 @@ public abstract class CommandReceiver<T extends JavaPlugin> implements CommandEx
         }
     }
 
-    public void msg(CommandSender target, String template, Object... args) {
+    public void msg(CommandSender target, @LangKey String template, Object... args) {
         target.sendMessage(i18n.get(template, args));
     }
 

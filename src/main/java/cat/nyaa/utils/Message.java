@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.librazy.nyaautils_lang_checker.LangKey;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,7 +35,7 @@ public final class Message {
         return this;
     }
 
-    public Message appendFormat(Internationalization i18n, String template, Object... obj) {
+    public Message appendFormat(Internationalization i18n, @LangKey String template, Object... obj) {
         return append(i18n.get(template, obj));
     }
 

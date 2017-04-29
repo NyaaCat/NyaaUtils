@@ -1,5 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.inferred.processors' version '1.2.11'
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -26,6 +29,11 @@ repositories {
         name 'vault-repo'
         url 'http://nexus.hc.to/content/repositories/pub_releases'
     }
+
+    maven {
+        name 'nu-langchecker'
+        url 'https://raw.githubusercontent.com/Librazy/NyaaUtilsLangChecker/maven-repo'
+    }
 }
 
 dependencies {
@@ -34,6 +42,13 @@ dependencies {
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
+    compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    processor 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    processor 'org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT'
+}
+
+compileJava {
+    options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor"]
 }
 
 publishing {

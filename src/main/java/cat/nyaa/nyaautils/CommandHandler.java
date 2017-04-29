@@ -362,7 +362,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         Player p = asPlayer(sender);
         String name = args.next().replace("§", "");
         if (plugin.cfg.renameCharacterLimit != 0 && ChatColor.stripColor(name).length() > NyaaUtils.instance.cfg.renameCharacterLimit) {
-            msg(p, "user.rename.name_too_long", name);
+            msg(p, "user.rename.name_too_long", name, NyaaUtils.instance.cfg.renameCharacterLimit);
             return;
         }
         for (String k : plugin.cfg.renameDisabledFormattingCodes) {

@@ -237,7 +237,7 @@ user:
     broadcast_disable: "Broadcast disabled"
     checkpoint_remove: "Checkpoint %s has been removed"
     checkpoint_not_found: "Checkpoint %s not found"
-    checkpoint_broadcast: "[%s] Player %s reache checkpoint %d, time [ %d min %.2fs ] "
+    checkpoint_broadcast: "[%s] Player %s reached checkpoint %d, time [ %d min %.2fs ] "
     checkpoint_info: "Checkpoint %d world: %s (%d, %d, %d) (%d, %d, %d)"
     select: "Please select a area first"
     checkpoint_conflict: "Area conflict with checkpoint %d"

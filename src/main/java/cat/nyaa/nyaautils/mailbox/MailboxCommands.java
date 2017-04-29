@@ -74,7 +74,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                     if (b.getState() instanceof Chest) {
                         plugin.cfg.mailbox.updateNameMapping(id, player);
                         plugin.cfg.mailbox.updateLocationMapping(id, b.getLocation());
-                        msg(admin, "user.mailbox.admin.success");
+                        msg(admin, "user.mailbox.admin.success_set");
                         if (p.isOnline()) {
                             Player tmp = plugin.getServer().getPlayer(id);
                             if (tmp != null) {
@@ -83,7 +83,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                         }
                         return;
                     }
-                    msg(admin, "user.mailbox.admin.fail");
+                    msg(admin, "user.mailbox.admin.fail_set");
                 });
         msg(admin, "user.mailbox.admin.right_click_set", player);
     }

@@ -70,7 +70,7 @@ public class ExhibitionCommands extends CommandReceiver<NyaaUtils> {
         } else if (p.hasPermission("nu.exhibition.forceUnset")) {
             f.unset();
         } else {
-            msg(sender, "nu.exhibition.unset_protected");
+            msg(sender, "user.exhibition.unset_protected");
         }
     }
 
@@ -123,7 +123,7 @@ public class ExhibitionCommands extends CommandReceiver<NyaaUtils> {
                 }
             }
         } else {
-            msg(sender, "nu.exhibition.desc_protected");
+            msg(sender, "user.exhibition.desc_protected");
         }
     }
 }
