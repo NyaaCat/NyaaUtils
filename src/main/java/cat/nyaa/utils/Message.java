@@ -171,6 +171,16 @@ public final class Message {
         return this;
     }
 
+
+    public Message broadcastToWorld(MessageType type, String worldName) {
+        Bukkit.getOnlinePlayers()
+              .stream()
+              .filter(p -> p.getLocation().getWorld().getName().equals(worldName))
+              .forEach(p -> send(p, type));
+        Bukkit.getConsoleSender().sendMessage(worldName + ":\n" + inner.toLegacyText());
+        return this;
+    }
+
     private String getItemJsonStripped(ItemStack item) {
         ItemStack cloned = item.clone();
         if (cloned.hasItemMeta() && cloned.getItemMeta() instanceof BookMeta) {
