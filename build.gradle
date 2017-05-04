@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'org.inferred.processors' version '1.2.11'
 }
 
@@ -52,9 +53,24 @@ dependencies {
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
     compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
     processor 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
-    processor 'org.spigotmc:spigot-api:1.11.2-R0.1-SNAPSHOT'
 }
 
 compileJava {
     options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor"]
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId "cat.nyaa"
+            artifactId "nyaautils"
+            version '3.0-SNAPSHOT'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "$buildDir/repo"
+        }
+    }
 }

@@ -14,6 +14,17 @@ before_deploy:
 - echo "https://$GITHUB_KEY:@github.com" > .git/credentials
 - git push -q --follow-tags
 - gem install octokit -v 4.3.0
+- gradle publish
+- cd ..
+- git clone -b maven-repo $GIT_ORIGIN_URL nyaautils-mvn
+- cp -r nyaautils/build/repo/cat nyaautils-mvn/
+- cd nyaautils-mvn
+- git config credential.helper "store --file=.git/credentials"
+- echo "https://$GITHUB_KEY:@github.com" > .git/credentials
+- git add .
+- git commit -m "auto generated maven repo"
+- git push --follow-tags
+- cd ../nyaautils
 deploy:
 - provider: releases
   skip_cleanup: true
