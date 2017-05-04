@@ -29,4 +29,4 @@ branches:
   - "maven-repo"
 env:
   global:
-    - main_version=2
+    - main_version=3
