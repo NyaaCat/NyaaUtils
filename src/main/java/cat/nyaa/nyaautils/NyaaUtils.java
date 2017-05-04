@@ -39,7 +39,6 @@ public class NyaaUtils extends JavaPlugin {
         cfg = new Configuration(this);
         cfg.load();
         i18n = new I18n(this, cfg.language);
-        i18n.load();
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
         getCommand("nyaautils").setTabCompleter((TabCompleter) commandHandler);
