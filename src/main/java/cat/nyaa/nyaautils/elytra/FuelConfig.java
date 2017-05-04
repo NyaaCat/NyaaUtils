@@ -1,8 +1,8 @@
 package cat.nyaa.nyaautils.elytra;
 
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.FileConfigure;
-import cat.nyaa.utils.ISerializable;
+import cat.nyaa.nyaacore.configuration.FileConfigure;
+import cat.nyaa.nyaacore.configuration.ISerializable;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

@@ -2,7 +2,7 @@ name: NyaaUtils
 main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
 version: 2.0
-depend: [Vault,WorldEdit,Essentials]
+depend: [Vault,WorldEdit,Essentials,NyaaCore]
 softdepend: [LockettePro]
 authors: [RecursiveG,Librazy]
 website: "https://github.com/NyaaCat/nyaautils"

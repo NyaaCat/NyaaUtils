@@ -1,5 +1,10 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
@@ -8,10 +13,6 @@ import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.realm.RealmCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
 import cat.nyaa.nyaautils.timer.TimerCommands;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.ExperienceUtil;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -46,7 +47,8 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     public RealmCommands realmCommands;
     
     private NyaaUtils plugin;
-    public CommandHandler(NyaaUtils plugin, Internationalization i18n) {
+
+    public CommandHandler(NyaaUtils plugin, LanguageRepository i18n) {
         super(plugin, i18n);
         this.plugin = plugin;
     }
@@ -201,7 +203,6 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         p.getServer().getScheduler().cancelTasks(p);
         p.getCommand("nyaautils").setExecutor(null);
         HandlerList.unregisterAll(p);
-        p.i18n.reset();
         p.onEnable();
     }
 
@@ -262,17 +263,17 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         }
 
         if (plugin.cfg.custom_fixes_prefix_moneyCost > 0 &&
-                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
+                !VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
         HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_prefix_moneyCost);
         plugin.getServer().getPluginManager().callEvent(event);
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
-            ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
+            ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
         }
-        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
-        plugin.vaultUtil.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix));
+        VaultUtils.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
+        VaultUtils.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
         msg(sender, "user.prefix.success", prefix);
     }
 
@@ -309,17 +310,17 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         }
 
         if (plugin.cfg.custom_fixes_suffix_moneyCost > 0 &&
-                !plugin.vaultUtil.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
+                !VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
         HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_suffix_moneyCost);
         plugin.getServer().getPluginManager().callEvent(event);
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
-            ExperienceUtil.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
+            ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
         }
-        plugin.vaultUtil.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
-        plugin.vaultUtil.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix));
+        VaultUtils.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
+        VaultUtils.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
         msg(sender, "user.suffix.success", suffix);
     }
 
@@ -327,11 +328,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "resetprefix", permission = "nu.prefix")
     public void commandResetPrefix(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        if (!(plugin.vaultUtil.getPlayerPrefix(p).length() > 0)) {
+        if (!(VaultUtils.getPlayerPrefix(p).length() > 0)) {
             return;
         }
 
-        plugin.vaultUtil.setPlayerPrefix(p, "");
+        VaultUtils.setPlayerPrefix(p, "", plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
         msg(sender, "user.resetprefix.success");
     }
 
@@ -339,11 +340,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
     @SubCommand(value = "resetsuffix", permission = "nu.suffix")
     public void commandResetSuffix(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        if (!(plugin.vaultUtil.getPlayerSuffix(p).length() > 0)) {
+        if (!(VaultUtils.getPlayerSuffix(p).length() > 0)) {
             return;
         }
 
-        plugin.vaultUtil.setPlayerSuffix(p, "");
+        VaultUtils.setPlayerSuffix(p, "", plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
         msg(sender, "user.resetsuffix.success");
     }
 
@@ -398,7 +399,7 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             return;
         }
         if (moneyCost > 0 &&
-                !plugin.vaultUtil.enoughMoney(p, moneyCost)) {
+                !VaultUtils.enoughMoney(p, moneyCost)) {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
@@ -408,9 +409,9 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
         itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         item.setItemMeta(itemStackMeta);
         if (expCost > 0) {
-            ExperienceUtil.addPlayerExperience(p, -expCost);
+            ExperienceUtils.addPlayerExperience(p, -expCost);
         }
-        plugin.vaultUtil.withdraw(p, moneyCost);
+        VaultUtils.withdraw(p, moneyCost);
         msg(sender, "user.rename.success", name);
     }
 

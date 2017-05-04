@@ -2,10 +2,10 @@ package cat.nyaa.nyaautils.repair;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.ExperienceUtil;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.Message;
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.Message;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import static cat.nyaa.nyaautils.repair.RepairInstance.RepairStat.UNREPAIRABLE;
 public class RepairCommands extends CommandReceiver<NyaaUtils> {
     private final NyaaUtils plugin;
 
-    public RepairCommands(Object plugin, Internationalization i18n) {
+    public RepairCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }
@@ -105,7 +105,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
 
-        ExperienceUtil.addPlayerExperience(p, -info.expConsumption);
+        ExperienceUtils.addPlayerExperience(p, -info.expConsumption);
 
         int dur = item.getDurability();
         dur -= info.durRecovered;
@@ -147,7 +147,7 @@ public class RepairCommands extends CommandReceiver<NyaaUtils> {
         int durMax = (int) Math.ceil(item.getDurability() / (double) info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
 
-        ExperienceUtil.addPlayerExperience(p, -info.expConsumption * repairAmount);
+        ExperienceUtils.addPlayerExperience(p, -info.expConsumption * repairAmount);
         int dur = item.getDurability();
         dur -= info.durRecovered * repairAmount;
         if (dur < 0) dur = 0;

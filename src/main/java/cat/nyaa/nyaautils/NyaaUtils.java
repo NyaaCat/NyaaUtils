@@ -10,8 +10,6 @@ import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.realm.RealmListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
-import cat.nyaa.utils.VaultUtil;
-import cat.nyaa.utils.internationalizer.I16rLang;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.HandlerList;
@@ -27,7 +25,6 @@ public class NyaaUtils extends JavaPlugin {
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
     public MailboxListener mailboxListener;
-    public VaultUtil vaultUtil;
     public ElytraEnhanceListener elytraEnhanceListener;
     public Teleport teleport;
     public FuelManager fuelManager;
@@ -42,7 +39,7 @@ public class NyaaUtils extends JavaPlugin {
         cfg = new Configuration(this);
         cfg.load();
         i18n = new I18n(this, cfg.language);
-        I16rLang.init();
+        i18n.load();
         commandHandler = new CommandHandler(this, i18n);
         getCommand("nyaautils").setExecutor(commandHandler);
         getCommand("nyaautils").setTabCompleter((TabCompleter) commandHandler);
@@ -53,7 +50,6 @@ public class NyaaUtils extends JavaPlugin {
         teleport = new Teleport(this);
         exhibitionListener = new ExhibitionListener(this);
         mailboxListener = new MailboxListener(this);
-        vaultUtil = new VaultUtil(this);
         fuelManager = new FuelManager(this);
         timerManager = new TimerManager(this);
         timerListener = new TimerListener(this);
@@ -68,6 +64,5 @@ public class NyaaUtils extends JavaPlugin {
         getCommand("nyaautils").setTabCompleter(null);
         HandlerList.unregisterAll(this);
         cfg.save();
-        i18n.reset();
     }
 }

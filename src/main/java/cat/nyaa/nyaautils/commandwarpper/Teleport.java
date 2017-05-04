@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils.commandwarpper;
 
+import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
@@ -148,7 +149,7 @@ public class Teleport implements Listener {
         }
         if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-        if (!plugin.vaultUtil.withdraw(p, fee)) {
+        if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
         }
@@ -173,7 +174,7 @@ public class Teleport implements Listener {
         }
         if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-        if (!plugin.vaultUtil.withdraw(p, fee)) {
+        if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
         }
@@ -183,7 +184,7 @@ public class Teleport implements Listener {
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
-            plugin.vaultUtil.deposit(p, fee);
+            VaultUtils.deposit(p, fee);
             p.sendMessage(e.getMessage());
         }
     }
@@ -203,7 +204,7 @@ public class Teleport implements Listener {
         }
         if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
-        if (!plugin.vaultUtil.withdraw(p, fee)) {
+        if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
         }
@@ -213,7 +214,7 @@ public class Teleport implements Listener {
             HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
             plugin.getServer().getPluginManager().callEvent(event);
         } catch (Exception e) {
-            plugin.vaultUtil.deposit(p, fee);
+            VaultUtils.deposit(p, fee);
             p.sendMessage(e.getMessage());
         }
     }

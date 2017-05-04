@@ -3,7 +3,7 @@ package cat.nyaa.nyaautils.elytra;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.InventoryUtils;
+import cat.nyaa.nyaacore.utils.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

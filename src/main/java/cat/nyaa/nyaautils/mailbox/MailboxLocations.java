@@ -1,7 +1,7 @@
 package cat.nyaa.nyaautils.mailbox;
 
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.FileConfigure;
+import cat.nyaa.nyaacore.configuration.FileConfigure;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.apache.commons.lang.Validate;

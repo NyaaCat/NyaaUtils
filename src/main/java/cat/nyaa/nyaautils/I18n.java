@@ -1,10 +1,10 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.utils.Internationalization;
+import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.librazy.nyaautils_lang_checker.LangKey;
 
-public class I18n extends Internationalization {
+public class I18n extends LanguageRepository {
     public static I18n instance = null;
     private String lang = null;
     private final NyaaUtils plugin;

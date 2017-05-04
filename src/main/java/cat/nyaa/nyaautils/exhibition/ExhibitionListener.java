@@ -2,7 +2,7 @@ package cat.nyaa.nyaautils.exhibition;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.Message;
+import cat.nyaa.nyaacore.Message;
 import org.bukkit.Material;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;

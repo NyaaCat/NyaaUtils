@@ -1,7 +1,7 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.utils.FileConfigure;
-import cat.nyaa.utils.ISerializable;
+import cat.nyaa.nyaacore.configuration.FileConfigure;
+import cat.nyaa.nyaacore.configuration.ISerializable;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;

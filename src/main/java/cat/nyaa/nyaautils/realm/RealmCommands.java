@@ -3,8 +3,8 @@ package cat.nyaa.nyaautils.realm;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 public class RealmCommands extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
-    public RealmCommands(Object plugin, Internationalization i18n) {
+    public RealmCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }

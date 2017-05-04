@@ -1,9 +1,9 @@
 package cat.nyaa.nyaautils.elytra;
 
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.InventoryUtils;
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.InventoryUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 public class ElytraCommands extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
-    public ElytraCommands(Object plugin, Internationalization i18n) {
+    public ElytraCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }

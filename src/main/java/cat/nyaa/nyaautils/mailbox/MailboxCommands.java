@@ -1,10 +1,11 @@
 package cat.nyaa.nyaautils.mailbox;
 
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.InventoryUtils;
+import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
-import cat.nyaa.utils.InventoryUtils;
 import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,7 +28,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
         return "mailbox";
     }
 
-    public MailboxCommands(Object plugin, Internationalization i18n) {
+    public MailboxCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }
@@ -169,7 +170,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
 
-        if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailHandFee)) {
+        if (!VaultUtils.enoughMoney(p, plugin.cfg.mailHandFee)) {
             msg(p, "user.mailbox.money_insufficient");
             return;
         }
@@ -215,7 +216,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             if (recp != null) {
                 msg(recp, "user.mailbox.mail_received", sender.getName());
             }
-            plugin.vaultUtil.withdraw(p, plugin.cfg.mailHandFee);
+            VaultUtils.withdraw(p, plugin.cfg.mailHandFee);
         }
     }
 
@@ -228,7 +229,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
             return;
         }
 
-        if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
+        if (!VaultUtils.enoughMoney(p, plugin.cfg.mailChestFee)) {
             msg(p, "user.mailbox.money_insufficient");
             return;
         }
@@ -264,7 +265,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
                 (Location boxLocation) -> {
-                    if (!plugin.vaultUtil.enoughMoney(p, plugin.cfg.mailChestFee)) {
+                    if (!VaultUtils.enoughMoney(p, plugin.cfg.mailChestFee)) {
                         msg(p, "user.mailbox.money_insufficient");
                         return;
                     }
@@ -310,7 +311,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
                         if (recpFinal != null) {
                             msg(recpFinal, "user.mailbox.mail_received", sender.getName());
                         }
-                        plugin.vaultUtil.withdraw(p, plugin.cfg.mailChestFee);
+                        VaultUtils.withdraw(p, plugin.cfg.mailChestFee);
                     } else {
                         msg(sender, "user.mailbox.mail_sent_nothing");
                     }

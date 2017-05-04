@@ -1,6 +1,6 @@
 package cat.nyaa.nyaautils.timer;
 
-import cat.nyaa.utils.ISerializable;
+import cat.nyaa.nyaacore.configuration.ISerializable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

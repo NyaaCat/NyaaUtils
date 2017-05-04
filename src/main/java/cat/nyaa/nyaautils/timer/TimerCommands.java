@@ -2,8 +2,8 @@ package cat.nyaa.nyaautils.timer;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class TimerCommands extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
-    public TimerCommands(Object plugin, Internationalization i18n) {
+    public TimerCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }

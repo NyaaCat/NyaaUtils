@@ -3,8 +3,8 @@ package cat.nyaa.nyaautils.realm;
 
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.Message;
-import cat.nyaa.utils.MessageType;
+import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.Message.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

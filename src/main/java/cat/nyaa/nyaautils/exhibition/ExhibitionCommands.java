@@ -1,8 +1,8 @@
 package cat.nyaa.nyaautils.exhibition;
 
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.utils.CommandReceiver;
-import cat.nyaa.utils.Internationalization;
+import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ExhibitionCommands extends CommandReceiver<NyaaUtils> {
     private NyaaUtils plugin;
 
-    public ExhibitionCommands(Object plugin, Internationalization i18n) {
+    public ExhibitionCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
     }
