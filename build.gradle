@@ -55,8 +55,13 @@ dependencies {
     processor 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
 }
 
+String nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR")
+
 compileJava {
     options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor"]
+    if (nyaaCoreLangDir != null) {
+        options.compilerArgs += ["-ALANG_DIR_ADDITIONAL_PATH=" + nyaaCoreLangDir]
+    }
 }
 
 publishing {
