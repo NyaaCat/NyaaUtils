@@ -62,6 +62,7 @@ public class MailboxCommands extends CommandReceiver<NyaaUtils> {
         msg(p, "user.mailbox.now_right_click");
     }
 
+    @SuppressWarnings("deprecation")
     public void createMailbox(Player admin, String player) {
         if (plugin.cfg.mailbox.getMailboxLocation(player) != null) {
             msg(admin, "user.mailbox.admin.already_set");

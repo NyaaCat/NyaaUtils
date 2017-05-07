@@ -25,6 +25,7 @@ public class RealmCommands extends CommandReceiver<NyaaUtils> {
         return "realm";
     }
 
+    @SuppressWarnings("deprecation")
     @SubCommand(value = "create", permission = "nu.realm.admin")
     public void commandCreate(CommandSender sender, Arguments args) {
         if (args.length() < 4) {

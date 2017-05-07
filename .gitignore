@@ -72,3 +72,4 @@ build
 
 !lib/LocketteProAPI.jar
 !lib/EssentialsX-2.0.1-468.jar
+!/lib/ourtown-api.jar

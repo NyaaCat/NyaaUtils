@@ -35,7 +35,7 @@ public class RepairInstance {
             }
         }
         stat = RepairStat.REPAIRABLE;
-        if (item.getItemMeta().spigot().isUnbreakable()) {
+        if (item.getItemMeta().isUnbreakable()) {
             stat = RepairStat.UNREPAIRABLE_UNBREAKABLE;
         }
         Repairable repairableMeta = (Repairable) item.getItemMeta();

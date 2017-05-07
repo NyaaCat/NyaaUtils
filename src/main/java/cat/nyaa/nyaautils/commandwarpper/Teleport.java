@@ -4,6 +4,7 @@ import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
+import cat.nyaa.ourtown.api.PlayerSpawn;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.LocationUtil;
@@ -12,6 +13,7 @@ import net.ess3.api.IEssentials;
 import net.ess3.api.InvalidWorldException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,7 +22,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.permissions.PermissionAttachment;
 import org.librazy.nyaautils_lang_checker.LangKey;
 
 import java.text.DecimalFormat;
@@ -37,6 +38,17 @@ public class Teleport implements Listener {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
 
+    }
+
+    private static Location PlayerSpawn(OfflinePlayer player, World world) {
+        try {
+            Location spawn = PlayerSpawn.getPlayerSpawn(player);
+            if (spawn.getWorld().getName().equals(world.getName())) {
+                return spawn;
+            }
+        } catch (NoClassDefFoundError ignored) {
+        }
+        return world.getSpawnLocation();
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -94,10 +106,7 @@ public class Teleport implements Listener {
                         return;
                     }
                 }
-                //The command will just list home the player have, won't actually teleports player home.
-                PermissionAttachment attachment = p.addAttachment(NyaaUtils.instance, 1);
-                attachment.setPermission("essentials.home", true);
-                Bukkit.dispatchCommand(p, "essentials:home");
+                msg(p, "user.teleport.homes", String.join(", ", homes.toArray(new String[0])));
             }
         } else if (cmd.equals("/sethome") || cmd.startsWith("/sethome ")) {
             e.setCancelled(true);
@@ -143,9 +152,9 @@ public class Teleport implements Listener {
         }
         if (curLoc.getWorld() != defaultWorld) {
             fee += plugin.cfg.setHomeWorld;
-            fee -= curLoc.distance(curLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
+            fee -= curLoc.distance(PlayerSpawn(p, curLoc.getWorld())) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
         } else {
-            fee -= curLoc.distance(defaultWorld.getSpawnLocation()) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
+            fee -= curLoc.distance(PlayerSpawn(p, defaultWorld)) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
         }
         if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
         fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
@@ -168,7 +177,7 @@ public class Teleport implements Listener {
         double fee = plugin.cfg.backBase;
         if (curLoc.getWorld() != lastLoc.getWorld()) {
             fee += plugin.cfg.backWorld;
-            fee += lastLoc.distance(lastLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
+            fee += lastLoc.distance(PlayerSpawn(p, lastLoc.getWorld())) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
         } else {
             fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
         }
@@ -198,7 +207,7 @@ public class Teleport implements Listener {
         double fee = plugin.cfg.homeBase;
         if (homeLoc.getWorld() != curLoc.getWorld()) {
             fee += plugin.cfg.homeWorld;
-            fee += homeLoc.distance(homeLoc.getWorld().getSpawnLocation()) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
+            fee += homeLoc.distance(PlayerSpawn(p, homeLoc.getWorld())) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
         } else {
             fee += homeLoc.distance(curLoc) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
         }

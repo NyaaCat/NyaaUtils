@@ -257,11 +257,12 @@ user:
     money_insufficient: "You don't have enough money(%.2f) to use this command"
     error: "That home seems to be broken, seek pm for help"
     invalid_home: "That home is in a removed world"
-    bed_not_set_yet: "You has not set a bed"
+    bed_not_set_yet: "You has not set a bed or home"
     unsafe: "The teleport destination is unsafe"
     invalid_name: "Invalid home name"
     home_limit: "You cannot set more than %d homes"
     home_limit_one: "You can set only one home. Renaming to home"
+    homes: "Homes: %s"
   rename:
     name_too_long: "Name '%s' is too long! Should less than %d chars"
     success: "Rename success"

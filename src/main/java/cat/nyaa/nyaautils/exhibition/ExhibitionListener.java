@@ -69,6 +69,7 @@ public class ExhibitionListener implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = HIGHEST, ignoreCancelled = true)
     public void onPlayerFetchItem(InventoryClickEvent ev) {
         if (!(ev.getWhoClicked() instanceof Player)) return;
