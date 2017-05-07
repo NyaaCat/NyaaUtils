@@ -1,36 +1,3 @@
-internal:
-  info:
-    using_language: "Now using language: %s"
-    command_complete: "Command Executed!"
-    usage_prompt: "Usage: %s"
-  error:
-    bad_subcommand: "Bad subcommand handler: %s"
-    not_player: "Only players can do this"
-    no_item_hand: "No item in main hand"
-    no_item_offhand: "No item in off hand"
-    command_exception: "Internal server error. Unable to run command."
-    no_required_permission: "You do not have the required permission: %s"
-    invalid_command_arg: "Invalid command line arguments."
-
-    bad_int: "Not a valid integer"
-    bad_double: "Not a valid number"
-    bad_enum: "Not valid for enum type: %s. Values: %s"
-    bad_decimal_pattern: "Not a valid pattern"
-
-    no_more_int: "No more integers in argument"
-    no_more_double: "No more numbers in argument"
-    no_more_enum: "No more enum values in argument"
-    no_more_bool: "No more booleans in argument"
-    no_more_string: "No more strings in argument"
-    no_more_player: "No more player name in argument"
-
-    assert_fail: "Command assertion fail, Expect: %s, Actual: %s"
-    player_not_found: "Cannot find player \"%s\""
-  named_argument:
-    missing_arg: "Missing argument: %s"
-    not_int: "Argument \"%s\" is not an integer: %s"
-    not_double: "Argument \"%s\" is not a double: %s"
-
 user:
   info:
     command_complete: "Command Executed!"
@@ -300,9 +267,6 @@ user:
       info_0: "Realms (%d / %d)"
       info_1: "%s, Type: %s, Priority: %d, owner: %s World: %s, (%d, %d, %d) (%d, %d, %d)"
 manual:
-  no_description: "No description"
-  no_usage: "No usage"
-
   help:
     description: "Show help message"
     usage: "/nu [subCommands...] help"

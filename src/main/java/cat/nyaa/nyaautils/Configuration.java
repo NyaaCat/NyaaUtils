@@ -158,11 +158,8 @@ public class Configuration extends PluginConfigure {
     public int dropProtectMaximumItem = 1000;
     @Serializable(name = "drop_protect.proctect_second")
     public int dropProtectSecond = 120;
-    @Serializable
+    @Serializable(name = "drop_protect.mode", alias = "dropProtectMode")
     public DropProtectMode dropProtectMode = DropProtectMode.ON;
-
-    @Serializable(name = "i16r.lang_file_dir")
-    public String langFileDir = "/i16r/";
 
     @Serializable(name = "realm.default_name")
     public String realm_default_name = ChatColor.GREEN + "Wilderness";
