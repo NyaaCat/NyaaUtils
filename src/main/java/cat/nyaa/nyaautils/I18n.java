@@ -27,6 +27,6 @@ public class I18n extends LanguageRepository {
     }
 
     public static String format(@LangKey String key, Object... args) {
-        return instance.get(key, args);
+        return instance.getFormatted(key, args);
     }
 }
