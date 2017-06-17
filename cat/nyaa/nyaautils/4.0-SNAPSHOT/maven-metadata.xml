@@ -4,9 +4,10 @@
   <artifactId>nyaautils</artifactId>
   <version>4.0-SNAPSHOT</version>
   <versioning>
-    <versions>
-      <version>4.0-SNAPSHOT</version>
-    </versions>
+    <snapshot>
+      <timestamp>20170617.070924</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
     <lastUpdated>20170617070924</lastUpdated>
   </versioning>
 </metadata>
