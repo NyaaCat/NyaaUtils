@@ -2,11 +2,11 @@
 <metadata>
   <groupId>cat.nyaa</groupId>
   <artifactId>nyaautils</artifactId>
-  <version>4.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
   <versioning>
     <versions>
-      <version>4.0-SNAPSHOT</version>
+      <version>3.0-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20170618133718</lastUpdated>
+    <lastUpdated>20170618140632</lastUpdated>
   </versioning>
 </metadata>
