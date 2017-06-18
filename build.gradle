@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    compile('cat.nyaa:nyaacore:2.0-SNAPSHOT') {
+    compile('cat.nyaa:nyaacore:3.0-SNAPSHOT') {
         transitive = false
     }
 

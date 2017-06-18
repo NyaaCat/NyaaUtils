@@ -112,11 +112,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                 final Vector v = toVector(yaw, pitch, speed);
                 final Player player = p;
                 int current = 0;
-
+                boolean stopped = false;
 
                 @Override
                 public void run() {
-                    if (player.isOnline()) {
+                    if (player.isOnline() && !stopped) {
                         if (current < d) {
                             current++;
                             player.setVelocity(v);
@@ -129,9 +129,11 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
                             }
                             player.setVelocity(player.getEyeLocation().getDirection().normalize().multiply(launchSpeed));
                             cancel();
+                            stopped = true;
                         }
                     } else {
                         cancel();
+                        stopped = true;
                     }
                 }
             }.runTaskTimer(plugin, 1, 1);
@@ -178,19 +180,21 @@ public class CommandHandler extends CommandReceiver<NyaaUtils> {
             final Vector v = toVector(yaw, pitch, speed);
             final Entity entity = p;
             int current = 0;
-
+            boolean stopped = false;
 
             @Override
             public void run() {
-                if (!(entity instanceof Player) || ((Player) entity).isOnline()) {
+                if ((!(entity instanceof Player) || ((Player) entity).isOnline()) && !stopped){
                     if (current < d) {
                         current++;
                         entity.setVelocity(v);
                     } else {
                         cancel();
+                        stopped = true;
                     }
                 } else {
                     cancel();
+                    stopped = true;
                 }
             }
         }.runTaskTimer(plugin, 1, 1);
