@@ -45,3 +45,4 @@ branches:
 env:
   global:
     - main_version=3
+    - trigger_ci=20170624
