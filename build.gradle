@@ -3,6 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
+// Version strings used for CI
+// Note the spaces before and after the equals sign
+ext.majorVersion = 4
+ext.minorVersion = 0
+ext.minecraftVersion = 1.12
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -35,23 +41,38 @@ repositories {
     }
 
     maven {
+        name 'ess-repo'
+        url 'http://repo.ess3.net/content/groups/essentials'
+    }
+
+    maven {
         name 'nu-langchecker'
         url 'https://raw.githubusercontent.com/Librazy/NyaaUtilsLangChecker/maven-repo'
+    }
+
+    maven {
+        url 'https://raw.github.com/MascusJeoraly/LanguageUtils/mvn-repo/'
     }
 }
 
 dependencies {
-    compile('cat.nyaa:nyaacore:3.0-SNAPSHOT') {
-        transitive = false
-    }
+//    compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
+//        transitive = false
+//    }
 
     compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
     compile 'net.milkbowl.vault:VaultAPI:1.6'
+//    compile('net.ess3:Essentials:2.13-SNAPSHOT') {
+//        transitive = false
+//    }
     compile files('lib/ourtown-api.jar')
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
     compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    compile('com.meowj:LangUtils:1.9') {
+        transitive = false
+    }
 }
 
 String nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR")
@@ -68,7 +89,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "cat.nyaa"
             artifactId "nyaautils"
-            version '4.0-SNAPSHOT'
+            version '$majorVersion.$minorVersion-SNAPSHOT'
             from components.java
         }
     }

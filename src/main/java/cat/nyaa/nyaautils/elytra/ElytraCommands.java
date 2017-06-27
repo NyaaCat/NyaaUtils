@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ElytraCommands extends CommandReceiver<NyaaUtils> {
+public class ElytraCommands extends CommandReceiver {
     private NyaaUtils plugin;
 
     public ElytraCommands(Object plugin, LanguageRepository i18n) {

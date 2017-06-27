@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.Repairable;
 import static cat.nyaa.nyaautils.repair.RepairInstance.RepairStat.REPAIRABLE;
 import static cat.nyaa.nyaautils.repair.RepairInstance.RepairStat.UNREPAIRABLE;
 
-public class RepairCommands extends CommandReceiver<NyaaUtils> {
+public class RepairCommands extends CommandReceiver {
     private final NyaaUtils plugin;
 
     public RepairCommands(Object plugin, LanguageRepository i18n) {

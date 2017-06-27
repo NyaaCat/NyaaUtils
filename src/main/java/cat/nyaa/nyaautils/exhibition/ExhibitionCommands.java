@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class ExhibitionCommands extends CommandReceiver<NyaaUtils> {
+public class ExhibitionCommands extends CommandReceiver {
     private NyaaUtils plugin;
 
     public ExhibitionCommands(Object plugin, LanguageRepository i18n) {

@@ -1,12 +1,13 @@
 package cat.nyaa.nyaautils.enchant;
 
+import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.BasicItemMatcher;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
-import cat.nyaa.nyaacore.internationalization.I18nEnchantment;
+import com.meowj.langutils.lang.convert.EnumEnchantment;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-public class EnchantCommands extends CommandReceiver<NyaaUtils> {
+public class EnchantCommands extends CommandReceiver {
     private NyaaUtils plugin;
     private final Map<UUID, Long> enchantCooldown;
 
@@ -87,9 +88,9 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
 
         sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
         for (Enchantment e : enchant.keySet()) {
-            if (I18nEnchantment.fromEnchantment(e) != null) {
+            if (EnumEnchantment.get(e) != null) {
                 Message msg = new Message(e.getName() + ": ");
-                msg.append(I18nEnchantment.fromEnchantment(e).getUnlocalizedName());
+                msg.append(LocaleUtils.getNameComponent(e));
                 msg.append(" " + I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
                 p.spigot().sendMessage(msg.inner);
             } else {
@@ -129,9 +130,9 @@ public class EnchantCommands extends CommandReceiver<NyaaUtils> {
         if (args.top() == null) {
             sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
             for (Enchantment e : Enchantment.values()) {
-                if (I18nEnchantment.fromEnchantment(e) != null) {
+                if (EnumEnchantment.get(e) != null) {
                     Message msg = new Message(e.getName() + ": ");
-                    msg.append(I18nEnchantment.fromEnchantment(e).getUnlocalizedName());
+                    msg.append(LocaleUtils.getNameComponent(e));
                     msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                     p.spigot().sendMessage(msg.inner);
                 } else {

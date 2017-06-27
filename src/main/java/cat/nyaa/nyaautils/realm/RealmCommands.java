@@ -12,7 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class RealmCommands extends CommandReceiver<NyaaUtils> {
+public class RealmCommands extends CommandReceiver {
     private NyaaUtils plugin;
 
     public RealmCommands(Object plugin, LanguageRepository i18n) {
