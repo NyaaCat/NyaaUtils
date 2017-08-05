@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -89,7 +89,7 @@ public class DropProtectListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPickup(PlayerPickupItemEvent e) {
+    public void onPickup(EntityPickupItemEvent e) {
         if (plugin.cfg.dropProtectMode == DropProtectMode.OFF) return;
         items.invalidate(e.getItem().getEntityId());
     }
