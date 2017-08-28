@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class MailboxCommands extends CommandReceiver<NyaaUtils> {
+public class MailboxCommands extends CommandReceiver {
     private final NyaaUtils plugin;
 
     @Override

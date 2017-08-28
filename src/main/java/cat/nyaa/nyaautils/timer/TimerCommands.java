@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-public class TimerCommands extends CommandReceiver<NyaaUtils> {
+public class TimerCommands extends CommandReceiver {
     private NyaaUtils plugin;
 
     public TimerCommands(Object plugin, LanguageRepository i18n) {
