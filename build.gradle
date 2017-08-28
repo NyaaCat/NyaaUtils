@@ -7,7 +7,7 @@ plugins {
 // Note the spaces before and after the equals sign
 ext.majorVersion = 4
 ext.minorVersion = 0
-ext.minecraftVersion = 1.12
+ext.minecraftVersion = "1.12.1"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -56,15 +56,10 @@ repositories {
 }
 
 dependencies {
-//    compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
-//        transitive = false
-//    }
-
     compile 'org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT'
-    compile 'net.milkbowl.vault:VaultAPI:1.6'
-//    compile('net.ess3:Essentials:2.13-SNAPSHOT') {
-//        transitive = false
-//    }
+    compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
+        transitive = false
+    }
     compile files('lib/ourtown-api.jar')
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
@@ -75,13 +70,8 @@ dependencies {
     }
 }
 
-String nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR")
-
 compileJava {
-    options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor", "-Xlint:deprecation", "-Xlint:unchecked"]
-    if (nyaaCoreLangDir != null) {
-        options.compilerArgs += ["-ALANG_DIR_ADDITIONAL_PATH=" + nyaaCoreLangDir]
-    }
+    options.compilerArgs += ["-Xlint:deprecation"]
 }
 
 publishing {
@@ -89,7 +79,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "cat.nyaa"
             artifactId "nyaautils"
-            version '$majorVersion.$minorVersion-SNAPSHOT'
+            version "$majorVersion.$minorVersion-SNAPSHOT"
             from components.java
         }
     }
