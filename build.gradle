@@ -60,7 +60,6 @@ dependencies {
     compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
         transitive = false
     }
-    compile files('lib/ourtown-api.jar')
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
