@@ -2,10 +2,10 @@ package cat.nyaa.nyaautils.mailbox;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -209,8 +209,9 @@ public class MailboxCommands extends CommandReceiver {
                 msg(recp, "user.mailbox.mailbox_no_space", sender.getName());
             }
         } else {
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.mailHandFee);
-            plugin.getServer().getPluginManager().callEvent(event);
+            if (NyaaUtils.hasHEH) {
+                IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.mailHandFee);
+            }
             InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
             msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailHandFee);
@@ -305,8 +306,9 @@ public class MailboxCommands extends CommandReceiver {
                         }
                     }
                     if (itemMoved) {
-                        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.mailChestFee);
-                        plugin.getServer().getPluginManager().callEvent(event);
+                        if (NyaaUtils.hasHEH) {
+                            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.mailChestFee);
+                        }
                         toInventory.setStorageContents(to);
                         msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailChestFee);
                         if (recpFinal != null) {

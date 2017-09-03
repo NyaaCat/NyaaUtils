@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
+    public static boolean hasHEH = false;
     public I18n i18n;
     public CommandHandler commandHandler;
     public Configuration cfg;
@@ -53,7 +54,8 @@ public class NyaaUtils extends JavaPlugin {
         timerManager = new TimerManager(this);
         timerListener = new TimerListener(this);
         worldEditPlugin = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-        realmListener=new RealmListener(this);
+        realmListener = new RealmListener(this);
+        hasHEH = getServer().getPluginManager().getPlugin("HamsterEcoHelper") != null;
     }
 
     @Override

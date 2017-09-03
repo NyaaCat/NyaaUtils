@@ -1,9 +1,9 @@
 package cat.nyaa.nyaautils.commandwarpper;
 
+import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import cat.nyaa.ourtown.api.PlayerSpawn;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
@@ -164,8 +164,9 @@ public class Teleport implements Listener {
         }
         iu.setHome(name, curLoc);
         msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.sethome"));
-        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-        plugin.getServer().getPluginManager().callEvent(event);
+        if (NyaaUtils.hasHEH) {
+            IPCUtils.callMethod("heh_balance_deposit", fee);
+        }
     }
 
     private void doBack(Player p, User iu, Location curLoc, Location lastLoc) {
@@ -190,8 +191,9 @@ public class Teleport implements Listener {
         try {
             iu.getTeleport().back(new Trade(0, ess));
             msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-            plugin.getServer().getPluginManager().callEvent(event);
+            if (NyaaUtils.hasHEH) {
+                IPCUtils.callMethod("heh_balance_deposit", fee);
+            }
         } catch (Exception e) {
             VaultUtils.deposit(p, fee);
             p.sendMessage(e.getMessage());
@@ -220,8 +222,9 @@ public class Teleport implements Listener {
         try {
             iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
             msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(fee);
-            plugin.getServer().getPluginManager().callEvent(event);
+            if (NyaaUtils.hasHEH) {
+                IPCUtils.callMethod("heh_balance_deposit", fee);
+            }
         } catch (Exception e) {
             VaultUtils.deposit(p, fee);
             p.sendMessage(e.getMessage());

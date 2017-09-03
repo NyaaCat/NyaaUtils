@@ -4,8 +4,8 @@ import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
-import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
@@ -271,8 +271,9 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_prefix_moneyCost);
-        plugin.getServer().getPluginManager().callEvent(event);
+        if (NyaaUtils.hasHEH) {
+            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_prefix_moneyCost);
+        }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
             ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
         }
@@ -318,8 +319,9 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(plugin.cfg.custom_fixes_suffix_moneyCost);
-        plugin.getServer().getPluginManager().callEvent(event);
+        if (NyaaUtils.hasHEH) {
+            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_suffix_moneyCost);
+        }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
             ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
         }
@@ -407,8 +409,9 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.no_enough_money");
             return;
         }
-        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(moneyCost);
-        plugin.getServer().getPluginManager().callEvent(event);
+        if (NyaaUtils.hasHEH) {
+            IPCUtils.callMethod("heh_balance_deposit", moneyCost);
+        }
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         item.setItemMeta(itemStackMeta);
