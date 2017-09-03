@@ -4,7 +4,6 @@ import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.ourtown.api.PlayerSpawn;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.LocationUtil;
@@ -28,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class Teleport implements Listener {
+    public static boolean hasOurTown = false;
     private IEssentials ess;
     private NyaaUtils plugin;
 
@@ -37,16 +37,15 @@ public class Teleport implements Listener {
         if (plugin.cfg.teleportEnable) {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
-
+        hasOurTown = plugin.getServer().getPluginManager().getPlugin("ourtown") != null;
     }
 
     private static Location PlayerSpawn(OfflinePlayer player, World world) {
-        try {
-            Location spawn = PlayerSpawn.getPlayerSpawn(player);
+        if (hasOurTown) {
+            Location spawn = (Location) IPCUtils.callMethod("ourtown_get_player_spawn", player);
             if (spawn.getWorld().getName().equals(world.getName())) {
                 return spawn;
             }
-        } catch (NoClassDefFoundError ignored) {
         }
         return world.getSpawnLocation();
     }
