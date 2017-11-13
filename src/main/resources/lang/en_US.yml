@@ -266,6 +266,20 @@ user:
     list:
       info_0: "Realms (%d / %d)"
       info_1: "%s, Type: %s, Priority: %d, owner: %s World: %s, (%d, %d, %d) (%d, %d, %d)"
+  particle:
+    not_exist: "Particle set %d not found"
+    not_enabled: "Particle %s is not enabled"
+    no_permission: "You do not have permission to edit this particle"
+    add: 
+      limit: "You can not add more particle to this particle set"
+    type:
+      not_enabled: "Particle type %s is not enabled"
+    remove:
+      success: "Particle set %d has been removed"
+    info:
+      page: "======== (%d/%d) ========"
+      name: "[%d] [%s] author: %s"
+      content: "  [%d] [particle: %s, amount %d, freq %d, offsetX: %.3f , offsetY: %.3f , offsetZ: %.3f , extra: %.3f]"
 manual:
   help:
     description: "Show help message"
@@ -474,3 +488,22 @@ manual:
     help:
       description: "Print help messages"
       usage: "/nu realm help"
+  particle:
+    create:
+      description: "Create a particle set"
+      usage: "/nu particle create [particle type] [name]"
+    remove:
+      description: "Remove a particle set or remove a particle from particle set"
+      usage: "/nu particle remove [particle set id] or /nu particle remove [particle set id] [index]"
+    set:
+      description: "Set your particle"
+      usage: "/nu particle set [particle type] [particle set id|clear]"
+    list:
+      description: "List all particle sets"
+      usage: "/nu particle list [particle type] [page]"
+    add:
+      description: "Add particle to your particle set"
+      usage: "/nu particle add [particle set id] [particle name] [amount] [freq] [offset x] [offset y] [offset z] [extra]"
+    help:
+      description: "Print help messages"
+      usage: "/nu particle help"

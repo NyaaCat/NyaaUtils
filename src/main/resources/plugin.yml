@@ -106,3 +106,12 @@ permissions:
   nu.realm.admin:
     description: Create and remove realm
     default: op
+  nu.particles.player:
+    description: Select particle set
+    default: true
+  nu.particles.editor:
+    description: Create and remove particle set
+    default: op
+  nu.particles.admin:
+    description: Create and remove particle set
+    default: op

@@ -10,6 +10,7 @@ import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
+import cat.nyaa.nyaautils.particle.ParticleCommands;
 import cat.nyaa.nyaautils.realm.RealmCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
 import cat.nyaa.nyaautils.timer.TimerCommands;
@@ -45,6 +46,8 @@ public class CommandHandler extends CommandReceiver {
     public TimerCommands timerCommands;
     @SubCommand("realm")
     public RealmCommands realmCommands;
+    @SubCommand("particle")
+    public ParticleCommands particleCommands;
     
     private NyaaUtils plugin;
 

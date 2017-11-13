@@ -1,25 +1,25 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaacore.Message.MessageType;
+import cat.nyaa.nyaacore.configuration.ISerializable;
+import cat.nyaa.nyaacore.configuration.PluginConfigure;
 import cat.nyaa.nyaautils.dropprotect.DropProtectMode;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
+import cat.nyaa.nyaautils.particle.ParticleConfig;
+import cat.nyaa.nyaautils.particle.ParticleLimit;
+import cat.nyaa.nyaautils.particle.ParticleType;
 import cat.nyaa.nyaautils.realm.RealmConfig;
 import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.nyaautils.timer.TimerConfig;
-import cat.nyaa.nyaacore.configuration.ISerializable;
-import cat.nyaa.nyaacore.Message.MessageType;
-import cat.nyaa.nyaacore.configuration.PluginConfigure;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static cat.nyaa.nyaautils.lootprotect.LootProtectMode.OFF;
 
@@ -171,6 +171,18 @@ public class Configuration extends PluginConfigure {
     public int realm_notification_title_stay_tick = 10;
     @Serializable(name = "realm.notification_title_fadeout_tick")
     public int realm_notification_title_fadeout_tick = 10;
+
+    @Serializable(name = "particles.type.player")
+    public boolean particles_type_player = false;
+    @Serializable(name = "particles.type.elytra")
+    public boolean particles_type_elytra = true;
+    @Serializable(name = "particles.type.other")
+    public boolean particles_type_other = false;
+    @Serializable(name = "particles.enabled")
+    public List<String> particles_enabled = new ArrayList<>(Arrays.asList("FLAME", "WATER_SPLASH"));
+    @Serializable(name = "particles.limits", manualSerialization = true)
+    public Map<ParticleType, ParticleLimit> particlesLimits = new HashMap<>();
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig
@@ -185,6 +197,8 @@ public class Configuration extends PluginConfigure {
     public final TimerConfig timerConfig;
     @StandaloneConfig
     public final RealmConfig realmConfig;
+    @StandaloneConfig
+    public final ParticleConfig particleConfig;
 
     private final NyaaUtils plugin;
 
@@ -202,6 +216,7 @@ public class Configuration extends PluginConfigure {
         this.fuelConfig = new FuelConfig(plugin);
         this.timerConfig = new TimerConfig(plugin);
         this.realmConfig = new RealmConfig(plugin);
+        this.particleConfig = new ParticleConfig(plugin);
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
@@ -224,15 +239,20 @@ public class Configuration extends PluginConfigure {
             if (e == null || e.getName() == null) continue;
             enchantMaxLevel.put(e, e.getMaxLevel());
         }
-        ConfigurationSection list = config.getConfigurationSection("enchant.max_level");
-        if (list == null) list = config.getConfigurationSection("enchantMaxLevel");
-        if (list != null) {
-            for (String enchName : list.getKeys(false)) {
+        if (config.isConfigurationSection("enchant.max_level")) {
+            ConfigurationSection maxLevel = config.getConfigurationSection("enchant.max_level");
+            for (String enchName : maxLevel.getKeys(false)) {
                 Enchantment e = Enchantment.getByName(enchName);
                 if (e == null || e.getName() == null) continue;
-                if (list.isInt(enchName)) {
-                    enchantMaxLevel.put(e, list.getInt(enchName));
+                if (maxLevel.isInt(enchName)) {
+                    enchantMaxLevel.put(e, maxLevel.getInt(enchName));
                 }
+            }
+        }
+        for (ParticleType type : ParticleType.values()) {
+            particlesLimits.put(type, new ParticleLimit());
+            if (config.isConfigurationSection("particles.limits." + type.name())) {
+                particlesLimits.get(type).deserialize(config.getConfigurationSection("particles.limits." + type.name()));
             }
         }
     }
@@ -247,6 +267,10 @@ public class Configuration extends PluginConfigure {
         for (Enchantment k : enchantMaxLevel.keySet()) {
             if (k == null || k.getName() == null) continue;
             list.set(k.getName(), enchantMaxLevel.get(k));
+        }
+        config.set("particles.limits", null);
+        for (ParticleType type : particlesLimits.keySet()) {
+            particlesLimits.get(type).serialize(config.createSection("particles.limits." + type.name()));
         }
     }
 }
