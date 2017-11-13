@@ -91,7 +91,7 @@ public class ParticleData implements ISerializable {
         if (!lastSend.containsKey(uuid)) {
             lastSend.put(uuid, 0L);
         }
-        if (time - lastSend.get(uuid) >= (freq > limit.getFreq() ? limit.getFreq() : freq) &&
+        if (time - lastSend.get(uuid) >= (freq < limit.getFreq() ? limit.getFreq() : freq) &&
                 NyaaUtils.instance.cfg.particles_enabled.contains(particle.name())) {
             loc.getWorld().spawnParticle(particle, loc,
                     count > limit.getAmount() ? limit.getAmount() : count,
