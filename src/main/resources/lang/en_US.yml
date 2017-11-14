@@ -280,6 +280,8 @@ user:
       page: "======== (%d/%d) ========"
       name: "[%d] [%s] author: %s"
       content: "  [%d] [particle: %s, amount %d, freq %d, offsetX: %.3f , offsetY: %.3f , offsetZ: %.3f , extra: %.3f]"
+    turned_on: "Particle turned on"
+    turned_off: "Particle turned off"
 manual:
   help:
     description: "Show help message"
@@ -504,6 +506,9 @@ manual:
     add:
       description: "Add particle to your particle set"
       usage: "/nu particle add [particle set id] [particle name] [amount] [freq] [offset x] [offset y] [offset z] [extra]"
+    toggle:
+      description: "Toggle particle"
+      usage: "/nu particle toggle"
     help:
       description: "Print help messages"
       usage: "/nu particle help"

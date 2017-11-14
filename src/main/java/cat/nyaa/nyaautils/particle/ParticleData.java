@@ -2,8 +2,10 @@ package cat.nyaa.nyaautils.particle;
 
 import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaautils.NyaaUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,13 +95,20 @@ public class ParticleData implements ISerializable {
         }
         if (time - lastSend.get(uuid) >= (freq < limit.getFreq() ? limit.getFreq() : freq) &&
                 NyaaUtils.instance.cfg.particles_enabled.contains(particle.name())) {
-            loc.getWorld().spawnParticle(particle, loc,
-                    count > limit.getAmount() ? limit.getAmount() : count,
-                    offsetX > limit.getOffsetX() ? limit.getOffsetX() : offsetX,
-                    offsetY > limit.getOffsetY() ? limit.getOffsetY() : offsetY,
-                    offsetZ > limit.getOffsetZ() ? limit.getOffsetZ() : offsetZ,
-                    extra > limit.getExtra() ? limit.getExtra() : extra);
             lastSend.put(uuid, time);
+            double distance = Bukkit.getViewDistance() * 16;
+            distance *= distance;
+            for (Player player : loc.getWorld().getPlayers()) {
+                if (player.isValid() && !NyaaUtils.instance.particleTask.bypassPlayers.contains(player.getUniqueId())
+                        && loc.distanceSquared(player.getLocation()) <= distance) {
+                    player.spawnParticle(particle, loc,
+                            count > limit.getAmount() ? limit.getAmount() : count,
+                            offsetX > limit.getOffsetX() ? limit.getOffsetX() : offsetX,
+                            offsetY > limit.getOffsetY() ? limit.getOffsetY() : offsetY,
+                            offsetZ > limit.getOffsetZ() ? limit.getOffsetZ() : offsetZ,
+                            extra > limit.getExtra() ? limit.getExtra() : extra);
+                }
+            }
         }
     }
 }

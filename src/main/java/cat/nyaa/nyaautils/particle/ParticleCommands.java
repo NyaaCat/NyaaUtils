@@ -142,6 +142,18 @@ public class ParticleCommands extends CommandReceiver {
         tmp.stream().skip(pageSize * (page - 1)).limit(pageSize).forEach(set -> printParticleSetInfo(sender, set));
     }
 
+    @SubCommand(value = "toggle", permission = "nu.particles.player")
+    public void commandToggle(CommandSender sender, Arguments args) {
+        Player player = asPlayer(sender);
+        if (plugin.particleTask.bypassPlayers.contains(player.getUniqueId())) {
+            plugin.particleTask.bypassPlayers.remove(player.getUniqueId());
+            msg(sender, "user.particle.turned_on");
+        } else {
+            plugin.particleTask.bypassPlayers.add(player.getUniqueId());
+            msg(sender, "user.particle.turned_off");
+        }
+    }
+
     public boolean isAdminOrAuthor(Player p, ParticleSet set) {
         return p.hasPermission("nu.particles.admin") || p.getUniqueId().equals(set.getAuthor());
     }

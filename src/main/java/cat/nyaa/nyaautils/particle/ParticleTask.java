@@ -8,11 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 public class ParticleTask extends BukkitRunnable {
+    public List<UUID> bypassPlayers = new ArrayList<>();
     private NyaaUtils plugin;
 
     public ParticleTask(NyaaUtils pl) {
@@ -25,7 +27,8 @@ public class ParticleTask extends BukkitRunnable {
         List<String> vanishedPlayers = plugin.ess.getVanishedPlayers();
         long time = System.currentTimeMillis() / 50;
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (p.isValid() && p.getGameMode() != GameMode.SPECTATOR && !vanishedPlayers.contains(p.getName())) {
+            if (p.isValid() && p.getGameMode() != GameMode.SPECTATOR && !vanishedPlayers.contains(p.getName()) &&
+                    !bypassPlayers.contains(p.getUniqueId())) {
                 ParticleType type = null;
                 if (!p.isGliding() && plugin.cfg.particles_type_player) {
                     type = ParticleType.PLAYER;

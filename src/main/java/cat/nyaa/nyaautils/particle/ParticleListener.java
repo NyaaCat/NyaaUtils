@@ -23,7 +23,9 @@ public class ParticleListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         if (plugin.cfg.particles_type_other && event.getEntity() != null && event.getEntity().getShooter() instanceof Player) {
-            projectiles.add(event.getEntity().getUniqueId());
+            if (!plugin.particleTask.bypassPlayers.contains(((Player) event.getEntity().getShooter()).getUniqueId())) {
+                projectiles.add(event.getEntity().getUniqueId());
+            }
         }
     }
 }
