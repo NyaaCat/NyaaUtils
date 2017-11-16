@@ -108,7 +108,7 @@ user:
       &r&&f3 &3 dark aqua
       &r&&f4 &4 dark red
       &r&&f5 &5 dark purple
-      &r&&f6 &6 glod
+      &r&&f6 &6 gold
       &r&&f7 &7 gray
       &r&&f8 &8 dark gray
       &r&&f9 &9 blue
@@ -116,7 +116,7 @@ user:
       &r&&fb &b aqua
       &r&&fc &c red
       &r&&fd &d light purple
-      &r&&fe &e yello
+      &r&&fe &e yellow
       &r&&ff &f white
       &r&&fl &l bold
       &r&&fm &m strikethrough
