@@ -270,8 +270,10 @@ user:
     not_exist: "Particle set %d not found"
     not_enabled: "Particle %s is not enabled"
     no_permission: "You do not have permission to edit this particle"
+    invalid_material: "Invalid material"
     add: 
       limit: "You can not add more particle to this particle set"
+      need_material: "This particle need a material, usage: %s [material] [data value]"
     type:
       not_enabled: "Particle type %s is not enabled"
     remove:
@@ -280,6 +282,8 @@ user:
       page: "======== (%d/%d) ========"
       name: "[%d] [%s] author: %s"
       content: "  [%d] [particle: %s, amount %d, freq %d, offsetX: %.3f , offsetY: %.3f , offsetZ: %.3f , extra: %.3f]"
+      use: "Click to use this particle set"
+      material: " [material: %s, data value: %s]"
     turned_on: "Particle turned on"
     turned_off: "Particle turned off"
 manual:
@@ -503,6 +507,9 @@ manual:
     list:
       description: "List all particle sets"
       usage: "/nu particle list [particle type] [page]"
+    my:
+      description: "List your particle sets"
+      usage: "/nu particle my [particle type] [page]"
     add:
       description: "Add particle to your particle set"
       usage: "/nu particle add [particle set id] [particle name] [amount] [freq] [offset x] [offset y] [offset z] [extra]"

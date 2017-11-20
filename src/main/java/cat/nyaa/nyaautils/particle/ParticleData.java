@@ -4,8 +4,11 @@ import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +29,10 @@ public class ParticleData implements ISerializable {
     private double extra;
     @Serializable
     private long freq;
-
+    @Serializable
+    private Material material;
+    @Serializable
+    private int dataValue;
     private Map<UUID, Long> lastSend = new HashMap<>();
 
     public ParticleData() {
@@ -98,6 +104,7 @@ public class ParticleData implements ISerializable {
             lastSend.put(uuid, time);
             double distance = Bukkit.getViewDistance() * 16;
             distance *= distance;
+            Object data = getData();
             for (Player player : loc.getWorld().getPlayers()) {
                 if (player.isValid() && !NyaaUtils.instance.particleTask.bypassPlayers.contains(player.getUniqueId())
                         && loc.distanceSquared(player.getLocation()) <= distance) {
@@ -106,9 +113,39 @@ public class ParticleData implements ISerializable {
                             offsetX > limit.getOffsetX() ? limit.getOffsetX() : offsetX,
                             offsetY > limit.getOffsetY() ? limit.getOffsetY() : offsetY,
                             offsetZ > limit.getOffsetZ() ? limit.getOffsetZ() : offsetZ,
-                            extra > limit.getExtra() ? limit.getExtra() : extra);
+                            extra > limit.getExtra() ? limit.getExtra() : extra,
+                            data);
                 }
             }
+        }
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public int getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(int dataValue) {
+        this.dataValue = dataValue;
+    }
+
+    @SuppressWarnings("deprecation")
+    private Object getData() {
+        if (material == null) {
+            return null;
+        } else if (particle.getDataType().equals(ItemStack.class)) {
+            return new ItemStack(material, 1, (short) (dataValue));
+        } else if (particle.getDataType().equals(MaterialData.class)) {
+            return new MaterialData(material, (byte) dataValue);
+        } else {
+            return null;
         }
     }
 }

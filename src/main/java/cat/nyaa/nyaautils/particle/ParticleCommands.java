@@ -2,14 +2,24 @@ package cat.nyaa.nyaautils.particle;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.ReflectionUtils;
+import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ParticleCommands extends CommandReceiver {
@@ -75,6 +85,21 @@ public class ParticleCommands extends CommandReceiver {
         data.setOffsetY(args.nextDouble());
         data.setOffsetZ(args.nextDouble());
         data.setExtra(args.nextDouble());
+        if (!particle.getDataType().equals(Void.class)) {
+            if (args.length() < 11) {
+                msg(sender, "user.particle.add.need_material", I18n.format("manual.particle.add.usage"));
+                return;
+            } else {
+                data.setMaterial(args.nextEnum(Material.class));
+                data.setDataValue(args.length() == 12 ? args.nextInt() : 0);
+                if ((particle.getDataType().equals(ItemStack.class) &&
+                        !ReflectionUtils.isValidItem(new ItemStack(data.getMaterial(), 1, (short) data.getDataValue()))) ||
+                        (particle.getDataType().equals(MaterialData.class) && !data.getMaterial().isBlock())) {
+                    msg(sender, "user.particle.invalid_material");
+                    return;
+                }
+            }
+        }
         set.contents.add(data);
         plugin.cfg.save();
         printParticleSetInfo(sender, set);
@@ -130,16 +155,8 @@ public class ParticleCommands extends CommandReceiver {
             throw new BadCommandException("manual.particle.list.usage");
         }
         ParticleType type = args.nextEnum(ParticleType.class);
-        List<ParticleSet> tmp = plugin.cfg.particleConfig.particleSets.values().stream().
-                filter(p -> p.getType().equals(type)).collect(Collectors.toList());
         int page = args.length() == 4 ? args.nextInt() : 1;
-        int pageSize = 10;
-        int pageCount = (tmp.size() + pageSize - 1) / pageSize;
-        if (page < 1 || page > pageCount) {
-            page = 1;
-        }
-        msg(sender, "user.particle.info.page", page, pageCount);
-        tmp.stream().skip(pageSize * (page - 1)).limit(pageSize).forEach(set -> printParticleSetInfo(sender, set));
+        listParticleSet(sender, page, type, null);
     }
 
     @SubCommand(value = "toggle", permission = "nu.particles.player")
@@ -154,24 +171,58 @@ public class ParticleCommands extends CommandReceiver {
         }
     }
 
+    @SubCommand(value = "my", permission = "nu.particles.player")
+    public void commandMy(CommandSender sender, Arguments args) {
+        Player player = asPlayer(sender);
+        ParticleType type = args.nextEnum(ParticleType.class);
+        int page = args.length() == 4 ? args.nextInt() : 1;
+        listParticleSet(sender, page, type, player.getUniqueId());
+    }
+
+    private void listParticleSet(CommandSender sender, int page, ParticleType type, UUID author) {
+        List<ParticleSet> tmp;
+        if (author == null) {
+            tmp = plugin.cfg.particleConfig.particleSets.values().stream().
+                    filter(p -> p.getType().equals(type)).collect(Collectors.toList());
+        } else {
+            tmp = plugin.cfg.particleConfig.particleSets.values().stream().
+                    filter(p -> p.getAuthor().equals(author)).filter(p -> p.getType().equals(type)).collect(Collectors.toList());
+        }
+        int pageSize = 10;
+        int pageCount = (tmp.size() + pageSize - 1) / pageSize;
+        if (page < 1 || page > pageCount) {
+            page = 1;
+        }
+        msg(sender, "user.particle.info.page", page, pageCount);
+        tmp.stream().skip(pageSize * (page - 1)).limit(pageSize).forEach(set -> printParticleSetInfo(sender, set));
+    }
+
     public boolean isAdminOrAuthor(Player p, ParticleSet set) {
         return p.hasPermission("nu.particles.admin") || p.getUniqueId().equals(set.getAuthor());
     }
 
     public void printParticleSetInfo(CommandSender sender, ParticleSet set) {
         if (set != null) {
-            OfflinePlayer player = Bukkit.getOfflinePlayer(set.getAuthor());
-            String author = "";
-            if (player != null) {
-                author = player.getName();
+            OfflinePlayer author = Bukkit.getOfflinePlayer(set.getAuthor());
+            if (sender instanceof Player) {
+                TextComponent msg = new TextComponent(I18n.format("user.particle.info.name", set.getId(), set.getName(), author.getName()));
+                msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(I18n.format("user.particle.info.use")).create()));
+                msg.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nu particle set " + set.getType().name() + " " + set.getId()));
+                asPlayer(sender).spigot().sendMessage(msg);
+            } else {
+                msg(sender, "user.particle.info.name", set.getId(), set.getName(), author.getName());
             }
-            msg(sender, "user.particle.info.name", set.getId(), set.getName(), author);
             for (int i = 0; i < set.contents.size(); i++) {
                 ParticleData p = set.contents.get(i);
-                msg(sender, "user.particle.info.content", i,
+                String msg = I18n.format("user.particle.info.content", i,
                         p.getParticle().name(), p.getCount(), p.getFreq(),
                         p.getOffsetX(), p.getOffsetY(), p.getOffsetZ(),
                         p.getExtra());
+                if (p.getMaterial() == null) {
+                    sender.sendMessage(msg);
+                } else {
+                    sender.sendMessage(msg + I18n.format("user.particle.info.material", p.getMaterial().name(), p.getDataValue()));
+                }
             }
         }
     }
