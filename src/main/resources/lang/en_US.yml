@@ -286,6 +286,13 @@ user:
       material: " [material: %s, data value: %s]"
     turned_on: "Particle turned on"
     turned_off: "Particle turned off"
+  signedit:
+    content: "===== Sign content ====="
+    content_line: "[%d]&r %s"
+    not_sign: "You must target a sign"
+    invalid_line: "Invalid line number"
+    need_sign: "You do not have a sign in your hand"
+    too_long: "Max length: %d"
 manual:
   help:
     description: "Show help message"
@@ -519,3 +526,13 @@ manual:
     help:
       description: "Print help messages"
       usage: "/nu particle help"
+  se:
+    edit:
+      description: "Edit a sign"
+      usage: "/nu se edit [line] [text|clear]"
+    sign:
+      description: "Edit sign in your hand"
+      usage: "/nu se sign [line] [text|clear]"
+    help:
+      description: "Print help messages"
+      usage: "/nu se help"

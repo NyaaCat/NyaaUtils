@@ -10,6 +10,7 @@ import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.particle.ParticleListener;
 import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
+import cat.nyaa.nyaautils.signedit.SignEditListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -39,6 +40,7 @@ public class NyaaUtils extends JavaPlugin {
     public IEssentials ess;
     public ParticleListener particleListener;
     public ParticleTask particleTask;
+    public SignEditListener signEditListener;
 
     @Override
     public void onEnable() {
@@ -65,6 +67,7 @@ public class NyaaUtils extends JavaPlugin {
         ess = (IEssentials) getServer().getPluginManager().getPlugin("Essentials");
         particleTask = new ParticleTask(this);
         particleListener = new ParticleListener(this);
+        signEditListener = new SignEditListener(this);
     }
 
     @Override

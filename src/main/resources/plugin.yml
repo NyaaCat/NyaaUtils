@@ -115,3 +115,9 @@ permissions:
   nu.particles.admin:
     description: Create and remove particle set
     default: op
+  nu.se.player:
+    description: Edit sign in your hand
+    default: true
+  nu.se.admin:
+    description: Edit a sign
+    default: op

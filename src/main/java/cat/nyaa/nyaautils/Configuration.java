@@ -182,7 +182,12 @@ public class Configuration extends PluginConfigure {
     public List<String> particles_enabled = new ArrayList<>(Arrays.asList("FLAME", "WATER_SPLASH"));
     @Serializable(name = "particles.limits", manualSerialization = true)
     public Map<ParticleType, ParticleLimit> particlesLimits = new HashMap<>();
-
+    
+    @Serializable(name = "signedit.disabledFormattingCodes")
+    public List<String> signedit_disabledFormattingCodes = new ArrayList<>(Collections.singletonList("k"));
+    @Serializable(name = "signedit.max_length")
+    public int signedit_max_length = 15;
+    
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig

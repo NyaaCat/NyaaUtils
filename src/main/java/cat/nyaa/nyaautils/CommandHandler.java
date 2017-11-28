@@ -13,6 +13,7 @@ import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.particle.ParticleCommands;
 import cat.nyaa.nyaautils.realm.RealmCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
+import cat.nyaa.nyaautils.signedit.SignEditCommands;
 import cat.nyaa.nyaautils.timer.TimerCommands;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,6 +49,8 @@ public class CommandHandler extends CommandReceiver {
     public RealmCommands realmCommands;
     @SubCommand("particle")
     public ParticleCommands particleCommands;
+    @SubCommand("se")
+    public SignEditCommands signEditCommands;
     
     private NyaaUtils plugin;
 
