@@ -5,10 +5,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SignContent {
-    private List<String> content = new ArrayList<>();
+    private List<String> content = new ArrayList<>(Arrays.asList("", "", "", ""));
 
     public SignContent() {
 
