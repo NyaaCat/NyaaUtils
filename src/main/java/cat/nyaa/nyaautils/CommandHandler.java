@@ -9,6 +9,7 @@ import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
+import cat.nyaa.nyaautils.expcapsule.ExpCapsuleCommands;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.particle.ParticleCommands;
 import cat.nyaa.nyaautils.realm.RealmCommands;
@@ -51,6 +52,8 @@ public class CommandHandler extends CommandReceiver {
     public ParticleCommands particleCommands;
     @SubCommand("se")
     public SignEditCommands signEditCommands;
+    @SubCommand("expcap")
+    public ExpCapsuleCommands expCapsuleCommands;
     
     private NyaaUtils plugin;
 

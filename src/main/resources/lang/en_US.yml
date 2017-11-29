@@ -293,6 +293,15 @@ user:
     invalid_line: "Invalid line number"
     need_sign: "You do not have a sign in your hand"
     too_long: "Max length: %d"
+  expcap:
+    not_enough_exp: "You do not have enough experience"
+    not_enough_exp_cap: "Not enough exp in capsule"
+    wrong_cap_type: "Incorrect capsule type"
+    current_exp: "Your exp point before storing: %d"
+    contain_exp: "Stored Exp: "
+    not_stackable: "You cannot operate on stacked capsules"
+    wrong_nbr: "Invalid exp amount"
+
 manual:
   help:
     description: "Show help message"
@@ -452,6 +461,8 @@ manual:
       description: "Print help messages"
       usage: "/nu repair help"
   timer:
+    description: "Timer manipulation"
+    usage: "/nu timer help"
     create:
       description: "Create timer"
       usage: "/nu timer create [timer name]"
@@ -483,6 +494,8 @@ manual:
       description: "Print help messages"
       usage: "/nu timer help"
   realm:
+    description: "Realm manipulation"
+    usage: "/nu realm help"
     create:
       description: "Create realm"
       usage: "/nu realm create [name] [type] [player]"
@@ -502,6 +515,8 @@ manual:
       description: "Print help messages"
       usage: "/nu realm help"
   particle:
+    description: "Set particle effects"
+    usage: "/nu particle help"
     create:
       description: "Create a particle set"
       usage: "/nu particle create [particle type] [name]"
@@ -527,6 +542,8 @@ manual:
       description: "Print help messages"
       usage: "/nu particle help"
   se:
+    description: "Sign editor"
+    usage: "/nu se help"
     edit:
       description: "Edit a sign"
       usage: "/nu se edit [line] [text|clear]"
@@ -536,3 +553,15 @@ manual:
     help:
       description: "Print help messages"
       usage: "/nu se help"
+  expcap:
+    description: "Experience Capsule"
+    usage: "/nu expcap [store|restore]"
+    store:
+      description: "Store experience into capsule"
+      usage: "/nu expcap store [exp]"
+    restore:
+      description: "Extract experience from capsule"
+      usage: "/nu expcap restore <exp>"
+    help:
+      description: "Print help messages"
+      usage: "/nu expcap help"

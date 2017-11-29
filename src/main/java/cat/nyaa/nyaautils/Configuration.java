@@ -15,6 +15,7 @@ import cat.nyaa.nyaautils.realm.RealmConfig;
 import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.nyaautils.timer.TimerConfig;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -187,6 +188,9 @@ public class Configuration extends PluginConfigure {
     public List<String> signedit_disabledFormattingCodes = new ArrayList<>(Collections.singletonList("k"));
     @Serializable(name = "signedit.max_length")
     public int signedit_max_length = 15;
+
+    @Serializable
+    public Material expCapsuleType = Material.EXP_BOTTLE;
     
     @StandaloneConfig
     public final MailboxLocations mailbox;

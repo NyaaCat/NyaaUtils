@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Set;
+
 public class SignEditCommands extends CommandReceiver {
     private final NyaaUtils plugin;
 
@@ -37,7 +39,7 @@ public class SignEditCommands extends CommandReceiver {
         Player player = asPlayer(sender);
         int line = args.nextInt();
         if (line >= 0 && line < 4) {
-            Block block = player.getTargetBlock(null, 5);
+            Block block = player.getTargetBlock((Set<Material>)null, 5);
             if (block != null && block.getState() instanceof Sign) {
                 String text = args.nextString();
                 //checkFormatCodes(text);

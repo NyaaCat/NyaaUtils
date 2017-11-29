@@ -7,7 +7,7 @@ plugins {
 // Note the spaces before and after the equals sign
 ext.majorVersion = 4
 ext.minorVersion = 0
-ext.minecraftVersion = "1.12.1"
+ext.minecraftVersion = "1.12"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -56,8 +56,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
+    compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
+    compile('cat.nyaa:nyaacore:4.1-SNAPSHOT') {
         transitive = false
     }
     compile files('lib/LocketteProAPI.jar')

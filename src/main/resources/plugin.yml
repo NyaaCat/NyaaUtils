@@ -121,3 +121,9 @@ permissions:
   nu.se.admin:
     description: Edit a sign
     default: op
+  nu.expcap.store:
+    description: Store experience
+    default: true
+  nu.expcap.restore:
+    description: Restore experience
+    default: true
