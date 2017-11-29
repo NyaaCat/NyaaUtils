@@ -57,29 +57,49 @@ public class LootProtectListener implements Listener {
     }
 
     private static final Random rnd = new Random();
-    /* Give exp to player, take Mending enchant into account*/
+    /* Give exp to player, take Mending enchant into account */
+    // TODO move into NyaaCore
     private static void giveExp(Player p, int amount) {
         if (amount <= 0) return;
         List<ItemStack> candidate = new ArrayList<>(13);
-        Arrays.stream(new ItemStack[]{
+
+        for (ItemStack item : new ItemStack[]{
                 p.getInventory().getHelmet(),
                 p.getInventory().getChestplate(),
                 p.getInventory().getLeggings(),
                 p.getInventory().getBoots(),
                 p.getInventory().getItemInMainHand(),
-                p.getInventory().getItemInOffHand()
-        }).filter(item -> item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.MENDING))
-        .forEach(candidate::add);
+                p.getInventory().getItemInOffHand()}) {
+            if (item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.MENDING)) {
+                if (item.getType().getMaxDurability() > 0 && item.getDurability() >= 2) {
+                    candidate.add(item);
+                }
+            }
+        }
 
         ItemStack repair = null;
-        if (candidate.size() > 0) repair = candidate.get(rnd.nextInt(candidate.size()));
+        if (candidate.size() > 0) {
+            candidate.sort(LootProtectListener::compareByDamagePercentage);
+            repair = candidate.get(0);
+        }
 
         if (repair != null) {
-            int repairPoint = Math.min(amount*2, repair.getDurability());
+            int repairPoint = repair.getDurability();
+            if ((repairPoint % 2) == 1) repairPoint--;
+            repairPoint = Math.min(amount * 2, repairPoint); // repairPoint is even
+            int expConsumption = repairPoint / 2;
             repair.setDurability((short)(repair.getDurability() - repairPoint));
-            amount -= repairPoint/2;
+            amount -= expConsumption;
         }
 
         if (amount > 0) p.giveExp(amount);
+    }
+
+    private static int compareByDamagePercentage(ItemStack a, ItemStack b) {
+        float delta = (float)a.getDurability()/a.getType().getMaxDurability() - (float)b.getDurability()/b.getType().getMaxDurability();
+        delta = -delta;
+        if (delta > 0) return 1;
+        if (delta < 0) return -1;
+        return 0;
     }
 }
