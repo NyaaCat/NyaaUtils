@@ -71,7 +71,7 @@ public class LootProtectListener implements Listener {
                 p.getInventory().getItemInMainHand(),
                 p.getInventory().getItemInOffHand()}) {
             if (item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.MENDING)) {
-                if (item.getType().getMaxDurability() > 0 && item.getDurability() >= 2) {
+                if (item.getType().getMaxDurability() > 0 && item.getDurability() > 0) {
                     candidate.add(item);
                 }
             }
@@ -85,9 +85,8 @@ public class LootProtectListener implements Listener {
 
         if (repair != null) {
             int repairPoint = repair.getDurability();
-            if ((repairPoint % 2) == 1) repairPoint--;
-            repairPoint = Math.min(amount * 2, repairPoint); // repairPoint is even
-            int expConsumption = repairPoint / 2;
+            if (amount * 2 < repairPoint) repairPoint = amount * 2;
+            int expConsumption = ((repairPoint%2) == 1) ? (repairPoint+1)/2 : repairPoint/2;
             repair.setDurability((short)(repair.getDurability() - repairPoint));
             amount -= expConsumption;
         }
