@@ -558,10 +558,13 @@ manual:
     usage: "/nu expcap [store|restore]"
     store:
       description: "Store experience into capsule"
-      usage: "/nu expcap store [exp]"
+      usage: "/nu expcap store [exp|ALL]"
     restore:
       description: "Extract experience from capsule"
-      usage: "/nu expcap restore <exp>"
+      usage: "/nu expcap restore <exp|ALL>"
+    set:
+      description: "Set experience in capsule"
+      usage: "/nu expcap set <exp>"
     help:
       description: "Print help messages"
       usage: "/nu expcap help"

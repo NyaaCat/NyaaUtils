@@ -127,3 +127,6 @@ permissions:
   nu.expcap.restore:
     description: Restore experience
     default: true
+  nu.expcap.set:
+    description: Modify exp capsule
+    default: op

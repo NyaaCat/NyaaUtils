@@ -30,14 +30,20 @@ public class ExpCapsuleCommands extends CommandReceiver {
     @SubCommand(value = "store", permission = "nu.expcap.store")
     public void cmdStoreExp(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        if (args.top() == null) {
-            p.sendMessage(I18n.format("user.expcap.current_exp", ExperienceUtils.getExpPoints(p)));
-            return;
+        int exp = ExperienceUtils.getExpPoints(p);
+        p.sendMessage(I18n.format("user.expcap.current_exp", exp));
+
+        if (args.top() == null) return;
+        int amount;
+        if ("ALL".equalsIgnoreCase(args.top())) {
+            amount = exp;
+            if (amount <= 0) throw new BadCommandException("user.expcap.not_enough_exp");
+        } else {
+            amount = args.nextInt();
+            if (amount <= 0) throw new BadCommandException("user.expcap.wrong_nbr");
+            if (exp < amount) throw new BadCommandException("user.expcap.not_enough_exp");
         }
-        int amount = args.nextInt();
-        if (amount <= 0) {
-            throw new BadCommandException("user.expcap.wrong_nbr");
-        }
+
         ItemStack item = getItemInHand(sender);
         if (item.getType() != plugin.cfg.expCapsuleType) {
             throw new BadCommandException("user.expcap.wrong_cap_type");
@@ -45,11 +51,7 @@ public class ExpCapsuleCommands extends CommandReceiver {
         if (item.getAmount() > 1) {
             throw new BadCommandException("user.expcap.not_stackable");
         }
-        int exp = ExperienceUtils.getExpPoints(p);
-        p.sendMessage(I18n.format("user.expcap.current_exp", exp));
-        if (exp < amount) {
-            throw new BadCommandException("user.expcap.not_enough_exp");
-        }
+
         Integer storedExp = getStoredExp(item);
         if (storedExp == null) storedExp = 0;
         storedExp += amount;
@@ -60,21 +62,33 @@ public class ExpCapsuleCommands extends CommandReceiver {
     @SubCommand(value = "restore", permission = "nu.expcap.restore")
     public void cmdRestoreExp(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        int amount = args.nextInt();
-        if (amount <= 0) {
-            throw new BadCommandException("user.expcap.wrong_nbr");
-        }
         ItemStack item = getItemInHand(sender);
-        if (item.getAmount() > 1) {
-            throw new BadCommandException("user.expcap.not_stackable");
-        }
         Integer storedExp = getStoredExp(item);
-        if (storedExp == null || amount > storedExp) {
-            throw new BadCommandException("user.expcap.not_enough_exp_cap");
+        if (storedExp == null) throw new BadCommandException("user.expcap.not_enough_exp_cap");
+        if (item.getAmount() > 1) throw new BadCommandException("user.expcap.not_stackable");
+
+        int amount;
+        if (args.top() == null) throw new BadCommandException();
+        if ("ALL".equalsIgnoreCase(args.top())) {
+            amount = storedExp;
+            if (amount <= 0) throw new BadCommandException("user.expcap.not_enough_exp_cap");
+        } else {
+            amount = args.nextInt();
+            if (amount <= 0) throw new BadCommandException("user.expcap.wrong_nbr");
+            if (amount > storedExp) throw new BadCommandException("user.expcap.not_enough_exp_cap");
         }
+
         storedExp -= amount;
         p.giveExp(amount);
         setStoredExp(item, storedExp);
+    }
+
+    @SubCommand(value = "set", permission = "nu.expcap.set")
+    public void cmdSetExp(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        ItemStack item = getItemInHand(sender);
+        int amount = args.nextInt();
+        setStoredExp(item, amount);
     }
 
     public static final String EXP_CAPSULE_MAGIC = ChatColor.translateAlternateColorCodes('&', "&e&c&a&r");
@@ -106,7 +120,9 @@ public class ExpCapsuleCommands extends CommandReceiver {
             if (str.contains(EXP_CAPSULE_MAGIC)) continue;
             newLore.add(str);
         }
-        newLore.add(I18n.format("user.expcap.contain_exp") + EXP_CAPSULE_MAGIC + Integer.toString(exp));
+        if (exp > 0) {
+            newLore.add(0,I18n.format("user.expcap.contain_exp") + EXP_CAPSULE_MAGIC + Integer.toString(exp));
+        }
         meta.setLore(newLore);
         item.setItemMeta(meta);
     }
