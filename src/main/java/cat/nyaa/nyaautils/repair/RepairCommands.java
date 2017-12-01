@@ -105,7 +105,7 @@ public class RepairCommands extends CommandReceiver {
             return;
         }
 
-        ExperienceUtils.addPlayerExperience(p, -info.expConsumption);
+        ExperienceUtils.subtractExpPoints(p, info.expConsumption);
 
         int dur = item.getDurability();
         dur -= info.durRecovered;
@@ -147,7 +147,7 @@ public class RepairCommands extends CommandReceiver {
         int durMax = (int) Math.ceil(item.getDurability() / (double) info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
 
-        ExperienceUtils.addPlayerExperience(p, -info.expConsumption * repairAmount);
+        ExperienceUtils.subtractExpPoints(p, info.expConsumption * repairAmount);
         int dur = item.getDurability();
         dur -= info.durRecovered * repairAmount;
         if (dur < 0) dur = 0;
