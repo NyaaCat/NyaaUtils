@@ -100,7 +100,7 @@ public class RepairCommands extends CommandReceiver {
             return;
         }
         Player p = asPlayer(sender);
-        if (p.getTotalExperience() < info.expConsumption) {
+        if (ExperienceUtils.getExpPoints(p) < info.expConsumption) {
             msg(sender, "user.repair.no_enough_exp");
             return;
         }
@@ -137,16 +137,16 @@ public class RepairCommands extends CommandReceiver {
             return;
         }
         Player p = asPlayer(sender);
-        if (p.getTotalExperience() < info.expConsumption) {
+        if (ExperienceUtils.getExpPoints(p) < info.expConsumption) {
             msg(sender, "user.repair.no_enough_exp");
             return;
         }
 
-        int expMax = (int) Math.floor(p.getTotalExperience() / (double) info.expConsumption);
+        int expMax = (int) Math.floor(ExperienceUtils.getExpPoints(p) / (double) info.expConsumption);
         int materialMax = material.getAmount();
         int durMax = (int) Math.ceil(item.getDurability() / (double) info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
-        if (p.getTotalExperience() < info.expConsumption * repairAmount) {
+        if (ExperienceUtils.getExpPoints(p) < info.expConsumption * repairAmount) {
             msg(sender, "user.repair.no_enough_exp");
             return;
         }

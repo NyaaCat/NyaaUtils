@@ -270,7 +270,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0 &&
-                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_prefix_expCost)) {
+                !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_prefix_expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
@@ -318,7 +318,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0 &&
-                !(p.getTotalExperience() >= plugin.cfg.custom_fixes_suffix_expCost)) {
+                !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_suffix_expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
@@ -409,7 +409,7 @@ public class CommandHandler extends CommandReceiver {
         int expCost = plugin.cfg.renameExpCostBase + plugin.cfg.renameExpCostPer * num;
         int moneyCost = plugin.cfg.renameMoneyCostBase + plugin.cfg.renameMoneyCostPer * num;
         if (expCost > 0 &&
-                !(p.getTotalExperience() >= expCost)) {
+                !(ExperienceUtils.getExpPoints(p) >= expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
