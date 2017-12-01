@@ -284,7 +284,7 @@ public class CommandHandler extends CommandReceiver {
             IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_prefix_moneyCost);
         }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
-            ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_prefix_expCost);
+            ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_prefix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
         VaultUtils.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
@@ -332,7 +332,7 @@ public class CommandHandler extends CommandReceiver {
             IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_suffix_moneyCost);
         }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
-            ExperienceUtils.addPlayerExperience(p, -plugin.cfg.custom_fixes_suffix_expCost);
+            ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_suffix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
         VaultUtils.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
@@ -425,7 +425,7 @@ public class CommandHandler extends CommandReceiver {
         itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
         item.setItemMeta(itemStackMeta);
         if (expCost > 0) {
-            ExperienceUtils.addPlayerExperience(p, -expCost);
+            ExperienceUtils.subtractExpPoints(p, expCost);
         }
         VaultUtils.withdraw(p, moneyCost);
         msg(sender, "user.rename.success", name);
