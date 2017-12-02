@@ -2,7 +2,6 @@ package cat.nyaa.nyaautils.mailbox;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
@@ -209,8 +208,8 @@ public class MailboxCommands extends CommandReceiver {
                 msg(recp, "user.mailbox.mailbox_no_space", sender.getName());
             }
         } else {
-            if (NyaaUtils.hasHEH) {
-                IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.mailHandFee);
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(plugin.cfg.mailHandFee, plugin);
             }
             InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
@@ -306,8 +305,8 @@ public class MailboxCommands extends CommandReceiver {
                         }
                     }
                     if (itemMoved) {
-                        if (NyaaUtils.hasHEH) {
-                            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.mailChestFee);
+                        if (plugin.systemBalance != null) {
+                            plugin.systemBalance.deposit(plugin.cfg.mailChestFee, plugin);
                         }
                         toInventory.setStorageContents(to);
                         msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailChestFee);

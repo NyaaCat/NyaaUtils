@@ -163,8 +163,8 @@ public class Teleport implements Listener {
         }
         iu.setHome(name, curLoc);
         msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.sethome"));
-        if (NyaaUtils.hasHEH) {
-            IPCUtils.callMethod("heh_balance_deposit", fee);
+        if (plugin.systemBalance != null && fee > 0) {
+            plugin.systemBalance.deposit(fee, plugin);
         }
     }
 
@@ -190,8 +190,8 @@ public class Teleport implements Listener {
         try {
             iu.getTeleport().back(new Trade(0, ess));
             msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
-            if (NyaaUtils.hasHEH) {
-                IPCUtils.callMethod("heh_balance_deposit", fee);
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(fee, plugin);
             }
         } catch (Exception e) {
             VaultUtils.deposit(p, fee);
@@ -221,8 +221,8 @@ public class Teleport implements Listener {
         try {
             iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
             msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
-            if (NyaaUtils.hasHEH) {
-                IPCUtils.callMethod("heh_balance_deposit", fee);
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(fee, plugin);
             }
         } catch (Exception e) {
             VaultUtils.deposit(p, fee);

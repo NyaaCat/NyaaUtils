@@ -4,7 +4,6 @@ import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
-import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
@@ -274,14 +273,14 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
-
-        if (plugin.cfg.custom_fixes_prefix_moneyCost > 0 &&
-                !VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
-            msg(sender, "user.warn.no_enough_money");
-            return;
-        }
-        if (NyaaUtils.hasHEH) {
-            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_prefix_moneyCost);
+        if (plugin.cfg.custom_fixes_prefix_moneyCost > 0) {
+            if (!VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_prefix_moneyCost)) {
+                msg(sender, "user.warn.no_enough_money");
+                return;
+            }
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(plugin.cfg.custom_fixes_prefix_moneyCost, plugin);
+            }
         }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_prefix_expCost);
@@ -322,14 +321,14 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
-
-        if (plugin.cfg.custom_fixes_suffix_moneyCost > 0 &&
-                !VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
-            msg(sender, "user.warn.no_enough_money");
-            return;
-        }
-        if (NyaaUtils.hasHEH) {
-            IPCUtils.callMethod("heh_balance_deposit", plugin.cfg.custom_fixes_suffix_moneyCost);
+        if (plugin.cfg.custom_fixes_suffix_moneyCost > 0) {
+            if (!VaultUtils.enoughMoney(p, plugin.cfg.custom_fixes_suffix_moneyCost)) {
+                msg(sender, "user.warn.no_enough_money");
+                return;
+            }
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(plugin.cfg.custom_fixes_suffix_moneyCost, plugin);
+            }
         }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_suffix_expCost);
@@ -413,13 +412,14 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
-        if (moneyCost > 0 &&
-                !VaultUtils.enoughMoney(p, moneyCost)) {
-            msg(sender, "user.warn.no_enough_money");
-            return;
-        }
-        if (NyaaUtils.hasHEH) {
-            IPCUtils.callMethod("heh_balance_deposit", moneyCost);
+        if (moneyCost > 0) {
+            if (!VaultUtils.enoughMoney(p, moneyCost)) {
+                msg(sender, "user.warn.no_enough_money");
+                return;
+            }
+            if (plugin.systemBalance != null) {
+                plugin.systemBalance.deposit(moneyCost, plugin);
+            }
         }
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));

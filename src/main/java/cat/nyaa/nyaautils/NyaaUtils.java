@@ -1,5 +1,8 @@
 package cat.nyaa.nyaautils;
 
+import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
+import cat.nyaa.nyaacore.component.ISystemBalance;
+import cat.nyaa.nyaacore.component.NyaaComponent;
 import cat.nyaa.nyaautils.commandwarpper.Teleport;
 import cat.nyaa.nyaautils.dropprotect.DropProtectListener;
 import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
@@ -21,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
-    public static boolean hasHEH = false;
+    public ISystemBalance systemBalance = null;
     public I18n i18n;
     public CommandHandler commandHandler;
     public Configuration cfg;
@@ -63,7 +66,11 @@ public class NyaaUtils extends JavaPlugin {
         timerListener = new TimerListener(this);
         worldEditPlugin = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         realmListener = new RealmListener(this);
-        hasHEH = getServer().getPluginManager().getPlugin("HamsterEcoHelper") != null;
+        try {
+            systemBalance = NyaaComponent.get(ISystemBalance.class);
+        } catch (ComponentNotAvailableException e) {
+            systemBalance = null;
+        }
         ess = (IEssentials) getServer().getPluginManager().getPlugin("Essentials");
         particleTask = new ParticleTask(this);
         particleListener = new ParticleListener(this);
