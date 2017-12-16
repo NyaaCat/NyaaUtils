@@ -9,6 +9,7 @@ import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.expcapsule.ExpCapsuleCommands;
+import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.particle.ParticleCommands;
 import cat.nyaa.nyaautils.realm.RealmCommands;
@@ -234,10 +235,28 @@ public class CommandHandler extends CommandReceiver {
     @SubCommand(value = "lp", permission = "nu.lootprotect")
     public void commandLootProtectToggle(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        if (plugin.lpListener.toggleStatus(p.getUniqueId())) {
-            p.sendMessage(I18n.format("user.lp.turned_on"));
+        String sub = args.next();
+        if(sub == null){
+            if (plugin.lpListener.toggleStatus(p.getUniqueId())) {
+                p.sendMessage(I18n.format("user.lp.turned_on"));
+            } else {
+                p.sendMessage(I18n.format("user.lp.turned_off"));
+            }
         } else {
-            p.sendMessage(I18n.format("user.lp.turned_off"));
+            switch (sub){
+                case "ignorevanilla":
+                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.IGNORE);
+                    p.sendMessage(I18n.format("user.lp.ignore_vanilla"));
+                    break;
+                case "rejectvanilla":
+                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.REJECT);
+                    p.sendMessage(I18n.format("user.lp.reject_vanilla"));
+                    break;
+                case "includevanilla" :
+                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.INCLUDE);
+                    p.sendMessage(I18n.format("user.lp.include_vanilla"));
+                    break;
+            }
         }
         p.sendMessage(I18n.format("user.lp.mode_" + plugin.cfg.lootProtectMode.name()));
     }

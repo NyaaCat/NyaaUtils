@@ -2,19 +2,28 @@ package cat.nyaa.nyaautils.lootprotect;
 
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LootProtectListener implements Listener {
     final private NyaaUtils plugin;
     final private Set<UUID> bypassPlayer = new HashSet<>();
+    final private Map<UUID, VanillaStrategy> bypassVanillaPlayer = new HashMap<>();
+
+    public enum VanillaStrategy {
+        IGNORE,
+        REJECT,
+        INCLUDE
+    }
 
     public LootProtectListener(NyaaUtils pl) {
         plugin = pl;
@@ -35,6 +44,18 @@ public class LootProtectListener implements Listener {
         }
     }
 
+    public void setVanillaStatus(UUID uuid, VanillaStrategy strategy) {
+        switch (strategy) {
+            case IGNORE:
+            case REJECT:
+                bypassVanillaPlayer.put(uuid, strategy);
+                break;
+            case INCLUDE:
+                bypassVanillaPlayer.remove(uuid);
+                break;
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMobKilled(EntityDeathEvent ev) {
         if (plugin.cfg.lootProtectMode == LootProtectMode.OFF || ev.getEntity() instanceof Player)
@@ -47,16 +68,35 @@ public class LootProtectListener implements Listener {
         }
         if (p == null) return;
         if (bypassPlayer.contains(p.getUniqueId())) return;
-        Map<Integer, ItemStack> leftItem =
-                p.getInventory().addItem(ev.getDrops().toArray(new ItemStack[0]));
-        ev.getDrops().clear();
-        ev.getDrops().addAll(leftItem.values());
-
+        if (bypassVanillaPlayer.get(p.getUniqueId()) != null) {
+            List<ItemStack> customItems = ev.getDrops().stream().filter(item -> item.hasItemMeta() && item.getItemMeta().hasLore()).collect(Collectors.toList());
+            ev.getDrops().removeAll(customItems);
+            Map<Integer, ItemStack> leftItem =
+                    p.getInventory().addItem(customItems.toArray(new ItemStack[0]));
+            ev.getDrops().addAll(leftItem.values());
+        } else {
+            Map<Integer, ItemStack> leftItem =
+                    p.getInventory().addItem(ev.getDrops().toArray(new ItemStack[0]));
+            ev.getDrops().clear();
+            ev.getDrops().addAll(leftItem.values());
+        }
         giveExp(p, ev.getDroppedExp());
         ev.setDroppedExp(0);
     }
 
-    private static final Random rnd = new Random();
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onPickup(EntityPickupItemEvent e) {
+        if (plugin.cfg.lootProtectMode == LootProtectMode.OFF || !(e.getEntity() instanceof Player))
+            return;
+        Player p = (Player) e.getEntity();
+        if (!p.isSneaking() && bypassVanillaPlayer.get(p.getUniqueId()) == VanillaStrategy.REJECT) {
+            ItemStack item = e.getItem().getItemStack();
+            if (!(item.hasItemMeta() && item.getItemMeta().hasLore())) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
     /* Give exp to player, take Mending enchant into account */
     // TODO move into NyaaCore
     private static void giveExp(Player p, int amount) {
@@ -86,8 +126,8 @@ public class LootProtectListener implements Listener {
         if (repair != null) {
             int repairPoint = repair.getDurability();
             if (amount * 2 < repairPoint) repairPoint = amount * 2;
-            int expConsumption = ((repairPoint%2) == 1) ? (repairPoint+1)/2 : repairPoint/2;
-            repair.setDurability((short)(repair.getDurability() - repairPoint));
+            int expConsumption = ((repairPoint % 2) == 1) ? (repairPoint + 1) / 2 : repairPoint / 2;
+            repair.setDurability((short) (repair.getDurability() - repairPoint));
             amount -= expConsumption;
         }
 
@@ -95,7 +135,7 @@ public class LootProtectListener implements Listener {
     }
 
     private static int compareByDamagePercentage(ItemStack a, ItemStack b) {
-        float delta = (float)a.getDurability()/a.getType().getMaxDurability() - (float)b.getDurability()/b.getType().getMaxDurability();
+        float delta = (float) a.getDurability() / a.getType().getMaxDurability() - (float) b.getDurability() / b.getType().getMaxDurability();
         delta = -delta;
         if (delta > 0) return 1;
         if (delta < 0) return -1;
