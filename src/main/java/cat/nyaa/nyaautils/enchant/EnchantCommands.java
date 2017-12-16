@@ -171,7 +171,9 @@ public class EnchantCommands extends CommandReceiver {
                 return;
             }
 
-            int level = args.nextInt();
+            int rawlevel = args.nextInt();
+
+            int level = rawlevel;
 
             if (level <= 0 || level > plugin.cfg.enchantMaxLevel.get(ench)) {
                 sender.sendMessage(I18n.format("user.enchant.invalid_level"));
@@ -213,8 +215,8 @@ public class EnchantCommands extends CommandReceiver {
             if (off.getType() == Material.ENCHANTED_BOOK) {
                 EnchantmentStorageMeta meta = (EnchantmentStorageMeta) off.getItemMeta();
                 int realLvl = meta.getStoredEnchantLevel(ench);
-                if (level > realLvl
-                        || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
+                if (rawlevel > realLvl
+                        || (rawlevel + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n.format("user.enchant.invalid_level"));
                     return;
                 } else {
@@ -227,8 +229,8 @@ public class EnchantCommands extends CommandReceiver {
 
             } else {
                 int realLvl = off.getEnchantmentLevel(ench);
-                if (level > realLvl
-                        || (level + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
+                if (rawlevel > realLvl
+                        || (rawlevel + main.getEnchantmentLevel(ench) > plugin.cfg.enchantMaxLevel.get(ench))) {
                     sender.sendMessage(I18n.format("user.enchant.invalid_level"));
                     return;
                 } else {
