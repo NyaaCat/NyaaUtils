@@ -1,0 +1,514 @@
+user:
+  info:
+    command_complete: "命令已执行"
+    not_player: "只有玩家可执行此操作"
+    no_item_hand: "主手中没有物品"
+    no_item_offhand: "副手中没有物品"
+    enabled: "已启用"
+    disabled: "已禁用"
+  error:
+    bad_command: "无效的命令：%s"
+    not_int: "不是有效的整数"
+    not_double: "不是有效的数字"
+    command_exception: "内部错误，无法执行此命令"
+    bad_enum: "不是枚举 %s 中的有效项，可用的值为：%s"
+    no_required_permission: "你没有所需的权限执行此操作：%s"
+  warn:
+    blocked_words: "你不能使用此词汇：%s"
+    blocked_materials: "你不能使用此材料：%s"
+    blocked_format_codes: "你不能使用样式代码 %s"
+    no_enough_money: "你没有足够的现金"
+    not_enough_exp: "你没有足够的经验值"
+  showitem:
+    message: "玩家 %s 正在展示物品：&r{itemName}&r * {amount}"
+  enchant:
+    list_ench_header: "=== 可用附魔列表 ==="
+    invalid_src: "副手中的物品不是有效的附魔源"
+    invalid_ench: "%s 不是有效的附魔名称"
+    invalid_level: "附魔等级无效"
+    invalid_item: "该物品不能附魔"
+    max_level: "（最高等级：%d）"
+    success: "附魔成功"
+    fail: "附魔失败"
+    enchantsrc_already_exists: "指定的附魔源已经存在"
+  prefix:
+    prefix_too_long: "前缀长度最大为 %d 个字符"
+    success: "你的前缀已设置为：%s"
+  suffix:
+    suffix_too_long: "后缀长度最大为 %d 个字符"
+    success: "你的后缀已设置为：%s"
+  resetprefix:
+    success: "重置前缀成功"
+  resetsuffix:
+    success: "重置后缀成功"
+  elytra_enhance:
+    fuel_notify: "飞行燃料剩余：%d"
+    durability_notify: "鞘翅耐久剩余：%d"
+    fuelmode_on: "飞行燃料已启用"
+    fuelmode_off: "飞行燃料已禁用"
+    fuel_durability: "&b%d / %d"
+    fuel_not_found: "指定的飞行燃料 %s 不存在"
+    fuel_info: "fuelID：%d 可用次数：%d"
+    player_not_found: "未找到玩家 %s"
+    save_success: "保存成功"
+    remove: "已删除指定的飞行燃料"
+  launch:
+    usage: |
+      /nu launch <Yaw> <Pitch> <Speed> <Delay> <LaunchSpeed> [Player]
+      Yaw：水平发射方向，0 正北(+X) 90 正东(+Z) 180 正西(-X) 270：正南(-Z)
+      Pitch：垂直发射角度，0 水平射出 90 垂直向上(+Y)
+      Speed：设置玩家起飞后的飞行速度
+      Delay：发射玩家前等待的刻数（ticks）
+      LaunchSpeed：设置玩家起飞的速度
+      Player：要发射的玩家，在命令方块中可为 @p
+    player_not_online: "玩家 %s 目前未在线"
+    not_ready_to_fly: "你必须装备鞘翅才能起飞"
+    not_ready_to_fly_sender: "指定的玩家必须装备鞘翅才能起飞"
+    missing_name: "未指定玩家名称"
+  project:
+    usage: |
+      /nu project <Yaw> <Pitch> <Speed> <duration> [Player]
+      Yaw：水平发射方向，0 正北(+X) 90 正东(+Z) 180 正西(-X) 270：正南(-Z)
+      Pitch：垂直发射角度，0 水平射出 90 垂直向上(+Y)
+      Speed: 设置玩家被发射出去后的飞行速度
+      Duration: 设置发射效果持续的刻数（ticks）
+      Player: 要发射的玩家，在命令方块中可为 @p
+    missing_name: "未指定玩家名称"
+    player_not_online: "玩家 %s 目前未在线"
+  dp:
+    turned_off: "死亡掉落保护已关闭"
+    turned_on: "死亡掉落保护已启用"
+    mode_OFF: "死亡掉落保护已全局禁用"
+    mode_ON: "死亡掉落的物品在 %d 秒内不会消失"
+  lp:
+    turned_off: "掉落物保护已关闭"
+    turned_on: "掉落物保护已启用"
+    mode_OFF: "掉落物保护已全局禁用"
+    mode_MAX_DAMAGE: "掉落物将给予输出最大伤害的玩家"
+    mode_FINAL_DAMAGE: "掉落物将给予发动最后一击的玩家"
+  exhibition:
+    no_item_frame: "没有找到物品展示框"
+    already_set: "指定的展示框已设置了展品"
+    no_item: "指定的展示框中没有物品"
+    have_not_set: "指定的展示框尚未设置展品"
+    frame_protected: "此展示框已被保护"
+    unset_protected: "不能撤销被保护的展示框中的展品"
+    looking_at: "你正在查看：&f"
+    provided_by: "由 %s 提供"
+    no_desc: "尚未设置展品说明"
+    range_error: "无效的说明行号"
+    line_removed: "第 %d 行说明已移除"
+    line_changed: "第 %d 行说明已修改"
+    desc_protected: "不能修改被保护的展示框的说明文字"
+  format:
+    message: |
+      &r&&f0 &0 黑色
+      &r&&f1 &1 深蓝色
+      &r&&f2 &2 深绿色
+      &r&&f3 &3 蓝绿色
+      &r&&f4 &4 深红色
+      &r&&f5 &5 紫色
+      &r&&f6 &6 金色
+      &r&&f7 &7 灰色
+      &r&&f8 &8 深灰色
+      &r&&f9 &9 蓝色
+      &r&&fa &a 绿色
+      &r&&fb &b 浅蓝色
+      &r&&fc &c 红色
+      &r&&fd &d 粉红色
+      &r&&fe &e 黄色
+      &r&&ff &f 白色
+      &r&&fl &l 粗体
+      &r&&fm &m 删除线
+      &r&&fn &n 下划线
+      &r&&fo &o 斜体
+      &r&&fr &r 重置文字样式
+  enchantinfo:
+    info_0: "=== 附魔机率 ==="
+    info_1: "大成功：%d%%"
+    info_2: "成  功：%d%%"
+    info_3: "失  败：%d%%"
+    info_4: "大失败：%d%%"
+    info_cooldown: "附魔冷却中，预计等待时间：%d 秒"
+    enchant_level: "等级：%d"
+  mailbox:
+    right_click_timeout: "指定时间内未设置要作为邮箱的箱子，操作已取消"
+    already_set: "设置新邮箱前，请撤销当前已设置过的邮箱"
+    havent_set_self: "你还没有邮箱"
+    havent_set_other: "玩家 %s 尚未设置邮箱"
+    set_success: "设置邮箱成功"
+    set_fail: "设置邮箱失败"
+    remove_success: "撤销邮箱成功"
+    now_right_click: "请在 5 秒内右键单击要作为邮箱的箱子"
+    permission_required: "你没有权限执行此操作"
+    same_src_dst: "你不能将自己的邮箱发送给自己"
+    info:
+      location: "你的邮箱位置：{X:%d, Y:%d, Z:%d}"
+      hand_price: "发送手中物品价格：%.2f / 次"
+      chest_price: "发送一箱物品价格：%.2f / 次"
+      send_cooldown: "两次发送邮件间隔：%.2f 秒"
+      send_timeout: "谢绝来信窗口时间：%.2f 秒"
+    player_no_mailbox: "玩家 %s 尚未设置邮箱"
+    create_mailbox_hint: |
+      玩家 %s 想要向你发送一份邮件，但你还没有设置邮箱
+      请使用 /nu mailbox create 指令，按照提示进行邮箱的设置
+    recipient_no_space: "对方邮箱没有足够的空间"
+    mailbox_no_space: "玩家 %s 想要向你发送一份邮件，但你的邮箱没有足够的空间"
+    mail_sent: "成功向 %s 发送了一份邮件，费用为：%.2f"
+    mail_received: "玩家 %s 向你发送了一份邮件并已保存在你的邮箱"
+    now_right_click_send: "现在请右键单击要发送给 %s 的成箱物品"
+    chest_protected: "不能发送指定的箱子，因为该箱子已锁定"
+    mail_sent_nothing: "邮递小哥慨而慷，免费为你发空箱"
+    money_insufficient: "你没有足够的现金来发送邮件"
+    admin:
+      right_click_set: "右键单击箱子来为 %s 设置邮箱"
+      already_set: "该玩家已经设定过邮箱"
+      fail_set: "设置邮箱失败"
+      success_set: "设置邮箱成功"
+      player_hint_set: "你的邮箱已由管理员进行设置"
+      no_mailbox: "该玩家尚未设置邮箱"
+      success_remove: "撤销邮箱成功"
+      player_hint_removed: "你的邮箱已被管理员撤销"
+      info: "玩家 %s(%s) 的邮箱位置：X:%d Y:%d Z:%d"
+
+  repair:
+    item_added: "新增可修复物品成功"
+    material_mismatch: "修复材料不正确"
+    no_enough_exp: "修复所需经验值不足"
+    info_1: "当前手持物品信息："
+    info_2: "物品类型：%s"
+    info_3: "该物品不能修复，原因为：%s"
+    info_4: "物品耐久：%d/%d (%.01f%%)"
+    info_5: "所需材料："
+    info_6: "花费经验：%d（以每修复材料计）"
+    info_7: "耐久回复：%d (%.01f%%)（以每修复材料计）"
+    info_8: "可修次数：无上限"
+    info_9: "可修次数：%d/%d"
+    info_10: "完整修复所需材料：%d 个"
+    unrepairable:
+      UNREPAIRABLE: "该物品无法修复"
+      UNREPAIRABLE_REPAIRED: "该物品已完全修复"
+      UNREPAIRABLE_UNBREAKABLE: "该物品不可破坏"
+      UNREPAIRABLE_RLE: "已达到可修次数上限"
+      UNREPAIRABLE_LOWRECOVER: "该物品耐久度已不可恢复"
+    repaired: "修复成功"
+  timer:
+    timer_create: "创建计时器成功"
+    timer_remove: "删除计时器 %s 成功"
+    timer_exist: "计时器 %s 已存在"
+    timer_not_found: "未找到计时器 %s"
+    timer_enable: "计时器 %s 已启用"
+    timer_disable: "计时器 %s 已禁用"
+    timer_info: "计时器：%s，检查点：%d，状态：%s，是否广播：%s"
+    broadcast_enable: "广播已启用"
+    broadcast_disable: "广播已禁用"
+    checkpoint_remove: "检查点 %s 已移除"
+    checkpoint_not_found: "未找到检查点 %s"
+    checkpoint_broadcast: "[%s] 玩家 %s 已通过检查点 %d，用时 [ %d 分 %.2f 秒 ] "
+    checkpoint_info: "检查点 %d 位于世界 %s 的 (%d, %d, %d) (%d, %d, %d)"
+    select: "请先选择一个检查点范围"
+    checkpoint_conflict: "所选范围与检查点 %d 冲突"
+    start: "[%s] 计时开始"
+    invalid: "[%s] 你必须先通过检查点 %d"
+    finish_0: "玩家 %s 在 %s 的比赛结果："
+    finish_1: "到达检查点 %d 用时 [ %d 分 %.2f 秒 ]"
+    finish_2: "总计用时为 [ %d 分 %.2f 秒 ]"
+    list: "已定义的计时器：%d"
+  teleport:
+    home: "home"
+    sethome: "set home"
+    back: "back"
+    ok: "已支付 %.2f 用于传送至 %s"
+    not_set_yet: "你还没有设置家"
+    no_loc: "没有有效的返回地点"
+    money_insufficient: "你没有足够的现金（%.2f）来执行此操作"
+    error: "指定的家位置无效，请联系管理员"
+    invalid_home: "指定的家在已移除的世界中"
+    bed_not_set_yet: "你尚未设置床或家"
+    unsafe: "传送的目标地点不安全"
+    invalid_name: "无效的家名称"
+    home_limit: "你最多只能设置 %d 个家"
+    home_limit_one: "你只能设置 1 个家，该家位置将被重命名为 home"
+    homes: "已设置的家：%s"
+  rename:
+    name_too_long: "名称 '%s' 过长，最多只能为 %d 个字符"
+    success: "物品重命名成功"
+  setlore:
+    success: "设置 Lore 成功"
+  setbook:
+    no_book: "主手中没有书物品"
+    success: "书籍信息设置成功"
+  realm:
+    select: "请先选择一个领域范围"
+    create: "创建领域成功"
+    remove: "移除领域 %s 成功"
+    exist: "领域 %s 已存在"
+    not_found: "未找到领域 %s"
+    type_error: "领域类型不正确"
+    no_realm: "当前位置暂无领域"
+    current_location: "当前位置：%s (X: %d, Y:%d, Z: %d)"
+    info_0: "领域名称：%s，类型：%s，优先级：%d %s"
+    info_1: "领域范围：世界 %s (%d, %d, %d) (%d, %d, %d)"
+    owner: "，所有者：%s"
+    realmtype:
+      PUBLIC: "公共"
+      PRIVATE: "私有"
+    notification:
+      public: "领域：%s"
+      private: "领域：%s 所有者：%s"
+      public_title: "领域：%s"
+      public_subtitle: "公共领域"
+      private_title: "领域：%s"
+      private_subtitle: "所有者：%s"
+    setpriority: "已设置优先级为：%d"
+    mute: "设置成功，你将不会再收到领域提示"
+    unmute: "取消领域提示静音成功"
+    list:
+      info_0: "领域列表（第 %d 页 / 共 %d 页）"
+      info_1: "%s，类型：%s，优先级：%d，所有者：%s，范围：世界 %s (%d, %d, %d) (%d, %d, %d)"
+  particle:
+    not_exist: "未找到粒子效果 %d"
+    not_enabled: "粒子效果 %s 尚未启用"
+    no_permission: "你没有权限编辑该粒子效果"
+    add: 
+      limit: "已达到该粒子效果的元素数量上限"
+    type:
+      not_enabled: "粒子效果类型 %s 尚未启用"
+    remove:
+      success: "移除粒子效果 %d 成功"
+    info:
+      page: "========（第 %d / %d 页）========"
+      name: "[%d] [%s] 作者：%s"
+      content: "  [%d] [粒子：%s 数量：%d 频率：%d X偏移：%.3f Y偏移：%.3f Z偏移：%.3f 附加值：%.3f]"
+    turned_on: "粒子效果已启用"
+    turned_off: "粒子效果已禁用"
+manual:
+  help:
+    description: "显示帮助信息"
+    usage: "/nu [子命令] help"
+
+  reload:
+    description: "从文件重新加载配置信息，未保存的修改将丢失"
+    usage: "/nu reload"
+
+  show:
+    description: "展示手中的物品"
+    usage: "/nu show"
+
+  lp:
+    description: "切换掉落物保护状态"
+    usage: "/nu lp"
+
+  dp:
+    description: "切换死亡掉落保护状态"
+    usage: "/nu dp"
+
+  launch:
+    description: "将玩家发射至空中，并展开鞘翅"
+    usage: "/nu launch <Yaw> <Pitch> <Speed> <Delay> [玩家名称]"
+
+  project:
+    description: "将玩家发射至空中"
+    usage: "/nu project <Yaw> <Pitch> <Speed> <Duration> [玩家名称]"
+    
+  prefix:
+    description: "设置玩家前缀"
+    usage: "/nu prefix [要设置的前缀]"
+    
+  suffix:
+    description: "设置玩家后缀"
+    usage: "/nu suffix [要设置的后缀]"
+    
+  resetprefix:
+    description: "重置自己的前缀"
+    usage: "/nu resetprefix"
+    
+  resetsuffix:
+    description: "重置自己的后缀"
+    usage: "/nu resetsuffix"
+
+  format:
+    description: "列出样式代码示例"
+    usage: "/nu format"
+
+  rename:
+    description: "为手中的物品改名"
+    usage: "/nu rename [要修改的名字]"
+
+  setlore:
+    description: "设置物品 Lore"
+    usage: "/nu setlore [lore]"
+
+  addlore:
+    description: "向物品追加 Lore"
+    usage: "/nu addlore [lore]"
+
+  setbookauthor:
+    description: "设置书的作者"
+    usage: "/nu setbookauthor [作者名称]"
+
+  setbooktitle:
+    description: "设置书的标题"
+    usage: "/nu setbooktitle [标题]"
+
+  setbookunsign:
+    description: "取消书的签名状态"
+    usage: "/nu setbookunsign"
+
+  el:
+    description: "切换飞行燃料开关状态"
+    usage: "/nu el 或 /nu el help"
+    addfuel:
+      description: "将物品设置为飞行燃料"
+      usage: "/nu el addfuel [可用次数]"
+    removefuel:
+      description: "取消设置物品为飞行燃料"
+      usage: "/nu el removefuel"
+    givefuel:
+      description: "将指定的飞行燃料给予玩家"
+      usage: "/nu el givefuel [玩家名称] [fuelID] [数量]"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu el help"
+
+  enchant:
+    description: "为物品附魔"
+    usage: "/nu enchant [附魔名称] [附魔等级] 或使用 /nu enchant help 查看详细帮助"
+    addsrc:
+      description: "将手中的物品注册为有效的附魔源"
+      usage: "/nu enchant addsrc"
+    info:
+      description: "显示附魔源信息"
+      usage: "/nu enchant info"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu enchant help"
+
+  exhibition:
+    description: "创建或修改受保护的展示框"
+    usage: "/nu exhibition help"
+    set:
+      description: "将眼前的展示框设置为受保护状态"
+      usage: "/nu exhibition set"
+    unset:
+      description: "取消眼前展示框的受保护状态"
+      usage: "/nu exhibition unset"
+    desc:
+      description: "修改受保护展示框的说明"
+      usage: "/nu exhibition desc <行号> [说明文字]"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu exhibition help"
+
+  mailbox:
+    description: "设置邮箱、发送邮件"
+    usage: "/nu mailbox help"
+    create:
+      description: "创建邮箱"
+      usage: "/nu mailbox create [玩家名称]"
+    info:
+      description: "显示邮箱信息"
+      usage: "/nu mailbox info [玩家名称]"
+    remove:
+      description: "撤销邮箱"
+      usage: "/nu mailbox remove [玩家名称]"
+    send:
+      description: "将手中的物品发送给另一玩家"
+      usage: "/nu mailbox send <玩家名称>"
+    sendchest:
+      description: "将一箱物品发送给另一玩家"
+      usage: "/nu mailbox sendchest <玩家名称>"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu mailbox help"
+
+  repair:
+    description: "修理物品"
+    usage: "/nu repair help"
+    add:
+      description: "添加可修理物品"
+      usage: "/nu repair add [物品] [修复材料] [fullRepairCostAmount(完整修复基础材料数量)] [expCostPerConsume(每修复材料基础消耗经验值)] [enchantCostPerLv(每附魔等级消耗材料或经验之乘数)] [可修次数上限]"
+    hand:
+      description: "修理手中的物品"
+      usage: "/nu repair hand"
+    full:
+      description: "完全修复手中的物品"
+      usage: "/nu repair full"
+    info:
+      description: "显示手中物品的修理信息"
+      usage: "/nu repair info"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu repair help"
+  timer:
+    create:
+      description: "创建计时器"
+      usage: "/nu timer create [计时器名称]"
+    remove:
+      description: "移除计时器"
+      usage: "/nu timer remove [计时器名称]"
+    enable:
+      description: "启用计时器"
+      usage: "/nu timer enable [计时器名称]"
+    disable:
+      description: "禁用计时器"
+      usage: "/nu timer disable [计时器名称]"
+    togglebroadcast:
+      description: "切换某计时器是否广播"
+      usage: "/nu timer togglebroadcast [计时器名称]"
+    addcheckpoint:
+      description: "向计时器添加检查点"
+      usage: "/nu timer addcheckpoint [计时器名称] 或 /nu timer addcheckpoint [计时器名称] [检查点ID]"
+    removecheckpoint:
+      description: "从计时器中移除检查点"
+      usage: "/nu timer addcheckpoint [计时器名称] [检查点ID]"
+    info:
+      description: "显示计时器信息"
+      usage: "/nu timer info [计时器名称]"
+    list:
+      description: "列出所有计时器"
+      usage: "/nu timer list"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu timer help"
+  realm:
+    create:
+      description: "创建领域"
+      usage: "/nu realm create [名称] [类型] [所有者]"
+    remove:
+      description: "移除领域"
+      usage: "/nu realm remove [领域名称]"
+    info:
+      description: "显示领域信息"
+      usage: "/nu realm info"
+    list:
+      description: "列出所有领域"
+      usage: "/nu realm list"
+    setpriority:
+      description: "设置领域优先级"
+      usage: "/nu realm setpriority"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu realm help"
+  particle:
+    create:
+      description: "创建粒子效果"
+      usage: "/nu particle create [粒子效果类别] [名称]"
+    remove:
+      description: "移除粒子效果或粒子效果元素"
+      usage: "/nu particle remove [粒子效果ID] 或 /nu particle remove [粒子效果ID] [元素ID]"
+    set:
+      description: "设置粒子效果（clear为清除粒子效果）"
+      usage: "/nu particle set [粒子效果类别] [粒子效果ID|clear]"
+    list:
+      description: "列出所有粒子效果"
+      usage: "/nu particle list [粒子效果类别] [page]"
+    add:
+      description: "向粒子效果添加元素"
+      usage: "/nu particle add [粒子效果ID] [粒子名称] [数量] [频率] [X轴偏移] [Y轴偏移] [Z轴偏移] [附加值]"
+    toggle:
+      description: "切换是否显示粒子效果（仅对本机有效）"
+      usage: "/nu particle toggle"
+    help:
+      description: "显示帮助信息"
+      usage: "/nu particle help"
