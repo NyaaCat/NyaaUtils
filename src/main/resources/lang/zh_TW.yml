@@ -1,13 +1,13 @@
 user:
   info:
-    command_complete: ''
-    not_player: ''
-    no_item_hand: ''
-    no_item_offhand: ''
+    command_complete: 指令已執行!
+    not_player: 只有玩家可執行此操作
+    no_item_hand: 主手中沒有物品
+    no_item_offhand: 副手中沒有物品
     enabled: ''
     disabled: ''
   error:
-    bad_command: ''
+    bad_command: '無效的指令: %s'
     not_int: ''
     not_double: ''
     command_exception: ''
