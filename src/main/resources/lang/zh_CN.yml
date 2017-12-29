@@ -343,7 +343,7 @@ user:
     wrong_nbr: 无效的经验值
 manual:
   help:
-    description: 展示帮助文本
+    description: 显示帮助信息
     usage: /nu [子命令] help
   reload:
     description: 从文件重新加载配置信息，未保存的修改将丢失
