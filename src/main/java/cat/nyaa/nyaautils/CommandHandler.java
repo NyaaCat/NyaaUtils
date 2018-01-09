@@ -193,7 +193,7 @@ public class CommandHandler extends CommandReceiver {
 
             @Override
             public void run() {
-                if ((!(entity instanceof Player) || ((Player) entity).isOnline()) && !stopped){
+                if (entity != null && entity.isValid() && (!(entity instanceof Player) || ((Player) entity).isOnline()) && !stopped) {
                     if (current < d) {
                         current++;
                         entity.setVelocity(v);
