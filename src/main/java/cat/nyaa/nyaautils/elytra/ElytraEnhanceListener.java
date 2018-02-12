@@ -40,7 +40,7 @@ public class ElytraEnhanceListener implements Listener {
                 !player.isSneaking()) {
             if (!FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() >= 0.75 &&
-                    plugin.fuelManager.getFuelAmount(player) > 0) {
+                    plugin.fuelManager.getFuelAmount(player, false) > 0) {
                 FuelMode.add(player.getUniqueId());
             }
             if (duration.containsKey(player.getUniqueId()) &&
@@ -69,7 +69,7 @@ public class ElytraEnhanceListener implements Listener {
                     duration.put(player.getUniqueId(), System.currentTimeMillis() + (plugin.cfg.elytra_power_duration * 1000));
                     player.setVelocity(player.getEyeLocation().getDirection().multiply(plugin.cfg.elytra_max_velocity));
                 }
-                int fuelAmount = plugin.fuelManager.getFuelAmount(player);
+                int fuelAmount = plugin.fuelManager.getFuelAmount(player, false);
                 if (fuelAmount <= plugin.cfg.elytra_fuel_notify) {
                     player.sendMessage(I18n.format("user.elytra_enhance.fuel_notify", fuelAmount));
                 }
@@ -82,7 +82,7 @@ public class ElytraEnhanceListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        if (event.getCurrentItem() != null && plugin.fuelManager.getFuelID(event.getCurrentItem()) != -1) {
+        if (!event.getWhoClicked().isGliding() && event.getCurrentItem() != null && plugin.fuelManager.getFuelID(event.getCurrentItem()) != -1) {
             ItemStack item = event.getCurrentItem();
             int id = plugin.fuelManager.getFuelID(item);
             int durability = plugin.fuelManager.getFuelDurability(item);

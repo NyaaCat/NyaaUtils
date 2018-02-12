@@ -1,9 +1,9 @@
 package cat.nyaa.nyaautils.elytra;
 
 
+import cat.nyaa.nyaacore.utils.InventoryUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.nyaacore.utils.InventoryUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,12 +23,15 @@ public class FuelManager {
         plugin = pl;
     }
 
-    public int getFuelAmount(Player player) {
+    public int getFuelAmount(Player player, boolean exact) {
         int fuel = 0;
         if (InventoryUtils.hasItem(player, plugin.cfg.fuelConfig.elytra_fuel, 1)) {
             fuel = InventoryUtils.getAmount(player, plugin.cfg.fuelConfig.elytra_fuel);
         }
         for (int i = 0; i <= player.getInventory().getSize(); i++) {
+            if (!exact && fuel > plugin.cfg.elytra_fuel_notify) {
+                return fuel;
+            }
             ItemStack item = player.getInventory().getItem(i);
             int fuelID = getFuelID(item);
             if (fuelID != -1 && plugin.cfg.fuelConfig.fuel.containsKey(fuelID)) {
@@ -93,7 +96,7 @@ public class FuelManager {
     public int getFuelID(ItemStack item) {
         if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
             String lore = item.getItemMeta().getLore().get(0);
-            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.contains(lore_prefix)) {
+            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.startsWith(lore_prefix)) {
                 try {
                     return Integer.parseInt(lore.substring(lore_prefix.length(),
                             lore_prefix.length() + 8).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), ""), 16);
