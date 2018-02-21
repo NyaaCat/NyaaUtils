@@ -305,7 +305,7 @@ public class CommandHandler extends CommandReceiver {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_prefix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
-        VaultUtils.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
+        VaultUtils.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), hasPexOrLp());
         msg(sender, "user.prefix.success", prefix);
     }
 
@@ -353,7 +353,7 @@ public class CommandHandler extends CommandReceiver {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_suffix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
-        VaultUtils.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
+        VaultUtils.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), hasPexOrLp());
         msg(sender, "user.suffix.success", suffix);
     }
 
@@ -365,7 +365,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
 
-        VaultUtils.setPlayerPrefix(p, "", plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
+        VaultUtils.setPlayerPrefix(p, "", hasPexOrLp());
         msg(sender, "user.resetprefix.success");
     }
 
@@ -377,7 +377,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
 
-        VaultUtils.setPlayerSuffix(p, "", plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null);
+        VaultUtils.setPlayerSuffix(p, "", hasPexOrLp());
         msg(sender, "user.resetsuffix.success");
     }
 
@@ -556,5 +556,9 @@ public class CommandHandler extends CommandReceiver {
         newbook.setItemMeta(newbookMeta);
         p.getInventory().setItemInMainHand(newbook);
         msg(sender, "user.setbook.success");
+    }
+
+    private boolean hasPexOrLp() {
+        return plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null || plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null;
     }
 }
