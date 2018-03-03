@@ -2,6 +2,7 @@ package cat.nyaa.nyaautils.repair;
 
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Repairable;
 import org.librazy.nyaautils_lang_checker.LangKey;
@@ -52,7 +53,9 @@ public class RepairInstance {
         }
 
         int enchLevel = 0;
-        for (Integer i : item.getEnchantments().values()) enchLevel += i;
+        for (Enchantment ench : Enchantment.values()) {
+            enchLevel += Math.max(item.getEnchantmentLevel(ench), 0);
+        }
 
         int fullDurability = toolMaterial.getMaxDurability();
         durRecovered = (int) Math.floor((double) fullDurability / ((double) cfg.fullRepairCost + (double) enchLevel * cfg.enchantCostPerLv));
