@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils;
 import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
 import cat.nyaa.nyaacore.component.ISystemBalance;
 import cat.nyaa.nyaacore.component.NyaaComponent;
+import cat.nyaa.nyaautils.commandwarpper.EsschatListener;
 import cat.nyaa.nyaautils.commandwarpper.Teleport;
 import cat.nyaa.nyaautils.dropprotect.DropProtectListener;
 import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
@@ -10,6 +11,7 @@ import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
+import cat.nyaa.nyaautils.mention.MentionListener;
 import cat.nyaa.nyaautils.particle.ParticleListener;
 import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
@@ -44,6 +46,8 @@ public class NyaaUtils extends JavaPlugin {
     public ParticleListener particleListener;
     public ParticleTask particleTask;
     public SignEditListener signEditListener;
+    public MentionListener mentionListener;
+    public EsschatListener esschatListener;
 
     @Override
     public void onEnable() {
@@ -75,6 +79,8 @@ public class NyaaUtils extends JavaPlugin {
         particleTask = new ParticleTask(this);
         particleListener = new ParticleListener(this);
         signEditListener = new SignEditListener(this);
+        mentionListener = new MentionListener(this);
+        esschatListener = new EsschatListener(this);
     }
 
     @Override

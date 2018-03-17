@@ -8,6 +8,7 @@ import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
 import cat.nyaa.nyaautils.mailbox.MailboxLocations;
+import cat.nyaa.nyaautils.mention.MentionNotification;
 import cat.nyaa.nyaautils.particle.ParticleConfig;
 import cat.nyaa.nyaautils.particle.ParticleLimit;
 import cat.nyaa.nyaautils.particle.ParticleType;
@@ -89,7 +90,7 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "elytra_enhance.fuel_notify_threshold", alias = "elytra_fuel_notify")
     public int elytra_fuel_notify = 10;
     @Serializable(name = "elytra_enhance.disabled_worlds", alias = "disabled_world")
-    public List<String> disabled_world = new ArrayList<String>(Arrays.asList("world1", "world2"));
+    public List<String> disabled_world = new ArrayList<>(Arrays.asList("world1", "world2"));
     /* Mailing System */
     @Serializable(name = "mail.handFee")
     public int mailHandFee = 10;
@@ -188,6 +189,17 @@ public class Configuration extends PluginConfigure {
     public List<String> signedit_disabledFormattingCodes = new ArrayList<>(Collections.singletonList("k"));
     @Serializable(name = "signedit.max_length")
     public int signedit_max_length = 15;
+
+    @Serializable(name = "mention.enable")
+    public Boolean mention_enable = true;
+    @Serializable(name = "mention.sound")
+    public List<String> mention_sound = new ArrayList<>(Collections.singletonList("entity.experience_orb.pickup"));
+    @Serializable(name = "mention.pitch")
+    public List<Double> mention_pitch = new ArrayList<>(Collections.singletonList(1d));
+    @Serializable(name = "mention.notification")
+    public MentionNotification mention_notification = MentionNotification.ACTION_BAR;
+    @Serializable(name = "mention.blink")
+    public Boolean mention_blink = true;
 
     @Serializable
     public Material expCapsuleType = Material.EXP_BOTTLE;
