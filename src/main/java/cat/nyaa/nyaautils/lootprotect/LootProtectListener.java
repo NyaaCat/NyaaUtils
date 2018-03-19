@@ -2,7 +2,6 @@ package cat.nyaa.nyaautils.lootprotect;
 
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +21,7 @@ public class LootProtectListener implements Listener {
     public enum VanillaStrategy {
         IGNORE,
         REJECT,
-        INCLUDE
+        ACCEPT
     }
 
     public LootProtectListener(NyaaUtils pl) {
@@ -44,13 +43,13 @@ public class LootProtectListener implements Listener {
         }
     }
 
-    public void setVanillaStatus(UUID uuid, VanillaStrategy strategy) {
+    public void setVanillaStrategy(UUID uuid, VanillaStrategy strategy) {
         switch (strategy) {
             case IGNORE:
             case REJECT:
                 bypassVanillaPlayer.put(uuid, strategy);
                 break;
-            case INCLUDE:
+            case ACCEPT:
                 bypassVanillaPlayer.remove(uuid);
                 break;
         }

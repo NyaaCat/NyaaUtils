@@ -35,7 +35,6 @@ public class MentionListener implements Listener {
                 String rep = raw.replace("@ ", "@");
                 Set<Player> playersNotified = Bukkit.getOnlinePlayers().parallelStream()
                                                     .filter(p -> rep.contains("@" + p.getName()))
-                                                    .filter(p -> e.getRecipients().contains(p))
                                                     .collect(Collectors.toSet());
                 notify(sender, raw, playersNotified, plugin);
             }

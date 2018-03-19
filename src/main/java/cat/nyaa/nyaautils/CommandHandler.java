@@ -54,7 +54,7 @@ public class CommandHandler extends CommandReceiver {
     public SignEditCommands signEditCommands;
     @SubCommand("expcap")
     public ExpCapsuleCommands expCapsuleCommands;
-    
+
     private NyaaUtils plugin;
 
     public CommandHandler(NyaaUtils plugin, LanguageRepository i18n) {
@@ -164,7 +164,7 @@ public class CommandHandler extends CommandReceiver {
         Entity ent;
         final Entity p;
         UUID uid;
-        if(pName == null){
+        if (pName == null) {
             if (sender instanceof Player) {
                 pName = ((Player) sender).getUniqueId().toString();
             } else {
@@ -236,24 +236,28 @@ public class CommandHandler extends CommandReceiver {
     public void commandLootProtectToggle(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         String sub = args.next();
-        if(sub == null){
+        if (sub == null) {
             if (plugin.lpListener.toggleStatus(p.getUniqueId())) {
                 p.sendMessage(I18n.format("user.lp.turned_on"));
             } else {
                 p.sendMessage(I18n.format("user.lp.turned_off"));
             }
         } else {
-            switch (sub){
+            switch (sub) {
+                case "ig":
                 case "ignorevanilla":
-                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.IGNORE);
+                    plugin.lpListener.setVanillaStrategy(p.getUniqueId(), LootProtectListener.VanillaStrategy.IGNORE);
                     p.sendMessage(I18n.format("user.lp.ignore_vanilla"));
                     break;
+                case "re":
                 case "rejectvanilla":
-                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.REJECT);
+                    plugin.lpListener.setVanillaStrategy(p.getUniqueId(), LootProtectListener.VanillaStrategy.REJECT);
                     p.sendMessage(I18n.format("user.lp.reject_vanilla"));
                     break;
-                case "includevanilla" :
-                    plugin.lpListener.setVanillaStatus(p.getUniqueId(), LootProtectListener.VanillaStrategy.INCLUDE);
+                case "ac":
+                case "acceptvanilla":
+                case "includevanilla":
+                    plugin.lpListener.setVanillaStrategy(p.getUniqueId(), LootProtectListener.VanillaStrategy.ACCEPT);
                     p.sendMessage(I18n.format("user.lp.include_vanilla"));
                     break;
             }
@@ -288,7 +292,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         if (plugin.cfg.custom_fixes_prefix_expCost > 0 &&
-                !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_prefix_expCost)) {
+                    !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_prefix_expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
@@ -336,7 +340,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         if (plugin.cfg.custom_fixes_suffix_expCost > 0 &&
-                !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_suffix_expCost)) {
+                    !(ExperienceUtils.getExpPoints(p) >= plugin.cfg.custom_fixes_suffix_expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
@@ -427,7 +431,7 @@ public class CommandHandler extends CommandReceiver {
         int expCost = plugin.cfg.renameExpCostBase + plugin.cfg.renameExpCostPer * num;
         int moneyCost = plugin.cfg.renameMoneyCostBase + plugin.cfg.renameMoneyCostPer * num;
         if (expCost > 0 &&
-                !(ExperienceUtils.getExpPoints(p) >= expCost)) {
+                    !(ExperienceUtils.getExpPoints(p) >= expCost)) {
             msg(sender, "user.warn.not_enough_exp");
             return;
         }
