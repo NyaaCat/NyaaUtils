@@ -18,6 +18,7 @@ import cat.nyaa.nyaautils.realm.RealmListener;
 import cat.nyaa.nyaautils.signedit.SignEditListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
+import cat.nyaa.nyaautils.vote.VoteTask;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.ess3.api.IEssentials;
 import org.bukkit.command.TabCompleter;
@@ -48,6 +49,7 @@ public class NyaaUtils extends JavaPlugin {
     public SignEditListener signEditListener;
     public MentionListener mentionListener;
     public EsschatListener esschatListener;
+    public VoteTask voteTask;
 
     @Override
     public void onEnable() {

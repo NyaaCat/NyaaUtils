@@ -309,6 +309,15 @@ user:
     contain_exp: 'Stored Exp: '
     not_stackable: You cannot operate on stacked capsules
     wrong_nbr: Invalid exp amount
+  vote:
+    options_header: "=== Vote: %s, use /nu vote [option id] to vote ==="
+    option: "%d. [%s](%d votes)"
+    options_footer: "===  %d seconds remaining ==="
+    result: "=== Vote results for %s ==="
+    need_options: "need at least 2 options"
+    success: "You success voted for %s"
+    unknown: "unknown option: %s"
+    repeat: "You can't repeat vote"
 manual:
   help:
     description: Show help message
@@ -364,6 +373,9 @@ manual:
   setbookunsign:
     description: Unsign book
     usage: /nu setbookunsign
+  vote:
+    description: start a vote
+    usage: /nu vote [subject] [option1] [option2] [option3] [option4]...
   el:
     description: Toggle fuel mode
     usage: /nu el or /nu el help

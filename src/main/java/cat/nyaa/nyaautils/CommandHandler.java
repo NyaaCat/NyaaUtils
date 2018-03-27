@@ -16,6 +16,7 @@ import cat.nyaa.nyaautils.realm.RealmCommands;
 import cat.nyaa.nyaautils.repair.RepairCommands;
 import cat.nyaa.nyaautils.signedit.SignEditCommands;
 import cat.nyaa.nyaautils.timer.TimerCommands;
+import cat.nyaa.nyaautils.vote.VoteTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,9 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CommandHandler extends CommandReceiver {
     @SubCommand("exhibition")
@@ -564,5 +563,38 @@ public class CommandHandler extends CommandReceiver {
 
     private boolean hasPexOrLp() {
         return plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null || plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null;
+    }
+
+    @SubCommand(value = "vote", permission = "nu.vote")
+    public void vote(CommandSender sender, Arguments args) {
+        if (!plugin.cfg.vote_enable) {
+            return;
+        }
+        if (plugin.voteTask != null && plugin.voteTask.ticks < plugin.cfg.vote_timeout) {
+            if (args.length() == 2) {
+                if (sender.isOp() && "STOP".equalsIgnoreCase(args.top())) {
+                    plugin.voteTask.ticks = plugin.voteTask.timeout + 1;
+                    plugin.voteTask.cancel();
+                    return;
+                }
+                plugin.voteTask.vote(asPlayer(sender), args.nextInt());
+            }
+        } else {
+            if (args.length() < 4) {
+                throw new BadCommandException("user.vote.need_options");
+            }
+            String subject = args.nextString();
+            Set<String> options = new HashSet<>();
+            for (int i = 0; i < plugin.cfg.vote_max_options; i++) {
+                String option = args.top();
+                if (option != null && option.length() > 0) {
+                    options.add(args.nextString());
+                } else {
+                    break;
+                }
+            }
+            plugin.voteTask = new VoteTask(subject, plugin.cfg.vote_timeout, plugin.cfg.vote_broadcast_interval, options);
+            plugin.voteTask.runTaskTimer(plugin, 1, 1);
+        }
     }
 }

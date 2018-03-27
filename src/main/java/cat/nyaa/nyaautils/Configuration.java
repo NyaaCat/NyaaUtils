@@ -203,6 +203,15 @@ public class Configuration extends PluginConfigure {
 
     @Serializable
     public Material expCapsuleType = Material.EXP_BOTTLE;
+
+    @Serializable(name = "vote.enable")
+    public boolean vote_enable = true;
+    @Serializable(name = "vote.timeout")
+    public int vote_timeout = 1200;
+    @Serializable(name = "vote.max_options")
+    public int vote_max_options = 8;
+    @Serializable(name = "vote.broadcast_interval")
+    public int vote_broadcast_interval = -1;
     
     @StandaloneConfig
     public final MailboxLocations mailbox;

@@ -130,3 +130,6 @@ permissions:
   nu.expcap.set:
     description: Modify exp capsule
     default: op
+  nu.vote:
+    description: Start a vote
+    default: true
