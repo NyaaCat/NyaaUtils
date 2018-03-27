@@ -341,6 +341,15 @@ user:
     contain_exp: '存储经验值: '
     not_stackable: 你不能将经验存储在堆叠的物品上
     wrong_nbr: 无效的经验值
+  vote:
+    options_header: "=== 投票: %s, 使用 /nu vote [选项ID] 来投票 ==="
+    option: "%d. [%s](%d 票)"
+    options_footer: "=== 剩余 %d 秒 ==="
+    result: "=== %s 的投票结果 ==="
+    need_options: "至少需要两个选项"
+    success: "你成功为 %s 投票"
+    unknown: "未知选项: %s"
+    repeat: "你已经投过票了"
 manual:
   help:
     description: 显示帮助信息
@@ -396,6 +405,9 @@ manual:
   setbookunsign:
     description: 取消书的签名状态
     usage: /nu setbookunsign
+  vote:
+    description: 开始新的投票
+    usage: /nu vote [投票主题] [选项1] [选项2] [选项3] [选项4]...
   el:
     description: 切换飞行燃料开关状态
     usage: /nu el 或 /nu el help
