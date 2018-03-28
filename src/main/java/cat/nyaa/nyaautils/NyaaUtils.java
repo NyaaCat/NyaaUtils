@@ -83,6 +83,7 @@ public class NyaaUtils extends JavaPlugin {
         signEditListener = new SignEditListener(this);
         mentionListener = new MentionListener(this);
         esschatListener = new EsschatListener(this);
+        voteTask = null;
     }
 
     @Override

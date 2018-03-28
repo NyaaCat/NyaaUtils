@@ -570,7 +570,7 @@ public class CommandHandler extends CommandReceiver {
         if (!plugin.cfg.vote_enable) {
             return;
         }
-        if (plugin.voteTask != null && plugin.voteTask.ticks < plugin.cfg.vote_timeout) {
+        if (plugin.voteTask != null && plugin.voteTask.ticks < plugin.voteTask.timeout) {
             if (args.length() == 2) {
                 if (sender.isOp() && "STOP".equalsIgnoreCase(args.top())) {
                     plugin.voteTask.ticks = plugin.voteTask.timeout + 1;

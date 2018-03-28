@@ -33,8 +33,8 @@ public class VoteTask extends BukkitRunnable {
     public void run() {
         ticks++;
         if (ticks == timeout) {
-            printOptions(true);
             cancel();
+            printOptions(true);
         } else if (ticks == 1 || (broadcastInterval > 0 && ticks % broadcastInterval == 0)) {
             printOptions(false);
         }
