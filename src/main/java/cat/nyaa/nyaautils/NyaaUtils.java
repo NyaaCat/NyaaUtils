@@ -19,11 +19,14 @@ import cat.nyaa.nyaautils.signedit.SignEditListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
 import cat.nyaa.nyaautils.vote.VoteTask;
+import com.earth2me.essentials.ISettings;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.ess3.api.IEssentials;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
@@ -82,7 +85,20 @@ public class NyaaUtils extends JavaPlugin {
         particleListener = new ParticleListener(this);
         signEditListener = new SignEditListener(this);
         mentionListener = new MentionListener(this);
-        esschatListener = new EsschatListener(this);
+        try {
+            ISettings settings = ess.getSettings();
+            Class<? extends ISettings> essSettingsClass = settings.getClass();
+            Long timeout = (Long) essSettingsClass.getMethod("getLastMessageReplyRecipientTimeout").invoke(settings);
+            // TODO: sort out reply recipient when isLastMessageReplyRecipient set to false instead disabling it
+            Boolean allow = (Boolean) essSettingsClass.getMethod("isLastMessageReplyRecipient").invoke(settings);
+            esschatListener = new EsschatListener(this, allow, timeout);
+        } catch (NoSuchMethodException e) {
+            getLogger().warning("EssentialsX not available, not enabling mention notify in /reply commands");
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            getLogger().warning("Unexpected error when enabling mention notify in EssentialsX commands");
+        }
+
         voteTask = null;
     }
 
