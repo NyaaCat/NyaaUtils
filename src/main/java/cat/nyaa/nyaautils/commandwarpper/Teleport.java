@@ -23,11 +23,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.librazy.nyaautils_lang_checker.LangKey;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Teleport implements Listener {
-    public static boolean hasOurTown = false;
+    private static boolean hasOurTown = false;
     private IEssentials ess;
     private NyaaUtils plugin;
 
@@ -156,7 +156,7 @@ public class Teleport implements Listener {
             fee -= curLoc.distance(PlayerSpawn(p, defaultWorld)) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
         }
         if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
-        fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
+        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
@@ -182,7 +182,7 @@ public class Teleport implements Listener {
             fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
         }
         if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
-        fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
+        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
@@ -213,7 +213,7 @@ public class Teleport implements Listener {
             fee += homeLoc.distance(curLoc) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
         }
         if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
-        fee = Double.parseDouble(new DecimalFormat("#.00").format(fee));
+        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
             msg(p, "user.teleport.money_insufficient", fee);
             return;
