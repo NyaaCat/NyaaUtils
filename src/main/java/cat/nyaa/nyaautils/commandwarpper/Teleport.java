@@ -114,7 +114,7 @@ public class Teleport implements Listener {
                 name = "home";
             }
             doSetHome(p, iu, curLoc, name);
-        } else if (cmd.equals("/back")) {
+        } else if (cmd.equals("/back") || cmd.startsWith("/back ")) {
             e.setCancelled(true);
             Location lastLoc = iu.getLastLocation();
             if (lastLoc == null) {
