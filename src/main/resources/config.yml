@@ -1,0 +1,16 @@
+database:
+  lpstrategy:
+    provider: map
+    connection:
+      []
+  lpbypass:
+    provider: map
+    connection:
+      []
+  fueldisabled:
+    provider: map
+    connection:
+      []
+  dpbypass:
+    provider: map
+    connection:
