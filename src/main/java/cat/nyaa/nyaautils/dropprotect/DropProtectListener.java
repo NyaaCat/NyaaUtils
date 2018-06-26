@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 public class DropProtectListener implements Listener {
     final private NyaaUtils plugin;
-    final private KeyValueDB<UUID,UUID> bypassPlayer = DatabaseUtils.get("database.dpbypass");
+    final private KeyValueDB<UUID,UUID> bypassPlayer = DatabaseUtils.get("database.dpbypass").connect();
     final private Cache<Integer, UUID> items;
 
     public DropProtectListener(NyaaUtils pl) {

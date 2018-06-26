@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class ElytraEnhanceListener implements Listener {
     public static List<UUID> FuelMode = new ArrayList<>();
-    public static KeyValueDB<UUID, UUID> disableFuelMode = DatabaseUtils.get("database.fueldisabled");
+    public static KeyValueDB<UUID, UUID> disableFuelMode = DatabaseUtils.get("database.fueldisabled").connect();
     public static HashMap<UUID, Long> duration = new HashMap<UUID, Long>();
     public NyaaUtils plugin;
 

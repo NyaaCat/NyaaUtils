@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class LootProtectListener implements Listener {
     final private NyaaUtils plugin;
-    final private KeyValueDB<UUID, UUID> bypassPlayer = DatabaseUtils.get("database.lpbypass");
-    final private KeyValueDB<UUID, VanillaStrategy> bypassVanillaPlayer = DatabaseUtils.get("database.lpstrategy");
+    final private KeyValueDB<UUID, UUID> bypassPlayer = DatabaseUtils.get("database.lpbypass").connect();
+    final private KeyValueDB<UUID, VanillaStrategy> bypassVanillaPlayer = DatabaseUtils.get("database.lpstrategy").connect();
 
     public enum VanillaStrategy {
         IGNORE,
