@@ -50,4 +50,3 @@ deploy:
   file: ./NyaaUtils-v$VERSION_STRING.jar
   on:
     tags: false
-    all_branches: true

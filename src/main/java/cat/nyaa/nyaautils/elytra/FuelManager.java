@@ -70,6 +70,9 @@ public class FuelManager {
 
     public void updateItem(ItemStack item, int fuelID, int durability) {
         FuelItem fuel = plugin.cfg.fuelConfig.fuel.get(fuelID);
+        if (fuel == null) {
+            return;
+        }
         String hex = toHexString(fuelID) + toHexString(durability) + toHexString(new Random().nextInt(65535));
         String str = "";
         for (int i = 0; i < hex.length(); i++) {
