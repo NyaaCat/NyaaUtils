@@ -1,5 +1,8 @@
 package cat.nyaa.nyaautils.dropprotect;
 
+import cat.nyaa.nyaacore.database.Database;
+import cat.nyaa.nyaacore.database.DatabaseUtils;
+import cat.nyaa.nyaacore.database.KeyValueDB;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -22,7 +25,7 @@ import java.util.stream.Stream;
 
 public class DropProtectListener implements Listener {
     final private NyaaUtils plugin;
-    final private Set<UUID> bypassPlayer = new HashSet<>();
+    final private KeyValueDB<UUID,UUID> bypassPlayer = DatabaseUtils.get("database.dpbypass").connect();
     final private Cache<Integer, UUID> items;
 
     public DropProtectListener(NyaaUtils pl) {
@@ -40,11 +43,11 @@ public class DropProtectListener implements Listener {
      * false: drop protect is disabled
      */
     public boolean toggleStatus(UUID uuid) {
-        if (bypassPlayer.contains(uuid)) {
+        if (bypassPlayer.containsKey(uuid)) {
             bypassPlayer.remove(uuid);
             return true;
         } else {
-            bypassPlayer.add(uuid);
+            bypassPlayer.put(uuid, uuid);
             return false;
         }
     }
@@ -53,7 +56,7 @@ public class DropProtectListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
         if (plugin.cfg.dropProtectMode == DropProtectMode.OFF) return;
         UUID id = e.getEntity().getUniqueId();
-        if (bypassPlayer.contains(id)) return;
+        if (bypassPlayer.containsKey(id)) return;
         List<ItemStack> dropStacks = e.getDrops();
         Location loc = e.getEntity().getLocation();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {

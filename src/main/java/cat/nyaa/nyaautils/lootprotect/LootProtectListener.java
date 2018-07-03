@@ -1,5 +1,7 @@
 package cat.nyaa.nyaautils.lootprotect;
 
+import cat.nyaa.nyaacore.database.DatabaseUtils;
+import cat.nyaa.nyaacore.database.KeyValueDB;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -15,8 +17,8 @@ import java.util.stream.Collectors;
 
 public class LootProtectListener implements Listener {
     final private NyaaUtils plugin;
-    final private Set<UUID> bypassPlayer = new HashSet<>();
-    final private Map<UUID, VanillaStrategy> bypassVanillaPlayer = new HashMap<>();
+    final private KeyValueDB<UUID, UUID> bypassPlayer = DatabaseUtils.get("database.lpbypass").connect();
+    final private KeyValueDB<UUID, VanillaStrategy> bypassVanillaPlayer = DatabaseUtils.get("database.lpstrategy").connect();
 
     public enum VanillaStrategy {
         IGNORE,
@@ -34,11 +36,11 @@ public class LootProtectListener implements Listener {
      * false: loot protect is disabled
      */
     public boolean toggleStatus(UUID uuid) {
-        if (bypassPlayer.contains(uuid)) {
+        if (bypassPlayer.containsKey(uuid)) {
             bypassPlayer.remove(uuid);
             return true;
         } else {
-            bypassPlayer.add(uuid);
+            bypassPlayer.put(uuid, uuid);
             return false;
         }
     }
@@ -66,7 +68,7 @@ public class LootProtectListener implements Listener {
             p = ev.getEntity().getKiller();
         }
         if (p == null) return;
-        if (bypassPlayer.contains(p.getUniqueId())) return;
+        if (bypassPlayer.containsKey(p.getUniqueId())) return;
         if (bypassVanillaPlayer.get(p.getUniqueId()) != null) {
             List<ItemStack> customItems = ev.getDrops().stream().filter(item -> item.hasItemMeta() && item.getItemMeta().hasLore()).collect(Collectors.toList());
             ev.getDrops().removeAll(customItems);

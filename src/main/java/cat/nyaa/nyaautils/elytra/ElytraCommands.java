@@ -109,11 +109,11 @@ public class ElytraCommands extends CommandReceiver {
     @DefaultCommand(permission = "nu.elytratoggle")
     public void commandElytraToggle(CommandSender sender, Arguments args) {
         Player player = asPlayer(sender);
-        if (ElytraEnhanceListener.disableFuelMode.contains(player.getUniqueId())) {
+        if (ElytraEnhanceListener.disableFuelMode.containsKey(player.getUniqueId())) {
             ElytraEnhanceListener.disableFuelMode.remove(player.getUniqueId());
             msg(sender, "user.elytra_enhance.fuelmode_on");
         } else {
-            ElytraEnhanceListener.disableFuelMode.add(player.getUniqueId());
+            ElytraEnhanceListener.disableFuelMode.put(player.getUniqueId(), player.getUniqueId());
             msg(sender, "user.elytra_enhance.fuelmode_off");
         }
     }

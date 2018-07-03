@@ -1,0 +1,21 @@
+database:
+  lpstrategy:
+    provider: map
+    connection:
+      key: java.util.UUID
+      value: cat.nyaa.nyaautils.lootprotect.LootProtectListener$VanillaStrategy
+  lpbypass:
+    provider: map
+    connection:
+      key: java.util.UUID
+      value: java.util.UUID
+  fueldisabled:
+    provider: map
+    connection:
+      key: java.util.UUID
+      value: java.util.UUID
+  dpbypass:
+    provider: map
+    connection:
+      key: java.util.UUID
+      value: java.util.UUID

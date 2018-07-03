@@ -3,9 +3,13 @@ plugins {
     id 'maven-publish'
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 // Version strings used for CI
 // Note the spaces before and after the equals sign
-ext.majorVersion = 4
+ext.majorVersion = 5
 ext.minorVersion = 0
 ext.minecraftVersion = "1.12"
 
@@ -57,7 +61,7 @@ repositories {
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:4.1-SNAPSHOT') {
+    compile('cat.nyaa:nyaacore:5.0-SNAPSHOT') {
         transitive = false
     }
     compile files('lib/LocketteProAPI.jar')
