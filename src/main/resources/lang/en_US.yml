@@ -280,7 +280,8 @@ user:
     invalid_material: Invalid material
     add:
       limit: You can not add more particle to this particle set
-      need_material: 'This particle need a material, usage: %s [material] [data value]'
+      need_material: 'This particle need a material, usage: %s [material]'
+      dust_options: 'This particle need color and size, usage: %s [color] [size]'
     type:
       not_enabled: Particle type %s is not enabled
     remove:
@@ -292,6 +293,7 @@ user:
         %.3f , offsetZ: %.3f , extra: %.3f]'
       use: Click to use this particle set
       material: ' [material: %s, data value: %s]'
+      dust_options: ' [color: %s, size: %s]'
     turned_on: Particle turned on
     turned_off: Particle turned off
   signedit:

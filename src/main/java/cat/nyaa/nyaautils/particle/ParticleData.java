@@ -2,19 +2,20 @@ package cat.nyaa.nyaautils.particle;
 
 import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaautils.NyaaUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class ParticleData implements ISerializable {
+    @Serializable
+    public int dustOptions_color = 0;
+    @Serializable
+    public double dustOptions_size = 0;
     @Serializable
     private Particle particle;
     @Serializable
@@ -31,8 +32,6 @@ public class ParticleData implements ISerializable {
     private long freq;
     @Serializable
     private Material material;
-    @Serializable
-    private int dataValue;
     private Map<UUID, Long> lastSend = new HashMap<>();
 
     public ParticleData() {
@@ -128,22 +127,13 @@ public class ParticleData implements ISerializable {
         this.material = material;
     }
 
-    public int getDataValue() {
-        return dataValue;
-    }
-
-    public void setDataValue(int dataValue) {
-        this.dataValue = dataValue;
-    }
-
-    @SuppressWarnings("deprecation")
     private Object getData() {
-        if (material == null) {
-            return null;
-        } else if (particle.getDataType().equals(ItemStack.class)) {
-            return new ItemStack(material, 1, (short) (dataValue));
-        } else if (particle.getDataType().equals(MaterialData.class)) {
-            return new MaterialData(material, (byte) dataValue);
+        if (particle.getDataType().equals(ItemStack.class)) {
+            return new ItemStack(material);
+        } else if (particle.getDataType().equals(BlockData.class)) {
+            return material.createBlockData();
+        } else if (particle.getDataType().equals(Particle.DustOptions.class)) {
+            return new Particle.DustOptions(Color.fromRGB(dustOptions_color), (float) dustOptions_size);
         } else {
             return null;
         }

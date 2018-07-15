@@ -17,6 +17,7 @@ import cat.nyaa.nyaautils.repair.RepairConfig;
 import cat.nyaa.nyaautils.timer.TimerConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -202,7 +203,7 @@ public class Configuration extends PluginConfigure {
     public Boolean mention_blink = true;
 
     @Serializable
-    public Material expCapsuleType = Material.EXP_BOTTLE;
+    public Material expCapsuleType = Material.EXPERIENCE_BOTTLE;
 
     @Serializable(name = "vote.enable")
     public boolean vote_enable = true;
@@ -272,7 +273,10 @@ public class Configuration extends PluginConfigure {
         if (config.isConfigurationSection("enchant.max_level")) {
             ConfigurationSection maxLevel = config.getConfigurationSection("enchant.max_level");
             for (String enchName : maxLevel.getKeys(false)) {
-                Enchantment e = Enchantment.getByName(enchName);
+                Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(enchName));
+                if (e == null) {//1.12 to 1.13
+                    e = Enchantment.getByName(enchName);
+                }
                 if (e == null || e.getName() == null) continue;
                 if (maxLevel.isInt(enchName)) {
                     enchantMaxLevel.put(e, maxLevel.getInt(enchName));
@@ -295,8 +299,8 @@ public class Configuration extends PluginConfigure {
         // Enchantment Max Level constraint
         ConfigurationSection list = config.createSection("enchant.max_level");
         for (Enchantment k : enchantMaxLevel.keySet()) {
-            if (k == null || k.getName() == null) continue;
-            list.set(k.getName(), enchantMaxLevel.get(k));
+            if (k == null || k.getKey() == null || k.getKey().getKey() == null) continue;
+            list.set(k.getKey().getKey(), enchantMaxLevel.get(k));
         }
         config.set("particles.limits", null);
         for (ParticleType type : particlesLimits.keySet()) {

@@ -1,14 +1,15 @@
 package cat.nyaa.nyaautils.enchant;
 
-import cat.nyaa.nyaacore.utils.LocaleUtils;
-import cat.nyaa.nyaautils.I18n;
-import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.BasicItemMatcher;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.utils.LocaleUtils;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
 import com.meowj.langutils.lang.convert.EnumEnchantment;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -89,15 +90,15 @@ public class EnchantCommands extends CommandReceiver {
         sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
         for (Enchantment e : enchant.keySet()) {
             if (EnumEnchantment.get(e) != null) {
-                Message msg = new Message(e.getName() + ": ");
+                Message msg = new Message(e.getKey().getKey() + ": ");
                 msg.append(LocaleUtils.getNameComponent(e));
                 msg.append(" " + I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
                 p.spigot().sendMessage(msg.inner);
             } else {
-                if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                if (e == null || e.getKey() == null || e.getKey().getKey() == null) {
                     continue;
                 }
-                p.sendMessage(e.getName() + ": " + e.getName() + " " +
+                p.sendMessage(e.getKey().getKey() + ": " + e.getKey().getKey() + " " +
                         I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
             }
         }
@@ -131,15 +132,15 @@ public class EnchantCommands extends CommandReceiver {
             sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
             for (Enchantment e : Enchantment.values()) {
                 if (EnumEnchantment.get(e) != null) {
-                    Message msg = new Message(e.getName() + ": ");
+                    Message msg = new Message(e.getKey().getKey() + ": ");
                     msg.append(LocaleUtils.getNameComponent(e));
                     msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                     p.spigot().sendMessage(msg.inner);
                 } else {
-                    if (e == null || e.getName() == null || e.getName().equalsIgnoreCase("Custom Enchantment")) {
+                    if (e == null || e.getKey() == null || e.getKey().getKey() == null) {
                         continue;
                     }
-                    p.sendMessage(e.getName() + ": " + e.getName() + " " +
+                    p.sendMessage(e.getKey().getKey() + ": " + e.getKey().getKey() + " " +
                             I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
                 }
             }
@@ -164,8 +165,8 @@ public class EnchantCommands extends CommandReceiver {
                 }
             }
 
-            String enchStr = args.next().toUpperCase();
-            Enchantment ench = Enchantment.getByName(enchStr);
+            String enchStr = args.next().toLowerCase();
+            Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(enchStr));
             if (ench == null) {
                 sender.sendMessage(I18n.format("user.enchant.invalid_ench", enchStr));
                 return;

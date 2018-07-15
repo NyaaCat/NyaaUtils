@@ -553,7 +553,7 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         BookMeta meta = (BookMeta) item.getItemMeta();
-        ItemStack newbook = new ItemStack(Material.BOOK_AND_QUILL, 1);
+        ItemStack newbook = new ItemStack(Material.WRITABLE_BOOK, 1);
         BookMeta newbookMeta = (BookMeta) newbook.getItemMeta();
         newbookMeta.setPages(meta.getPages());
         newbook.setItemMeta(newbookMeta);

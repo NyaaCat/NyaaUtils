@@ -11,7 +11,7 @@ configurations.all {
 // Note the spaces before and after the equals sign
 ext.majorVersion = 5
 ext.minorVersion = 0
-ext.minecraftVersion = "1.12"
+ext.minecraftVersion = "1.13-pre7"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -60,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.13-pre7-R0.1-SNAPSHOT'
     compile('cat.nyaa:nyaacore:5.0-SNAPSHOT') {
         transitive = false
     }

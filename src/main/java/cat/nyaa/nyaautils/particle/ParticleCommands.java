@@ -2,7 +2,6 @@ package cat.nyaa.nyaautils.particle;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import cat.nyaa.nyaacore.utils.ReflectionUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -13,10 +12,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Particle;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 import java.util.List;
 import java.util.UUID;
@@ -86,15 +85,21 @@ public class ParticleCommands extends CommandReceiver {
         data.setOffsetZ(args.nextDouble());
         data.setExtra(args.nextDouble());
         if (!particle.getDataType().equals(Void.class)) {
-            if (args.length() < 11) {
-                msg(sender, "user.particle.add.need_material", I18n.format("manual.particle.add.usage"));
-                return;
+            if (particle.getDataType().equals(Particle.DustOptions.class)) {
+                if (args.length() < 12) {
+                    msg(sender, "user.particle.add.dust_options", I18n.format("manual.particle.add.usage"));
+                    return;
+                }
+                data.dustOptions_color = args.nextInt();
+                data.dustOptions_size = (float) args.nextDouble();
             } else {
+                if (args.length() < 11) {
+                    msg(sender, "user.particle.add.need_material", I18n.format("manual.particle.add.usage"));
+                    return;
+                }
                 data.setMaterial(args.nextEnum(Material.class));
-                data.setDataValue(args.length() == 12 ? args.nextInt() : 0);
-                if ((particle.getDataType().equals(ItemStack.class) &&
-                        !ReflectionUtils.isValidItem(new ItemStack(data.getMaterial(), 1, (short) data.getDataValue()))) ||
-                        (particle.getDataType().equals(MaterialData.class) && !data.getMaterial().isBlock())) {
+                if ((particle.getDataType().equals(ItemStack.class) && !data.getMaterial().isItem()) ||
+                        (particle.getDataType().equals(BlockData.class) && !data.getMaterial().isBlock())) {
                     msg(sender, "user.particle.invalid_material");
                     return;
                 }
@@ -218,10 +223,12 @@ public class ParticleCommands extends CommandReceiver {
                         p.getParticle().name(), p.getCount(), p.getFreq(),
                         p.getOffsetX(), p.getOffsetY(), p.getOffsetZ(),
                         p.getExtra());
-                if (p.getMaterial() == null) {
+                if (p.getParticle().getDataType().equals(Particle.DustOptions.class)) {
+                    sender.sendMessage(msg + I18n.format("user.particle.info.dust_options", p.dustOptions_color,p.dustOptions_size));
+                } else if (p.getMaterial() == null) {
                     sender.sendMessage(msg);
                 } else {
-                    sender.sendMessage(msg + I18n.format("user.particle.info.material", p.getMaterial().name(), p.getDataValue()));
+                    sender.sendMessage(msg + I18n.format("user.particle.info.material", p.getMaterial().name()));
                 }
             }
         }

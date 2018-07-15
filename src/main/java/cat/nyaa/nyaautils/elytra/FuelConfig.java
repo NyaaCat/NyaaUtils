@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class FuelConfig extends FileConfigure {
     private final NyaaUtils plugin;
     @Serializable
-    public ItemStack elytra_fuel = new ItemStack(Material.SULPHUR);
+    public ItemStack elytra_fuel = new ItemStack(Material.GUNPOWDER);
     @Serializable
     public int pos = 0;
 

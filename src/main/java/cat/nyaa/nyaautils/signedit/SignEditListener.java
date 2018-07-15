@@ -31,7 +31,7 @@ public class SignEditListener implements Listener {
         Block block = event.getBlock();
         ItemStack item = event.getItemInHand();
         if (block != null && item != null && item.getType().equals(Material.SIGN) &&
-                (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST))) {
+                (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN))) {
             Player player = event.getPlayer();
             if ((player.isOp() && player.getGameMode().equals(GameMode.CREATIVE)) ||
                     !item.hasItemMeta() || !(item.getItemMeta() instanceof BlockStateMeta) ||
