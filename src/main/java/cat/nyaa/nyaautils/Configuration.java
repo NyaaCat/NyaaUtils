@@ -248,6 +248,7 @@ public class Configuration extends PluginConfigure {
         this.timerConfig = new TimerConfig(plugin);
         this.realmConfig = new RealmConfig(plugin);
         this.particleConfig = new ParticleConfig(plugin);
+        //TODO: Key based enchantment store
         for (Enchantment e : Enchantment.values()) {
             if (e == null) {
                 plugin.getLogger().warning("Bad enchantment: null");
