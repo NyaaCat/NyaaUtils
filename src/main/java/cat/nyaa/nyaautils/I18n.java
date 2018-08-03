@@ -2,7 +2,7 @@ package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.librazy.nyaautils_lang_checker.LangKey;
+import org.librazy.nclangchecker.LangKey;
 
 public class I18n extends LanguageRepository {
     public static I18n instance = null;

@@ -322,7 +322,7 @@ user:
       name: '[%d] [%s] 作者：%s'
       content: '  [%d] [粒子：%s 数量：%d 频率：%d X偏移：%.3f Y偏移：%.3f Z偏移：%.3f 附加值：%.3f]'
       use: 点击以使用此粒子特效组
-      material: ' [材质: %s, 数据值: %s]'
+      material: ' [材质: %s]'
     turned_on: 粒子效果已启用
     turned_off: 粒子效果已禁用
     invalid_material: 无效的材质

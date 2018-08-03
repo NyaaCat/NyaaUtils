@@ -1,8 +1,7 @@
 package cat.nyaa.nyaautils.dropprotect;
 
-import cat.nyaa.nyaacore.database.Database;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.KeyValueDB;
+import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -25,7 +24,7 @@ import java.util.stream.Stream;
 
 public class DropProtectListener implements Listener {
     final private NyaaUtils plugin;
-    final private KeyValueDB<UUID,UUID> bypassPlayer = DatabaseUtils.get("database.dpbypass").connect();
+    final private KeyValueDB<UUID,UUID> bypassPlayer = DatabaseUtils.get("database.dpbypass", KeyValueDB.class);
     final private Cache<Integer, UUID> items;
 
     public DropProtectListener(NyaaUtils pl) {

@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Repairable;
-import org.librazy.nyaautils_lang_checker.LangKey;
-import org.librazy.nyaautils_lang_checker.LangKeyType;
+import org.librazy.nclangchecker.LangKey;
+import org.librazy.nclangchecker.LangKeyType;
 
 public class RepairInstance {
     @LangKey(type = LangKeyType.SUFFIX) public enum RepairStat {

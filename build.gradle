@@ -9,9 +9,9 @@ configurations.all {
 
 // Version strings used for CI
 // Note the spaces before and after the equals sign
-ext.majorVersion = 5
-ext.minorVersion = 0
-ext.minecraftVersion = "1.13-pre7"
+ext.majorVersion = 6
+ext.minorVersion = 1
+ext.minecraftVersion = "1.13"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -61,13 +61,13 @@ repositories {
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:5.0-SNAPSHOT') {
+    compile('cat.nyaa:nyaacore:6.1-SNAPSHOT') {
         transitive = false
     }
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
-    compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
     compile('com.meowj:LangUtils:1.9') {
         transitive = false
     }

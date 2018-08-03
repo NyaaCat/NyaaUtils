@@ -1,7 +1,7 @@
 package cat.nyaa.nyaautils.elytra;
 
 import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.KeyValueDB;
+import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class ElytraEnhanceListener implements Listener {
     public static List<UUID> FuelMode = new ArrayList<>();
-    public static KeyValueDB<UUID, UUID> disableFuelMode = DatabaseUtils.get("database.fueldisabled").connect();
+    public static KeyValueDB<UUID, UUID> disableFuelMode = DatabaseUtils.get("database.fueldisabled", KeyValueDB.class);
     public static HashMap<UUID, Long> duration = new HashMap<UUID, Long>();
     public NyaaUtils plugin;
 

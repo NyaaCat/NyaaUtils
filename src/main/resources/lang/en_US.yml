@@ -292,7 +292,7 @@ user:
       content: '  [%d] [particle: %s, amount %d, freq %d, offsetX: %.3f , offsetY:
         %.3f , offsetZ: %.3f , extra: %.3f]'
       use: Click to use this particle set
-      material: ' [material: %s, data value: %s]'
+      material: ' [material: %s]'
       dust_options: ' [color: %s, size: %s]'
     turned_on: Particle turned on
     turned_off: Particle turned off
