@@ -312,7 +312,8 @@ user:
     no_permission: 你没有权限编辑该粒子效果
     add:
       limit: 已达到该粒子效果的元素数量上限
-      need_material: 此粒子需要一个材质，用法：%s [材质] [数据值]
+      need_material: 此粒子需要一个材质，用法：%s [材质]
+      dust_options: 此粒子需要指定颜色与大小，用法：%s [颜色] [大小]
     type:
       not_enabled: 粒子效果类型 %s 尚未启用
     remove:
