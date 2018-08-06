@@ -274,13 +274,16 @@ public class Configuration extends PluginConfigure {
         if (config.isConfigurationSection("enchant.max_level")) {
             ConfigurationSection maxLevel = config.getConfigurationSection("enchant.max_level");
             for (String enchName : maxLevel.getKeys(false)) {
-                Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(enchName));
-                if (e == null) {//1.12 to 1.13
-                    e = Enchantment.getByName(enchName);
+                Enchantment ench = null;
+                try {
+                    ench = Enchantment.getByKey(NamespacedKey.minecraft(enchName));
+                } catch (IllegalArgumentException e) {
+                    ench = Enchantment.getByName(enchName);
                 }
-                if (e == null || e.getName() == null) continue;
+                if (ench == null || !NamespacedKey.MINECRAFT.equals(ench.getKey().getNamespace()))
+                    continue;
                 if (maxLevel.isInt(enchName)) {
-                    enchantMaxLevel.put(e, maxLevel.getInt(enchName));
+                    enchantMaxLevel.put(ench, maxLevel.getInt(enchName));
                 }
             }
         }

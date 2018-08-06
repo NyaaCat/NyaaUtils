@@ -8,6 +8,7 @@ import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.meowj.langutils.lang.convert.EnumEnchantment;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
@@ -24,8 +25,8 @@ import java.util.Random;
 import java.util.UUID;
 
 public class EnchantCommands extends CommandReceiver {
-    private NyaaUtils plugin;
     private final Map<UUID, Long> enchantCooldown;
+    private NyaaUtils plugin;
 
     public EnchantCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
@@ -88,20 +89,7 @@ public class EnchantCommands extends CommandReceiver {
         }
 
         sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
-        for (Enchantment e : enchant.keySet()) {
-            if (EnumEnchantment.get(e) != null) {
-                Message msg = new Message(e.getKey().getKey() + ": ");
-                msg.append(LocaleUtils.getNameComponent(e));
-                msg.append(" " + I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
-                p.spigot().sendMessage(msg.inner);
-            } else {
-                if (e == null || e.getKey() == null || e.getKey().getKey() == null) {
-                    continue;
-                }
-                p.sendMessage(e.getKey().getKey() + ": " + e.getKey().getKey() + " " +
-                        I18n.format("user.enchantinfo.enchant_level", enchant.get(e)));
-            }
-        }
+        printEnchant(p, enchant.keySet().toArray(new Enchantment[0]));
         long cooldown = 0;
         if (enchantCooldown.containsKey(p.getUniqueId())) {
             cooldown = enchantCooldown.get(p.getUniqueId()) + (plugin.cfg.enchantCooldown / 20 * 1000);
@@ -130,20 +118,7 @@ public class EnchantCommands extends CommandReceiver {
         Player p = asPlayer(sender);
         if (args.top() == null) {
             sender.sendMessage(I18n.format("user.enchant.list_ench_header"));
-            for (Enchantment e : Enchantment.values()) {
-                if (EnumEnchantment.get(e) != null) {
-                    Message msg = new Message(e.getKey().getKey() + ": ");
-                    msg.append(LocaleUtils.getNameComponent(e));
-                    msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
-                    p.spigot().sendMessage(msg.inner);
-                } else {
-                    if (e == null || e.getKey() == null || e.getKey().getKey() == null) {
-                        continue;
-                    }
-                    p.sendMessage(e.getKey().getKey() + ": " + e.getKey().getKey() + " " +
-                            I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
-                }
-            }
+            printEnchant(p, Enchantment.values());
             sender.sendMessage(I18n.format("manual.enchant.usage"));
         } else {
             ItemStack main = getItemInHand(sender);
@@ -166,7 +141,11 @@ public class EnchantCommands extends CommandReceiver {
             }
 
             String enchStr = args.next().toLowerCase();
-            Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(enchStr));
+            Enchantment ench = null;
+            try {
+                ench = Enchantment.getByKey(NamespacedKey.minecraft(enchStr));
+            } catch (IllegalArgumentException e) {
+            }
             if (ench == null) {
                 sender.sendMessage(I18n.format("user.enchant.invalid_ench", enchStr));
                 return;
@@ -266,6 +245,20 @@ public class EnchantCommands extends CommandReceiver {
             enchantCooldown.put(p.getUniqueId(), System.currentTimeMillis());
             p.getInventory().setItemInMainHand(main);
             p.getInventory().setItemInOffHand(off);
+        }
+    }
+
+    private void printEnchant(Player p, Enchantment[] enchantments) {
+        for (Enchantment e : enchantments) {
+            Message msg = new Message(e.getKey().getKey() + ": ");
+            if (EnumEnchantment.get(e) != null) {
+                msg.append(LocaleUtils.getNameComponent(e));
+            } else {
+                msg.append(e.getKey().getKey());
+            }
+            msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
+            msg.inner.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nu enchant " + e.getKey().getKey()));
+            p.spigot().sendMessage(msg.inner);
         }
     }
 }
