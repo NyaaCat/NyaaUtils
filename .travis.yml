@@ -32,15 +32,18 @@ after_success:
 - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 - export GIT_ORIGIN_URL=`git config --get remote.origin.url`
 - gradle publish
-- cd ..
-- git clone -b maven-repo $GIT_ORIGIN_URL nyaautils-mvn
-- cp -r NyaaUtils/build/repo/cat nyaautils-mvn/
-- cd nyaautils-mvn
-- git config credential.helper "store --file=.git/credentials"
-- echo "https://$GITHUB_KEY:@github.com" > .git/credentials
-- git add .
-- git commit -m "auto generated maven repo"
-- git push --follow-tags
+- |
+  if [ $PUBLISH_MAVEN ]; then
+    cd ..;
+    git clone -b maven-repo $MAVEN_REPO_URL mvn;
+    cp -r NyaaUtils/build/repo/cat mvn/;
+    cd mvn;
+    git config credential.helper "store --file=.git/credentials";
+    echo "https://$GITHUB_KEY:@github.com" > .git/credentials;
+    git add .;
+    git commit -m "auto generated maven repo";
+    git push --follow-tags;
+  fi
 - cd ../NyaaUtils
 deploy:
   skip_cleanup: true
