@@ -16,22 +16,12 @@ before_script:
 - git config --global user.name "Travis CI"
 - 'sed -i "s/^\(version: \).*\$/\1$VERSION_STRING/g" src/main/resources/plugin.yml'
 script: gradle build
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -f  $HOME/.gradle/caches/3.5/fileHashes/fileHashes.bin
-  - rm -f  $HOME/.gradle/caches/3.5/fileHashes/fileHashes.lock
-  - rm -f  $HOME/.gradle/caches/transforms-1/transforms-1.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
 after_success:
 - cp build/libs/NyaaUtils.jar ./NyaaUtils-v$VERSION_STRING.jar
 - export GIT_TAG=v$VERSION_STRING
 - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 - export GIT_ORIGIN_URL=`git config --get remote.origin.url`
-- gradle publish
+- ./gradlew publish
 - |
   if [ $PUBLISH_MAVEN ]; then
     cd ..;
@@ -53,3 +43,13 @@ deploy:
   file: ./NyaaUtils-v$VERSION_STRING.jar
   on:
     tags: false
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.bin
+- rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.lock
+- rm -f  $HOME/.gradle/caches/transforms-1/transforms-1.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/

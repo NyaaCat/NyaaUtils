@@ -67,9 +67,9 @@ hs_err_pid*
 
 .DS_Store
 .gradle
-gradle
 build
 
 !lib/LocketteProAPI.jar
 !lib/EssentialsX-2.0.1-468.jar
 !/lib/ourtown-api.jar
+!/gradle/wrapper/gradle-wrapper.jar
