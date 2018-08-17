@@ -2,9 +2,13 @@ package cat.nyaa.nyaautils.signedit;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.utils.RayTraceUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -25,7 +29,9 @@ public class SignEditCommands extends CommandReceiver {
     public static void printSignContent(Player player, SignContent content) {
         player.sendMessage(I18n.format("user.signedit.content"));
         for (int i = 0; i < 4; i++) {
-            player.sendMessage(I18n.format("user.signedit.content_line", i, content.getLine(i)));
+            Message msg = new Message(I18n.format("user.signedit.content_line", i, content.getLine(i)));
+            msg.inner.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/nu se sign "+i+" "+content.getLine(i).replace('§','&')));
+            msg.send(player, Message.MessageType.CHAT);
         }
     }
 
@@ -39,10 +45,14 @@ public class SignEditCommands extends CommandReceiver {
         Player player = asPlayer(sender);
         int line = args.nextInt();
         if (line >= 0 && line < 4) {
-            Block block = player.getTargetBlock((Set<Material>)null, 5);
+            Block block = null;
+            try {
+                block = RayTraceUtils.rayTraceBlock(player);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
             if (block != null && block.getState() instanceof Sign) {
                 String text = args.nextString();
-                //checkFormatCodes(text);
                 text = ChatColor.translateAlternateColorCodes('&', text);
                 if (ChatColor.stripColor(text).length() > plugin.cfg.signedit_max_length) {
                     throw new BadCommandException("user.signedit.too_long", plugin.cfg.signedit_max_length);
