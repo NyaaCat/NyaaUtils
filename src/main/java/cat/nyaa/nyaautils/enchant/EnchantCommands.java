@@ -7,7 +7,6 @@ import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import com.meowj.langutils.lang.convert.EnumEnchantment;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -251,11 +250,7 @@ public class EnchantCommands extends CommandReceiver {
     private void printEnchant(Player p, Enchantment[] enchantments) {
         for (Enchantment e : enchantments) {
             Message msg = new Message(e.getKey().getKey() + ": ");
-            if (EnumEnchantment.get(e) != null) {
-                msg.append(LocaleUtils.getNameComponent(e));
-            } else {
-                msg.append(e.getKey().getKey());
-            }
+            msg.append(LocaleUtils.getNameComponent(e));
             msg.append(" " + I18n.format("user.enchant.max_level", plugin.cfg.enchantMaxLevel.get(e)));
             msg.inner.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/nu enchant " + e.getKey().getKey()));
             p.spigot().sendMessage(msg.inner);

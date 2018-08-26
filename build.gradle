@@ -48,29 +48,17 @@ repositories {
         name 'ess-repo'
         url 'http://repo.ess3.net/content/groups/essentials'
     }
-
-    maven {
-        name 'nu-langchecker'
-        url 'https://raw.githubusercontent.com/Librazy/NyaaUtilsLangChecker/maven-repo'
-    }
-
-    maven {
-        url 'https://raw.github.com/MascusJeoraly/LanguageUtils/mvn-repo/'
-    }
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:6.1-SNAPSHOT') {
+    compile 'org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT'
+    compile('cat.nyaa:nyaacore:6.2-SNAPSHOT') {
         transitive = false
     }
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
     compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
     compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
-    compile('com.meowj:LangUtils:1.9') {
-        transitive = false
-    }
 }
 
 String nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR")
