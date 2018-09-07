@@ -4,6 +4,7 @@ import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,6 +34,7 @@ public class ParticleData implements ISerializable {
     @Serializable
     private Material material;
     private Map<UUID, Long> lastSend = new HashMap<>();
+    private Object data = null;
 
     public ParticleData() {
 
@@ -103,7 +105,6 @@ public class ParticleData implements ISerializable {
             lastSend.put(uuid, time);
             double distance = Bukkit.getViewDistance() * 16;
             distance *= distance;
-            Object data = getData();
             for (Player player : loc.getWorld().getPlayers()) {
                 if (player.isValid() && !NyaaUtils.instance.particleTask.bypassPlayers.contains(player.getUniqueId())
                         && loc.distanceSquared(player.getLocation()) <= distance) {
@@ -113,7 +114,7 @@ public class ParticleData implements ISerializable {
                             offsetY > limit.getOffsetY() ? limit.getOffsetY() : offsetY,
                             offsetZ > limit.getOffsetZ() ? limit.getOffsetZ() : offsetZ,
                             extra > limit.getExtra() ? limit.getExtra() : extra,
-                            data);
+                            getData());
                 }
             }
         }
@@ -128,14 +129,37 @@ public class ParticleData implements ISerializable {
     }
 
     private Object getData() {
-        if (particle.getDataType().equals(ItemStack.class)) {
-            return new ItemStack(material);
-        } else if (particle.getDataType().equals(BlockData.class)) {
-            return material.createBlockData();
+        if (data != null || particle.getDataType().equals(Void.class)) {
+            return data;
+        } else if (particle.getDataType().equals(ItemStack.class) && material != null && material.isItem()) {
+            data = new ItemStack(material);
+        } else if (particle.getDataType().equals(BlockData.class) && material != null && material.isBlock()) {
+            data = material.createBlockData();
         } else if (particle.getDataType().equals(Particle.DustOptions.class)) {
-            return new Particle.DustOptions(Color.fromRGB(dustOptions_color), (float) dustOptions_size);
-        } else {
-            return null;
+            data = new Particle.DustOptions(Color.fromRGB(dustOptions_color), (float) dustOptions_size);
         }
+        return data;
+    }
+
+    @Override
+    public void serialize(ConfigurationSection config) {
+        ISerializable.serialize(config, this);
+        config.set("version", Bukkit.getVersion());
+    }
+
+    @Override
+    public void deserialize(ConfigurationSection config) {
+        if (config.getString("version", "").length() == 0) {
+            String materialName = config.getString("material", null);
+            if (materialName != null) {
+                Material m = Material.matchMaterial(materialName, true);
+                if (m.isBlock() && config.isInt("dataValue")) {
+                    config.set("material", Bukkit.getUnsafe().fromLegacy(m, (byte) config.getInt("dataValue")).getMaterial().name());
+                } else {
+                    config.set("material", Bukkit.getUnsafe().fromLegacy(m).name());
+                }
+            }
+        }
+        ISerializable.deserialize(config, this);
     }
 }
