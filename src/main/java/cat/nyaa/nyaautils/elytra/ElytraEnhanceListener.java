@@ -35,8 +35,8 @@ public class ElytraEnhanceListener implements Listener {
         if (player.isGliding() &&
                 plugin.cfg.elytra_enhance_enabled &&
                 !plugin.cfg.disabled_world.contains(player.getWorld().getName()) &&
-                player.getLocation().getBlock().getType() == Material.AIR &&
-                player.getEyeLocation().getBlock().getType() == Material.AIR &&
+                player.getLocation().getBlock().isEmpty() &&
+                player.getEyeLocation().getBlock().isEmpty() &&
                 !disableFuelMode.containsKey(player.getUniqueId()) &&
                 !player.isSneaking()) {
             if (!FuelMode.contains(player.getUniqueId()) &&
