@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils.exhibition;
 
+import cat.nyaa.nyaacore.utils.RayTraceUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -12,7 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 import static org.bukkit.Material.AIR;
 
@@ -109,15 +109,9 @@ public class ExhibitionFrame {
     }
 
     public static ExhibitionFrame fromPlayerEye(Player p) {
-        Vector eyeVector = p.getEyeLocation().getDirection();
-        Vector locVec = p.getEyeLocation().toVector().multiply(-1);
-        Optional<Entity> itemF = p.getNearbyEntities(10, 10, 10).stream()
-                .filter(entity -> entity instanceof ItemFrame)
-                .filter(entity -> entity.getLocation().toVector().add(locVec).angle(eyeVector) < 0.5D)
-                .sorted((e1, e2) -> Double.compare(e1.getLocation().distance(p.getLocation()), e2.getLocation().distance(p.getLocation())))
-                .findFirst();
-        if (itemF.isPresent()) {
-            return new ExhibitionFrame((ItemFrame) itemF.get());
+        Entity itemF = RayTraceUtils.getTargetEntity(p);
+        if (itemF instanceof ItemFrame) {
+            return new ExhibitionFrame((ItemFrame) itemF);
         } else {
             return null;
         }
