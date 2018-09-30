@@ -8,15 +8,12 @@ import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Set;
 
 public class SignEditCommands extends CommandReceiver {
     private final NyaaUtils plugin;
@@ -46,11 +43,7 @@ public class SignEditCommands extends CommandReceiver {
         int line = args.nextInt();
         if (line >= 0 && line < 4) {
             Block block = null;
-            try {
-                block = RayTraceUtils.rayTraceBlock(player);
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
+            block = RayTraceUtils.rayTraceBlock(player);
             if (block != null && block.getState() instanceof Sign) {
                 String text = args.nextString();
                 text = ChatColor.translateAlternateColorCodes('&', text);
