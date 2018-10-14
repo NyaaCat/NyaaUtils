@@ -12,7 +12,7 @@ jobs:
     - git config --global user.email "builds@travis-ci.com"
     - git config --global user.name "Travis CI"
     - 'sed -i "s/^\(version: \).*\$/\1$VERSION_STRING/g" src/main/resources/plugin.yml'
-    script: gradle build
+    script: ./gradlew build
     after_success:
     - cp build/libs/NyaaUtils.jar ./NyaaUtils-v$VERSION_STRING.jar
     - export GIT_TAG=v$VERSION_STRING
