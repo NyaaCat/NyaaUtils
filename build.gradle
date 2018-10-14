@@ -52,8 +52,12 @@ repositories {
 
 dependencies {
     compile 'org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:6.2-SNAPSHOT') {
-        transitive = false
+    if (gradle.hasProperty("useLocalDependencies") && gradle.useLocalDependencies) {
+        compile project(":NyaaCore")
+    } else {
+        compile('cat.nyaa:nyaacore:6.2-SNAPSHOT') {
+            transitive = false
+        }
     }
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
@@ -61,7 +65,8 @@ dependencies {
     compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
 }
 
-String nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR")
+String nyaaCoreLangDir = gradle.hasProperty("NyaaCoreLangDirs") ? gradle.NyaaCoreLangDirs : null
+if (nyaaCoreLangDir == null) { nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR") }
 
 compileJava {
     options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor", "-Xlint:deprecation"]
