@@ -82,7 +82,7 @@ public class ExhibitionListener implements Listener {
                             ev.getWhoClicked().getName(), ev.getWhoClicked().getLocation().toString(),
                             ev.getCursor().toString()));
             ev.setCancelled(true);
-            ev.setCursor(new ItemStack(Material.AIR));
+            ev.getView().setCursor(new ItemStack(Material.AIR));
         }
         if (ExhibitionFrame.isFrameInnerItem(ev.getCurrentItem())) {
             plugin.getLogger().warning(

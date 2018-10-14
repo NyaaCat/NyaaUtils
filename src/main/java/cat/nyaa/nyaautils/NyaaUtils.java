@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
+import cat.nyaa.nyaacore.component.IMessageQueue;
 import cat.nyaa.nyaacore.component.ISystemBalance;
 import cat.nyaa.nyaacore.component.NyaaComponent;
 import cat.nyaa.nyaautils.commandwarpper.EsschatListener;
@@ -12,6 +13,7 @@ import cat.nyaa.nyaautils.exhibition.ExhibitionListener;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.mention.MentionListener;
+import cat.nyaa.nyaautils.messagequeue.MessageQueue;
 import cat.nyaa.nyaautils.particle.ParticleListener;
 import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
@@ -53,6 +55,7 @@ public class NyaaUtils extends JavaPlugin {
     public MentionListener mentionListener;
     public EsschatListener esschatListener;
     public VoteTask voteTask;
+    public MessageQueue messageQueueListener;
 
     @Override
     public void onEnable() {
@@ -85,6 +88,8 @@ public class NyaaUtils extends JavaPlugin {
         particleListener = new ParticleListener(this);
         signEditListener = new SignEditListener(this);
         mentionListener = new MentionListener(this);
+        messageQueueListener = new MessageQueue(this);
+        NyaaComponent.register(IMessageQueue.class, messageQueueListener);
         try {
             ISettings settings = ess.getSettings();
             Class<? extends ISettings> essSettingsClass = settings.getClass();

@@ -4,6 +4,7 @@ import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.Repairable;
 import org.librazy.nclangchecker.LangKey;
 import org.librazy.nclangchecker.LangKeyType;
@@ -40,6 +41,7 @@ public class RepairInstance {
             stat = RepairStat.UNREPAIRABLE_UNBREAKABLE;
         }
         Repairable repairableMeta = (Repairable) item.getItemMeta();
+        Damageable damageableMeta = (Damageable) item.getItemMeta();
         repairLimit = cfg.repairLimit;
         if (repairLimit > 0 && repairableMeta.getRepairCost() >= repairLimit) {
             stat = RepairStat.UNREPAIRABLE_RLE;
@@ -47,7 +49,7 @@ public class RepairInstance {
 
         Material toolMaterial = item.getType();
         repairMaterial = cfg.material;
-        int currentDurability = item.getDurability();
+        int currentDurability = damageableMeta.getDamage();
         if (currentDurability <= 0) {
             stat = RepairStat.UNREPAIRABLE_REPAIRED;
         }

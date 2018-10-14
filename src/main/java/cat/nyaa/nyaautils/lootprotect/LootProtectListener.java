@@ -11,13 +11,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class LootProtectListener implements Listener {
     final private NyaaUtils plugin;
+    @SuppressWarnings("unchecked")
     final private KeyValueDB<UUID, UUID> bypassPlayer = DatabaseUtils.get("database.lpbypass", KeyValueDB.class);
+    @SuppressWarnings("unchecked")
     final private KeyValueDB<UUID, VanillaStrategy> bypassVanillaPlayer = DatabaseUtils.get("database.lpstrategy", KeyValueDB.class);
 
     public enum VanillaStrategy {
@@ -112,7 +116,7 @@ public class LootProtectListener implements Listener {
                 p.getInventory().getItemInMainHand(),
                 p.getInventory().getItemInOffHand()}) {
             if (item != null && item.hasItemMeta() && item.getItemMeta().hasEnchant(Enchantment.MENDING)) {
-                if (item.getType().getMaxDurability() > 0 && item.getDurability() > 0) {
+                if (item.getType().getMaxDurability() > 0 && ((Damageable) item.getItemMeta()).getDamage() > 0) {
                     candidate.add(item);
                 }
             }
@@ -125,10 +129,13 @@ public class LootProtectListener implements Listener {
         }
 
         if (repair != null) {
-            int repairPoint = repair.getDurability();
+            Damageable itemMeta = (Damageable) repair.getItemMeta();
+            int durability = itemMeta.getDamage();
+            int repairPoint = durability;
             if (amount * 2 < repairPoint) repairPoint = amount * 2;
             int expConsumption = ((repairPoint % 2) == 1) ? (repairPoint + 1) / 2 : repairPoint / 2;
-            repair.setDurability((short) (repair.getDurability() - repairPoint));
+            itemMeta.setDamage(durability - repairPoint);
+            repair.setItemMeta((ItemMeta) itemMeta);
             amount -= expConsumption;
         }
 
@@ -136,7 +143,7 @@ public class LootProtectListener implements Listener {
     }
 
     private static int compareByDamagePercentage(ItemStack a, ItemStack b) {
-        float delta = (float) a.getDurability() / a.getType().getMaxDurability() - (float) b.getDurability() / b.getType().getMaxDurability();
+        float delta = (float) ((Damageable) a.getItemMeta()).getDamage() / a.getType().getMaxDurability() - (float) ((Damageable) b.getItemMeta()).getDamage() / b.getType().getMaxDurability();
         delta = -delta;
         if (delta > 0) return 1;
         if (delta < 0) return -1;

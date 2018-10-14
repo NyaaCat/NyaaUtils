@@ -11,7 +11,7 @@ configurations.all {
 // Note the spaces before and after the equals sign
 ext.majorVersion = 6
 ext.minorVersion = 1
-ext.minecraftVersion = "1.13"
+ext.minecraftVersion = "1.13.1"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -61,14 +61,19 @@ dependencies {
     }
     compile files('lib/LocketteProAPI.jar')
     compile files('lib/EssentialsX-2.0.1-468.jar')
-    compile 'com.sk89q.worldedit:worldedit-bukkit:6.1.5'
+    compile ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
+        exclude group: 'io.papermc', module: 'paperlib'
+        exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
+    }
     compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
+    annotationProcessor 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
+    annotationProcessor "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
 }
 
 String nyaaCoreLangDir = gradle.hasProperty("NyaaCoreLangDirs") ? gradle.NyaaCoreLangDirs : null
 if (nyaaCoreLangDir == null) { nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR") }
 
-compileJava {
+tasks.withType(JavaCompile) {
     options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor", "-Xlint:deprecation"]
     if (nyaaCoreLangDir != null) {
         options.compilerArgs += ["-ALANG_DIR_ADDITIONAL_PATH=" + nyaaCoreLangDir]

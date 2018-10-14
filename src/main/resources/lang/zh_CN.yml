@@ -352,6 +352,13 @@ user:
     success: "你成功为 %s 投票"
     unknown: "未知选项: %s"
     repeat: "你已经投过票了"
+  mq:
+    deliver: |-
+      您在 %s 收到一条消息:
+      [
+      {message}
+      ]
+
 manual:
   help:
     description: 显示帮助信息

@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -90,7 +91,6 @@ public class FuelManager {
             lore.add(lore_prefix + str + I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
         }
         item.setType(fuel.getItem().getType());
-        item.setDurability(fuel.getItem().getDurability());
         item.setData(fuel.getItem().getData());
         meta.setLore(lore);
         item.setItemMeta(meta);

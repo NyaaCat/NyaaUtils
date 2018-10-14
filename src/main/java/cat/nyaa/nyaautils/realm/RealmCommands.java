@@ -1,11 +1,13 @@
 package cat.nyaa.nyaautils.realm;
 
 
-import cat.nyaa.nyaautils.I18n;
-import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -27,7 +29,7 @@ public class RealmCommands extends CommandReceiver {
 
     @SuppressWarnings("deprecation")
     @SubCommand(value = "create", permission = "nu.realm.admin")
-    public void commandCreate(CommandSender sender, Arguments args) {
+    public void commandCreate(CommandSender sender, Arguments args) throws IncompleteRegionException {
         if (args.length() < 4) {
             msg(sender, "manual.realm.create.usage");
             return;
@@ -62,13 +64,13 @@ public class RealmCommands extends CommandReceiver {
             }
         }
 
-        Selection selection = plugin.worldEditPlugin.getSelection(player);
+        Region selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
         if (selection == null) {
             msg(sender, "user.realm.select");
             return;
         }
-        Location minimumPoint = selection.getMinimumPoint().clone();
-        Location maximumPoint = selection.getMaximumPoint().clone();
+        Location minimumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
+        Location maximumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
         Realm realm = new Realm();
         realm.setType(realmType);
         realm.setName(name);

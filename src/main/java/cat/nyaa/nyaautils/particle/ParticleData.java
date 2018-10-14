@@ -147,6 +147,7 @@ public class ParticleData implements ISerializable {
         config.set("version", Bukkit.getVersion());
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void deserialize(ConfigurationSection config) {
         if (config.getString("version", "").length() == 0) {

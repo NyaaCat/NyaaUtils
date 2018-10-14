@@ -19,3 +19,8 @@ database:
     connection:
       key: java.util.UUID
       value: java.util.UUID
+  messagequeue:
+    provider: map
+    connection:
+      key: java.util.UUID
+      value: java.util.String

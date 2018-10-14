@@ -1,15 +1,16 @@
 package cat.nyaa.nyaautils.repair;
 
-import cat.nyaa.nyaautils.I18n;
-import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.CommandReceiver;
-import cat.nyaa.nyaacore.utils.ExperienceUtils;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 
@@ -50,6 +51,7 @@ public class RepairCommands extends CommandReceiver {
     @SubCommand(value = "info", permission = "nu.repair")
     public void repairInfo(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
+        ItemMeta itemMeta = item.getItemMeta();
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         new Message(I18n.format("user.repair.info_1")).append(item).send(asPlayer(sender));
         msg(sender, "user.repair.info_2", item.getType().name());
@@ -58,7 +60,7 @@ public class RepairCommands extends CommandReceiver {
         }
         if (info.stat == UNREPAIRABLE) return;
         int fullDur = item.getType().getMaxDurability();
-        int currDur = fullDur - item.getDurability();
+        int currDur = fullDur - ((Damageable) itemMeta).getDamage();
         msg(sender, "user.repair.info_4", currDur, fullDur, (double) currDur / (double) fullDur * 100);
         new Message(I18n.format("user.repair.info_5")).append(new ItemStack(info.repairMaterial)).send(asPlayer(sender));
         msg(sender, "user.repair.info_6", info.expConsumption);
@@ -66,11 +68,11 @@ public class RepairCommands extends CommandReceiver {
         if (info.repairLimit <= 0) {
             msg(sender, "user.repair.info_8");
         } else {
-            int repairTime = ((Repairable) item.getItemMeta()).getRepairCost();
+            int repairTime = ((Repairable) itemMeta).getRepairCost();
             msg(sender, "user.repair.info_9", repairTime, info.repairLimit);
         }
         if (info.stat == REPAIRABLE) {
-            msg(sender, "user.repair.info_10", (int) Math.ceil(item.getDurability() / (double) info.durRecovered));
+            msg(sender, "user.repair.info_10", (int) Math.ceil(((Damageable) itemMeta).getDamage() / (double) info.durRecovered));
         }
     }
 
@@ -89,6 +91,7 @@ public class RepairCommands extends CommandReceiver {
     @SubCommand(value = "hand", permission = "nu.repair")
     public void repairHand(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
+        ItemMeta itemMeta = item.getItemMeta();
         ItemStack material = getItemInOffHand(sender);
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
@@ -107,10 +110,11 @@ public class RepairCommands extends CommandReceiver {
 
         ExperienceUtils.subtractExpPoints(p, info.expConsumption);
 
-        int dur = item.getDurability();
+        int dur = ((Damageable) itemMeta).getDamage();
         dur -= info.durRecovered;
         if (dur < 0) dur = 0;
-        item.setDurability((short) dur);
+        ((Damageable) itemMeta).setDamage(dur);
+        item.setItemMeta(itemMeta);
         increaseReapirCount(item, 1);
         p.getInventory().setItemInMainHand(item);
         int count = material.getAmount();
@@ -126,6 +130,7 @@ public class RepairCommands extends CommandReceiver {
     @SubCommand(value = "full", permission = "nu.repair")
     public void repairFull(CommandSender sender, Arguments args) {
         ItemStack item = getItemInHand(sender);
+        ItemMeta itemMeta = item.getItemMeta();
         ItemStack material = getItemInOffHand(sender);
         RepairInstance info = new RepairInstance(item, plugin.cfg.repair, plugin);
         if (info.stat != REPAIRABLE) {
@@ -144,17 +149,18 @@ public class RepairCommands extends CommandReceiver {
 
         int expMax = (int) Math.floor(ExperienceUtils.getExpPoints(p) / (double) info.expConsumption);
         int materialMax = material.getAmount();
-        int durMax = (int) Math.ceil(item.getDurability() / (double) info.durRecovered);
+        int durMax = (int) Math.ceil(((Damageable) itemMeta).getDamage() / (double) info.durRecovered);
         int repairAmount = Math.min(Math.min(expMax, materialMax), durMax);
         if (ExperienceUtils.getExpPoints(p) < info.expConsumption * repairAmount) {
             msg(sender, "user.repair.no_enough_exp");
             return;
         }
         ExperienceUtils.subtractExpPoints(p, info.expConsumption * repairAmount);
-        int dur = item.getDurability();
+        int dur = ((Damageable) itemMeta).getDamage();
         dur -= info.durRecovered * repairAmount;
         if (dur < 0) dur = 0;
-        item.setDurability((short) dur);
+        ((Damageable) itemMeta).setDamage(dur);
+        item.setItemMeta(itemMeta);
         increaseReapirCount(item, 1);
         p.getInventory().setItemInMainHand(item);
         int count = material.getAmount() - repairAmount;

@@ -213,7 +213,10 @@ public class Configuration extends PluginConfigure {
     public int vote_max_options = 8;
     @Serializable(name = "vote.broadcast_interval")
     public int vote_broadcast_interval = -1;
-    
+
+    @Serializable(name = "message_queue.enable")
+    public Boolean message_queue_enable = true;
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig
@@ -238,6 +241,7 @@ public class Configuration extends PluginConfigure {
         return plugin;
     }
 
+    @SuppressWarnings("deprecation")
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
         this.mailbox = new MailboxLocations(plugin);
@@ -260,6 +264,7 @@ public class Configuration extends PluginConfigure {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void deserialize(ConfigurationSection config) {
         // general values load & standalone config load

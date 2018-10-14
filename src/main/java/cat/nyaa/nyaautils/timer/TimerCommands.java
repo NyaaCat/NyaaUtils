@@ -1,10 +1,12 @@
 package cat.nyaa.nyaautils.timer;
 
-import cat.nyaa.nyaautils.I18n;
-import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -93,7 +95,7 @@ public class TimerCommands extends CommandReceiver {
     }
 
     @SubCommand(value = "addcheckpoint", permission = "nu.createtimer")
-    public void commandAddCheckpoint(CommandSender sender, Arguments args) {
+    public void commandAddCheckpoint(CommandSender sender, Arguments args) throws IncompleteRegionException {
         if (args.length() < 3) {
             msg(sender, "manual.timer.addcheckpoint.usage");
             return;
@@ -109,13 +111,13 @@ public class TimerCommands extends CommandReceiver {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        Selection selection = plugin.worldEditPlugin.getSelection(player);
+        Region selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
         if (selection == null) {
             msg(sender, "user.timer.select");
             return;
         }
-        Location minimumPoint = selection.getMinimumPoint().clone();
-        Location maximumPoint = selection.getMaximumPoint().clone();
+        Location minimumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
+        Location maximumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
         for (int x = minimumPoint.getBlockX(); x <= maximumPoint.getBlockX(); x++) {
             for (int y = minimumPoint.getBlockY(); y <= maximumPoint.getBlockY(); y++) {
                 for (int z = minimumPoint.getBlockZ(); z <= maximumPoint.getBlockZ(); z++) {
@@ -132,10 +134,10 @@ public class TimerCommands extends CommandReceiver {
         int id = 0;
         if (checkpointID == -1) {
             id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(
-                    selection.getMaximumPoint(), selection.getMinimumPoint());
+                    BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint()), BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint()));
         } else {
             id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(checkpointID,
-                    selection.getMaximumPoint(), selection.getMinimumPoint());
+                    BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint()), BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint()));
         }
         msg(sender, "user.timer.checkpoint_info", id, maximumPoint.getWorld().getName(),
                 minimumPoint.getBlockX(), minimumPoint.getBlockY(), minimumPoint.getBlockZ(),

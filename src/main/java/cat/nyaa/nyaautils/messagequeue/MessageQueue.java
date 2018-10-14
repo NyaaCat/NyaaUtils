@@ -1,0 +1,64 @@
+package cat.nyaa.nyaautils.messagequeue;
+
+import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.component.IMessageQueue;
+import cat.nyaa.nyaacore.database.DatabaseUtils;
+import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
+import cat.nyaa.nyaautils.I18n;
+import cat.nyaa.nyaautils.NyaaUtils;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.text.DateFormat;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class MessageQueue implements IMessageQueue, Listener {
+
+    private KeyValueDB<UUID, String> messages;
+    final private NyaaUtils plugin;
+
+    @SuppressWarnings("unchecked")
+    public MessageQueue(NyaaUtils pl) {
+        plugin = pl;
+        plugin.getServer().getPluginManager().registerEvents(this, pl);
+        messages = DatabaseUtils.get("database.messagequeue", KeyValueDB.class);
+    }
+
+    @Override
+    public void send(OfflinePlayer player, Message message) {
+        if (!plugin.cfg.message_queue_enable) return;
+        long timestamp = System.currentTimeMillis();
+        UUID uuid = player.getUniqueId();
+        String msg = messages.get(uuid);
+        String current = timestamp + ":" + message.toString() + "\n";
+        msg = msg == null ? current : msg + current;
+        messages.put(uuid, msg);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (!plugin.cfg.message_queue_enable) return;
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+        String msg = messages.get(uniqueId);
+        if(msg == null) return;
+        Map<Long, String> map = Arrays.stream(msg.split("\n")).map(s -> s.split(":", 2)).collect(Collectors.toMap(
+                s -> Long.parseLong(s[0]),
+                s -> s[1]
+        ));
+        map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(
+                p -> {
+                    Date time = Date.from(Instant.ofEpochMilli(p.getKey()));
+                    Message message = new Message("").append(I18n.format("user.mq.deliver", DateFormat.getDateTimeInstance().format(time)), Collections.singletonMap("{message}", ComponentSerializer.parse(p.getValue())[0]));
+                    message.send(player);
+                }
+        );
+    }
+}

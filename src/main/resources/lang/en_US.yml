@@ -320,6 +320,12 @@ user:
     success: "You success voted for %s"
     unknown: "unknown option: %s"
     repeat: "You can't repeat vote"
+  mq:
+    deliver: |-
+      You received a message on %s:
+      [
+      {message}
+      ]
 manual:
   help:
     description: Show help message

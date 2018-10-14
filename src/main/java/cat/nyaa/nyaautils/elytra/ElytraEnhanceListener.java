@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class ElytraEnhanceListener implements Listener {
                 if (player.getInventory().getChestplate() != null &&
                         player.getInventory().getChestplate().getType() == Material.ELYTRA) {
                     int durability = player.getInventory().getChestplate().getType().getMaxDurability() -
-                            player.getInventory().getChestplate().getDurability();
+                                             ((Damageable)player.getInventory().getChestplate().getItemMeta()).getDamage();
                     if (durability <= plugin.cfg.elytra_durability_notify) {
                         player.sendMessage(I18n.format("user.elytra_enhance.durability_notify", durability));
                     }
