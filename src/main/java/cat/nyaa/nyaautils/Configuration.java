@@ -217,6 +217,12 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "message_queue.enable")
     public Boolean message_queue_enable = true;
 
+    @Serializable(name = "redstone_control.enable")
+    public boolean redstoneControl;
+
+    @Serializable(name = "redstone_control.material")
+    public Material redstoneControlMaterial = Material.AIR;
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig

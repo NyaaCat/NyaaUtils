@@ -56,6 +56,7 @@ public class NyaaUtils extends JavaPlugin {
     public EsschatListener esschatListener;
     public VoteTask voteTask;
     public MessageQueue messageQueueListener;
+    public cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener redstoneControlListener;
 
     @Override
     public void onEnable() {
@@ -90,6 +91,8 @@ public class NyaaUtils extends JavaPlugin {
         mentionListener = new MentionListener(this);
         messageQueueListener = new MessageQueue(this);
         NyaaComponent.register(IMessageQueue.class, messageQueueListener);
+        redstoneControlListener = new cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener(this);
+
         try {
             ISettings settings = ess.getSettings();
             Class<? extends ISettings> essSettingsClass = settings.getClass();

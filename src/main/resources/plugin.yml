@@ -133,3 +133,15 @@ permissions:
   nu.vote:
     description: Start a vote
     default: true
+  nu.redstonecontrol:
+    description: Control redstone stuff by right click
+    default: true
+  nu.redstonecontrol.lamp:
+    description: Light/off redstone lamp
+    default: true
+  nu.redstonecontrol.torch:
+    description: Light/off redstone torch
+    default: op
+  nu.redstonecontrol.wire:
+    description: Cycle through each level of power for redstone wire
+    default: op
