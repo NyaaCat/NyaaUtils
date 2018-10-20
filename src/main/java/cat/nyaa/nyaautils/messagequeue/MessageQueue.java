@@ -31,14 +31,18 @@ public class MessageQueue implements IMessageQueue, Listener {
     }
 
     @Override
-    public void send(OfflinePlayer player, Message message) {
+    public void send(OfflinePlayer player, Message message, long timestamp) {
         if (!plugin.cfg.message_queue_enable) return;
-        long timestamp = System.currentTimeMillis();
         UUID uuid = player.getUniqueId();
         String msg = messages.get(uuid);
         String current = timestamp + ":" + message.toString() + "\n";
         msg = msg == null ? current : msg + current;
         messages.put(uuid, msg);
+    }
+
+    @Override
+    public void send(OfflinePlayer player, Message message) {
+        send(player, message, System.currentTimeMillis());
     }
 
     @EventHandler
