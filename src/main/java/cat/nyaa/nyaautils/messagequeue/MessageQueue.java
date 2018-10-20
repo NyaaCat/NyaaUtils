@@ -6,7 +6,6 @@ import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -48,16 +47,20 @@ public class MessageQueue implements IMessageQueue, Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
         String msg = messages.get(uniqueId);
-        if(msg == null) return;
-        Map<Long, String> map = Arrays.stream(msg.split("\n")).map(s -> s.split(":", 2)).collect(Collectors.toMap(
-                s -> Long.parseLong(s[0]),
-                s -> s[1]
-        ));
+        if (msg == null) return;
+        Map<Long, List<String>> map =
+                Arrays.stream(msg.split("\n")).map(s -> s.split(":", 2)).collect(Collectors.groupingBy(
+                        s -> Long.parseLong(s[0]),
+                        Collectors.mapping(s -> s[1], Collectors.toList())
+                ));
         map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).forEach(
                 p -> {
                     Date time = Date.from(Instant.ofEpochMilli(p.getKey()));
-                    Message message = new Message("").append(I18n.format("user.mq.deliver", DateFormat.getDateTimeInstance().format(time)), Collections.singletonMap("{message}", ComponentSerializer.parse(p.getValue())[0]));
-                    message.send(player);
+                    p.getValue().forEach(msgJson -> {
+                                Message message = new Message("").append(I18n.format("user.mq.deliver", DateFormat.getDateTimeInstance().format(time)), Collections.singletonMap("{message}", ComponentSerializer.parse(msgJson)[0]));
+                                message.send(player);
+                            }
+                    );
                 }
         );
     }
