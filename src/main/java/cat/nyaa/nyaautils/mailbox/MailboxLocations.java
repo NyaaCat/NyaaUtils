@@ -1,18 +1,21 @@
 package cat.nyaa.nyaautils.mailbox;
 
-import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.configuration.FileConfigure;
+import cat.nyaa.nyaautils.NyaaUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MailboxLocations extends FileConfigure {
     public final static String CFG_FILE_NAME = "mailbox_location.yml";
@@ -23,6 +26,10 @@ public class MailboxLocations extends FileConfigure {
 
     public MailboxLocations(NyaaUtils plugin) {
         this.plugin = plugin;
+    }
+
+    public static List<String> getLoadedWorldsName() {
+        return Bukkit.getWorlds().stream().map(world -> world.getName().toLowerCase()).collect(Collectors.toList());
     }
 
     @Override
@@ -39,11 +46,20 @@ public class MailboxLocations extends FileConfigure {
     public void deserialize(ConfigurationSection config) {
         locationMap.clear();
         nameMap.clear();
+        List<String> loadedWorlds = getLoadedWorldsName();
         ConfigurationSection locations = config.getConfigurationSection("locations");
         ConfigurationSection names = config.getConfigurationSection("names");
         if (locations != null) {
             for (String uuid_s : locations.getKeys(false)) {
-                locationMap.put(UUID.fromString(uuid_s), (Location) locations.get(uuid_s));
+                ConfigurationSection section = locations.getConfigurationSection(uuid_s);
+                if (section == null) {
+                    locationMap.put(UUID.fromString(uuid_s), (Location) locations.get(uuid_s));
+                } else {
+                    String worldName = section.getString("world", "").toLowerCase();
+                    if (loadedWorlds.contains(worldName)) {
+                        locationMap.put(UUID.fromString(uuid_s), new Location(Bukkit.getWorld(worldName), section.getInt("x"), section.getInt("y"), section.getInt("z")));
+                    }
+                }
             }
         }
         if (names != null) {
@@ -61,7 +77,15 @@ public class MailboxLocations extends FileConfigure {
     public void serialize(ConfigurationSection config) {
         ConfigurationSection locationSection = config.createSection("locations");
         for (UUID uuid : locationMap.keySet()) {
-            locationSection.set(uuid.toString(), locationMap.get(uuid));
+            Location loc = locationMap.get(uuid);
+            if (loc != null && loc.getWorld() != null && loc.getWorld().getName() != null) {
+                String uuid_str = uuid.toString();
+                ConfigurationSection section = locationSection.createSection(uuid_str);
+                section.set("world", loc.getWorld().getName());
+                section.set("x", loc.getX());
+                section.set("y", loc.getY());
+                section.set("z", loc.getZ());
+            }
         }
         ConfigurationSection nameSection = config.createSection("names");
         for (UUID uuid : nameMap.keySet()) {
@@ -100,7 +124,12 @@ public class MailboxLocations extends FileConfigure {
 
     public Location getMailboxLocation(UUID uuid) {
         if (uuid == null) return null;
-        return locationMap.get(uuid);
+        Location loc = locationMap.get(uuid);
+        if (loc == null || loc.getWorld() == null || !getLoadedWorldsName().contains(loc.getWorld().getName().toLowerCase())) {
+            return null;
+        }
+        loc.setWorld(Bukkit.getWorld(loc.getWorld().getName()));
+        return loc;
     }
 
     public UUID getUUIDbyName(String name) {
