@@ -8,7 +8,6 @@ import cat.nyaa.nyaautils.NyaaUtils;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -27,7 +26,6 @@ public class RealmCommands extends CommandReceiver {
         return "realm";
     }
 
-    @SuppressWarnings("deprecation")
     @SubCommand(value = "create", permission = "nu.realm.admin")
     public void commandCreate(CommandSender sender, Arguments args) throws IncompleteRegionException {
         if (args.length() < 4) {
@@ -52,12 +50,7 @@ public class RealmCommands extends CommandReceiver {
         OfflinePlayer owner = null;
         if (realmType == RealmType.PRIVATE) {
             if (args.length() == 5) {
-                String playerName = args.next();
-                owner = Bukkit.getOfflinePlayer(playerName);
-                if (owner == null) {
-                    msg(sender, "internal.error.player_not_found", playerName);
-                    return;
-                }
+                owner = args.nextOfflinePlayer();
             } else {
                 msg(sender, "manual.realm.create.usage");
                 return;

@@ -11,7 +11,7 @@ configurations.all {
 // Note the spaces before and after the equals sign
 ext.majorVersion = 6
 ext.minorVersion = 1
-ext.minecraftVersion = "1.13.1"
+ext.minecraftVersion = "1.13.2"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -51,11 +51,11 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.13.1-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
     if (gradle.hasProperty("useLocalDependencies") && gradle.useLocalDependencies) {
         compile project(":NyaaCore")
     } else {
-        compile('cat.nyaa:nyaacore:6.2-SNAPSHOT') {
+        compile('cat.nyaa:nyaacore:6.3-SNAPSHOT') {
             transitive = false
         }
     }
@@ -64,6 +64,7 @@ dependencies {
     compile ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
+        exclude group: 'org.bukkit', module: 'bukkit'
     }
     compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
     annotationProcessor 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'

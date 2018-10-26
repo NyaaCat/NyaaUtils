@@ -22,14 +22,14 @@ import java.util.UUID;
 public class MailboxCommands extends CommandReceiver {
     private final NyaaUtils plugin;
 
-    @Override
-    public String getHelpPrefix() {
-        return "mailbox";
-    }
-
     public MailboxCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
+    }
+
+    @Override
+    public String getHelpPrefix() {
+        return "mailbox";
     }
 
     @SubCommand(value = "create", permission = "nu.mailbox")
@@ -38,7 +38,7 @@ public class MailboxCommands extends CommandReceiver {
         String tmp = args.top();
         if (tmp != null) {
             if (sender.hasPermission("nu.mailadmin")) {
-                createMailbox(p, tmp);
+                createMailbox(p, args.nextOfflinePlayer());
             } else {
                 msg(sender, "user.mailbox.permission_required");
             }
@@ -61,22 +61,20 @@ public class MailboxCommands extends CommandReceiver {
         msg(p, "user.mailbox.now_right_click");
     }
 
-    @SuppressWarnings("deprecation")
-    public void createMailbox(Player admin, String player) {
-        if (plugin.cfg.mailbox.getMailboxLocation(player) != null) {
+    public void createMailbox(Player admin, OfflinePlayer player) {
+        UUID id = player.getUniqueId();
+        if (plugin.cfg.mailbox.getMailboxLocation(id) != null) {
             msg(admin, "user.mailbox.admin.already_set");
             return;
         }
-        OfflinePlayer p = plugin.getServer().getOfflinePlayer(player);
-        UUID id = p.getUniqueId();
         plugin.mailboxListener.registerRightClickCallback(admin, 100,
                 (Location clickedBlock) -> {
                     Block b = clickedBlock.getBlock();
                     if (b.getState() instanceof Chest) {
-                        plugin.cfg.mailbox.updateNameMapping(id, player);
+                        plugin.cfg.mailbox.updateNameMapping(id, player.getName());
                         plugin.cfg.mailbox.updateLocationMapping(id, b.getLocation());
                         msg(admin, "user.mailbox.admin.success_set");
-                        if (p.isOnline()) {
+                        if (player.isOnline()) {
                             Player tmp = plugin.getServer().getPlayer(id);
                             if (tmp != null) {
                                 msg(tmp, "user.mailbox.admin.player_hint_set");
@@ -95,7 +93,7 @@ public class MailboxCommands extends CommandReceiver {
         String tmp = args.top();
         if (tmp != null) {
             if (sender.hasPermission("nu.mailadmin")) {
-                removeMailbox(p, tmp);
+                removeMailbox(p, args.nextOfflinePlayer());
             } else {
                 msg(sender, "user.mailbox.permission_required");
             }
@@ -109,16 +107,15 @@ public class MailboxCommands extends CommandReceiver {
         msg(p, "user.mailbox.remove_success");
     }
 
-    public void removeMailbox(Player admin, String player) {
-        if (plugin.cfg.mailbox.getMailboxLocation(player) == null) {
+    public void removeMailbox(Player admin, OfflinePlayer player) {
+        if (plugin.cfg.mailbox.getMailboxLocation(player.getUniqueId()) == null) {
             msg(admin, "user.mailbox.admin.no_mailbox");
         } else {
-            UUID id = plugin.cfg.mailbox.getUUIDbyName(player);
+            UUID id = player.getUniqueId();
             plugin.cfg.mailbox.updateLocationMapping(id, null);
             msg(admin, "user.mailbox.admin.success_remove");
-            Player p = plugin.getServer().getPlayer(player);
-            if (p != null) {
-                msg(p, "user.mailbox.admin.player_hint_removed");
+            if (player.isOnline()) {
+                msg((Player) player, "user.mailbox.admin.player_hint_removed");
             }
         }
     }
@@ -128,7 +125,7 @@ public class MailboxCommands extends CommandReceiver {
         String tmp = args.top();
         if (tmp != null) {
             if (sender.hasPermission("nu.mailadmin")) {
-                infoMailbox(sender, tmp);
+                infoMailbox(sender, args.nextOfflinePlayer());
             } else {
                 msg(sender, "user.mailbox.permission_required");
             }
@@ -149,23 +146,21 @@ public class MailboxCommands extends CommandReceiver {
         }
     }
 
-    public void infoMailbox(CommandSender admin, String player) {
-        Location loc = plugin.cfg.mailbox.getMailboxLocation(player);
+    public void infoMailbox(CommandSender admin, OfflinePlayer player) {
+        Location loc = plugin.cfg.mailbox.getMailboxLocation(player.getUniqueId());
         if (loc != null) {
-            msg(admin, "user.mailbox.admin.info", player, plugin.cfg.mailbox.getUUIDbyName(player).toString(),
+            msg(admin, "user.mailbox.admin.info", player.getName(), player.getUniqueId().toString(),
                     loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         } else {
             msg(admin, "user.mailbox.admin.no_mailbox");
         }
     }
 
-
     @SubCommand(value = "send", permission = "nu.mailbox")
     public void sendMailbox(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         ItemStack stack = getItemInHand(sender);
-        String toPlayer = args.next();
-        if (toPlayer == null) {
+        if (args.top() == null) {
             msg(sender, "manual.mailbox.send.usage");
             return;
         }
@@ -174,8 +169,8 @@ public class MailboxCommands extends CommandReceiver {
             msg(p, "user.mailbox.money_insufficient");
             return;
         }
-
-        UUID recipient = plugin.cfg.mailbox.getUUIDbyName(toPlayer);
+        OfflinePlayer toPlayer = args.nextOfflinePlayer();
+        UUID recipient = toPlayer.getUniqueId();
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
 
         // Check remote mailbox
@@ -188,19 +183,18 @@ public class MailboxCommands extends CommandReceiver {
         }
 
         if (recipient == null) {
-            msg(sender, "user.mailbox.player_no_mailbox", toPlayer);
+            msg(sender, "user.mailbox.player_no_mailbox", toPlayer.getName());
             return;
         } else if (toLocation == null) {
-            msg(sender, "user.mailbox.player_no_mailbox", toPlayer);
-            Player tmp = plugin.getServer().getPlayer(toPlayer);
-            if (tmp != null && tmp.isOnline()) {
-                msg(tmp, "user.mailbox.create_mailbox_hint", sender.getName());
+            msg(sender, "user.mailbox.player_no_mailbox", toPlayer.getName());
+            if (toPlayer.isOnline()) {
+                msg((Player) toPlayer, "user.mailbox.create_mailbox_hint", sender.getName());
             }
             return;
         }
 
-        Player recp = plugin.getServer().getPlayer(toPlayer);
-        if (recp != null && !recp.isOnline()) recp = null;
+        Player recp = null;
+        if (toPlayer.isOnline()) recp = (Player) toPlayer;
         Inventory targetInventory = ((InventoryHolder) toLocation.getBlock().getState()).getInventory();
         if (!InventoryUtils.hasEnoughSpace(targetInventory, stack)) {
             msg(sender, "user.mailbox.recipient_no_space");
@@ -213,7 +207,7 @@ public class MailboxCommands extends CommandReceiver {
             }
             InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-            msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailHandFee);
+            msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), (float) plugin.cfg.mailHandFee);
             if (recp != null) {
                 msg(recp, "user.mailbox.mail_received", sender.getName());
             }
@@ -224,8 +218,7 @@ public class MailboxCommands extends CommandReceiver {
     @SubCommand(value = "sendchest", permission = "nu.mailbox")
     public void sendBoxMailbox(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        String toPlayer = args.next();
-        if (toPlayer == null) {
+        if (args.top() == null) {
             msg(sender, "manual.mailbox.sendchest.usage");
             return;
         }
@@ -234,8 +227,8 @@ public class MailboxCommands extends CommandReceiver {
             msg(p, "user.mailbox.money_insufficient");
             return;
         }
-
-        UUID recipient = plugin.cfg.mailbox.getUUIDbyName(toPlayer);
+        OfflinePlayer toPlayer = args.nextOfflinePlayer();
+        UUID recipient = toPlayer.getUniqueId();
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
 
         // Check remote mailbox
@@ -248,20 +241,19 @@ public class MailboxCommands extends CommandReceiver {
         }
 
         if (recipient == null) {
-            msg(sender, "user.mailbox.player_no_mailbox", toPlayer);
+            msg(sender, "user.mailbox.player_no_mailbox", toPlayer.getName());
             return;
         } else if (toLocation == null) {
-            msg(sender, "user.mailbox.player_no_mailbox", toPlayer);
-            Player tmp = plugin.getServer().getPlayer(toPlayer);
-            if (tmp != null && tmp.isOnline()) {
-                msg(tmp, "user.mailbox.create_mailbox_hint", sender.getName());
+            msg(sender, "user.mailbox.player_no_mailbox", toPlayer.getName());
+            if (toPlayer.isOnline()) {
+                msg((Player) toPlayer, "user.mailbox.create_mailbox_hint", sender.getName());
             }
             return;
         }
 
         final Location toLocationFinal = toLocation;
-        Player recp = plugin.getServer().getPlayer(toPlayer);
-        if (recp != null && !recp.isOnline()) recp = null;
+        Player recp = null;
+        if (toPlayer.isOnline()) recp = (Player) toPlayer;
         final Player recpFinal = recp;
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
@@ -309,7 +301,7 @@ public class MailboxCommands extends CommandReceiver {
                             plugin.systemBalance.deposit(plugin.cfg.mailChestFee, plugin);
                         }
                         toInventory.setStorageContents(to);
-                        msg(sender, "user.mailbox.mail_sent", toPlayer, (float) plugin.cfg.mailChestFee);
+                        msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), (float) plugin.cfg.mailChestFee);
                         if (recpFinal != null) {
                             msg(recpFinal, "user.mailbox.mail_received", sender.getName());
                         }
@@ -318,6 +310,6 @@ public class MailboxCommands extends CommandReceiver {
                         msg(sender, "user.mailbox.mail_sent_nothing");
                     }
                 });
-        msg(p, "user.mailbox.now_right_click_send", toPlayer);
+        msg(p, "user.mailbox.now_right_click_send", toPlayer.getName());
     }
 }
