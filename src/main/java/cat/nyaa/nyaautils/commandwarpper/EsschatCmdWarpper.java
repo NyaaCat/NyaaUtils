@@ -17,12 +17,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-public class EsschatListener implements Listener {
+public class EsschatCmdWarpper implements Listener {
     private final NyaaUtils plugin;
     private final boolean allowMentionReply;
     private final Cache<UUID, UUID> r;
 
-    public EsschatListener(NyaaUtils pl, boolean allowMentionReply, long timeout) {
+    public EsschatCmdWarpper(NyaaUtils pl, boolean allowMentionReply, long timeout) {
         this.plugin = pl;
         this.allowMentionReply = allowMentionReply;
         if (plugin.cfg.mention_enable) {

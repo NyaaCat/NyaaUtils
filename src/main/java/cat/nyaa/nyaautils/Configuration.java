@@ -104,40 +104,40 @@ public class Configuration extends PluginConfigure {
     /* Timer */
     @Serializable
     public int timerCheckInterval = -1;
-    /* Teleport */
-    @Serializable(name = "teleport.enable")
+    /* TeleportCmdWarpper */
+    @Serializable(name = "teleportCmdWarpper.enable")
     public boolean teleportEnable = true;
-    @Serializable(name = "teleport.home.max")
+    @Serializable(name = "teleportCmdWarpper.home.max")
     public int homeMax = 300;
-    @Serializable(name = "teleport.home.base")
+    @Serializable(name = "teleportCmdWarpper.home.base")
     public int homeBase = 10;
-    @Serializable(name = "teleport.home.world")
+    @Serializable(name = "teleportCmdWarpper.home.world")
     public int homeWorld = 20;
-    @Serializable(name = "teleport.home.distance")
+    @Serializable(name = "teleportCmdWarpper.home.distance")
     public int homeDistance = 200;
-    @Serializable(name = "teleport.home.increment")
+    @Serializable(name = "teleportCmdWarpper.home.increment")
     public int homeIncrement = 5;
-    @Serializable(name = "teleport.sethome.max")
+    @Serializable(name = "teleportCmdWarpper.sethome.max")
     public int setHomeMax = 100;
-    @Serializable(name = "teleport.sethome.min")
+    @Serializable(name = "teleportCmdWarpper.sethome.min")
     public int setHomeMin = 10;
-    @Serializable(name = "teleport.sethome.distance")
+    @Serializable(name = "teleportCmdWarpper.sethome.distance")
     public int setHomeDistance = 200;
-    @Serializable(name = "teleport.sethome.decrement")
+    @Serializable(name = "teleportCmdWarpper.sethome.decrement")
     public int setHomeDecrement = 10;
-    @Serializable(name = "teleport.sethome.world")
+    @Serializable(name = "teleportCmdWarpper.sethome.world")
     public int setHomeWorld = 50;
-    @Serializable(name = "teleport.sethome.default_world")
+    @Serializable(name = "teleportCmdWarpper.sethome.default_world")
     public String setHomeDefaultWorld = "world";
-    @Serializable(name = "teleport.back.max")
+    @Serializable(name = "teleportCmdWarpper.back.max")
     public int backMax = 300;
-    @Serializable(name = "teleport.back.base")
+    @Serializable(name = "teleportCmdWarpper.back.base")
     public int backBase = 100;
-    @Serializable(name = "teleport.back.world")
+    @Serializable(name = "teleportCmdWarpper.back.world")
     public int backWorld = 20;
-    @Serializable(name = "teleport.back.distance")
+    @Serializable(name = "teleportCmdWarpper.back.distance")
     public int backDistance = 200;
-    @Serializable(name = "teleport.back.increment")
+    @Serializable(name = "teleportCmdWarpper.back.increment")
     public int backIncrement = 20;
 
     @Serializable(name = "rename.character_limit")
@@ -201,6 +201,9 @@ public class Configuration extends PluginConfigure {
     public MentionNotification mention_notification = MentionNotification.ACTION_BAR;
     @Serializable(name = "mention.blink")
     public Boolean mention_blink = true;
+    @Serializable(name = "mention.blink_chars")
+    public String mention_blink_char = "b0fc";
+
 
     @Serializable
     public Material expCapsuleType = Material.EXPERIENCE_BOTTLE;
@@ -222,6 +225,25 @@ public class Configuration extends PluginConfigure {
 
     @Serializable(name = "redstone_control.material")
     public Material redstoneControlMaterial = Material.AIR;
+
+    @Serializable(name = "enhanced_ping.enable")
+    public boolean ping_enable = true;
+
+    @Serializable(name = "enhanced_ping.override")
+    public boolean ping_override = false;
+
+    @Serializable(name = "enhanced_ping.show_in_tab")
+    public boolean ping_tab = false;
+
+    @Serializable(name = "enhanced_tps.enable")
+    public boolean tps_enable = true;
+
+    @Serializable(name = "enhanced_tps.history")
+    public int tps_history = 10;
+
+    @Serializable(name = "enhanced_tps.override")
+    public boolean tps_override = false;
+
 
     @StandaloneConfig
     public final MailboxLocations mailbox;

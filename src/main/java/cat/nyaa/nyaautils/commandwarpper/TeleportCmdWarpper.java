@@ -26,12 +26,12 @@ import org.librazy.nclangchecker.LangKey;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class Teleport implements Listener {
+public class TeleportCmdWarpper implements Listener {
     private static boolean hasOurTown = false;
     private IEssentials ess;
     private NyaaUtils plugin;
 
-    public Teleport(Object pl) {
+    public TeleportCmdWarpper(Object pl) {
         this.plugin = (NyaaUtils) pl;
         this.ess = (IEssentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
         if (plugin.cfg.teleportEnable) {
@@ -64,7 +64,7 @@ public class Teleport implements Listener {
             if (cmd.equals("/home bed") || (cmd.equals("/home") && homes.size() < 1)) {
                 Location bedLoc = p.getBedSpawnLocation();
                 if (bedLoc == null) {
-                    msg(p, "user.teleport.bed_not_set_yet");
+                    msg(p, "user.teleportCmdWarpper.bed_not_set_yet");
                     return;
                 }
                 doHome(p, iu, bedLoc, curLoc);
@@ -72,17 +72,17 @@ public class Teleport implements Listener {
             }
 
             if (homes.size() < 1) {
-                msg(p, "user.teleport.not_set_yet");
+                msg(p, "user.teleportCmdWarpper.not_set_yet");
             } else if (homes.size() == 1 && cmd.equals("/home")) {
                 Location homeLoc;
                 try {
                     homeLoc = iu.getHome(homes.get(0));
                 } catch (InvalidWorldException ex) {
-                    msg(p, "user.teleport.invalid_home");
+                    msg(p, "user.teleportCmdWarpper.invalid_home");
                     return;
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    msg(p, "user.teleport.error");
+                    msg(p, "user.teleportCmdWarpper.error");
                     return;
                 }
                 doHome(p, iu, homeLoc, curLoc);
@@ -94,18 +94,18 @@ public class Teleport implements Listener {
                         try {
                             homeLoc = iu.getHome(to);
                         } catch (InvalidWorldException ex) {
-                            msg(p, "user.teleport.invalid_home");
+                            msg(p, "user.teleportCmdWarpper.invalid_home");
                             return;
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            msg(p, "user.teleport.error");
+                            msg(p, "user.teleportCmdWarpper.error");
                             return;
                         }
                         doHome(p, iu, homeLoc, curLoc);
                         return;
                     }
                 }
-                msg(p, "user.teleport.homes", String.join(", ", homes.toArray(new String[0])));
+                msg(p, "user.teleportCmdWarpper.homes", String.join(", ", homes.toArray(new String[0])));
             }
         } else if (cmd.equals("/sethome") || cmd.startsWith("/sethome ")) {
             e.setCancelled(true);
@@ -118,7 +118,7 @@ public class Teleport implements Listener {
             e.setCancelled(true);
             Location lastLoc = iu.getLastLocation();
             if (lastLoc == null) {
-                msg(p, "user.teleport.no_loc");
+                msg(p, "user.teleportCmdWarpper.no_loc");
                 return;
             }
             doBack(p, iu, curLoc, lastLoc);
@@ -129,18 +129,18 @@ public class Teleport implements Listener {
         int n = checkHomeLimit(iu, name);
         if (n == 1) {
             if (!name.equals("home"))
-                msg(p, "user.teleport.home_limit_one");
+                msg(p, "user.teleportCmdWarpper.home_limit_one");
             name = "home";
         } else if (n != 0) {
-            msg(p, "user.teleport.home_limit", n);
+            msg(p, "user.teleportCmdWarpper.home_limit", n);
             return;
         }
         if ("bed".equals(name) || NumberUtil.isInt(name)) {
-            msg(p, "user.teleport.invalid_name");
+            msg(p, "user.teleportCmdWarpper.invalid_name");
             return;
         }
         if (!ess.getSettings().isTeleportSafetyEnabled() && LocationUtil.isBlockUnsafeForUser(iu, curLoc.getWorld(), curLoc.getBlockX(), curLoc.getBlockY(), curLoc.getBlockZ())) {
-            msg(p, "user.teleport.unsafe");
+            msg(p, "user.teleportCmdWarpper.unsafe");
             return;
         }
 
@@ -158,11 +158,11 @@ public class Teleport implements Listener {
         if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
         fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
+            msg(p, "user.teleportCmdWarpper.money_insufficient", fee);
             return;
         }
         iu.setHome(name, curLoc);
-        msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.sethome"));
+        msg(p, "user.teleportCmdWarpper.ok", fee, I18n.format("user.teleportCmdWarpper.sethome"));
         if (plugin.systemBalance != null && fee > 0) {
             plugin.systemBalance.deposit(fee, plugin);
         }
@@ -184,12 +184,12 @@ public class Teleport implements Listener {
         if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
         fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
+            msg(p, "user.teleportCmdWarpper.money_insufficient", fee);
             return;
         }
         try {
             iu.getTeleport().back(new Trade(0, ess));
-            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
+            msg(p, "user.teleportCmdWarpper.ok", fee, I18n.format("user.teleportCmdWarpper.back"));
             if (plugin.systemBalance != null) {
                 plugin.systemBalance.deposit(fee, plugin);
             }
@@ -215,12 +215,12 @@ public class Teleport implements Listener {
         if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
         fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
+            msg(p, "user.teleportCmdWarpper.money_insufficient", fee);
             return;
         }
         try {
             iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
-            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
+            msg(p, "user.teleportCmdWarpper.ok", fee, I18n.format("user.teleportCmdWarpper.home"));
             if (plugin.systemBalance != null) {
                 plugin.systemBalance.deposit(fee, plugin);
             }

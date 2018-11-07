@@ -358,7 +358,17 @@ user:
       [
       {message}
       ]
+  ping:
+    history10s: "玩家 %s 最近 10s 的 ping ：
 
+    %s"
+    avgmax30s: "最近 30s 的 ping 平均: %s&r, 最大: %s"
+    top:
+      avg: "第 %d/%d 页，玩家平均延迟：%.2f"
+      player: "No.%d：%s毫秒 %s"
+  tps:
+    header: "%ds 内的 TPS 图表"
+    header_verbose: "%ds 内的 TPS 记录"
 manual:
   help:
     description: 显示帮助信息

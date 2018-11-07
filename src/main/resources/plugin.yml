@@ -145,3 +145,18 @@ permissions:
   nu.redstonecontrol.wire:
     description: Cycle through each level of power for redstone wire
     default: op
+  nu.tps:
+    description: Show TPS graph
+    default: true
+  nu.tps.verbose:
+    description: Show TPS statics
+    default: op
+  nu.tps.tick:
+    description: Show tick time record
+    default: op
+  nu.ping:
+    description: Show player's ping
+    default: true
+  nu.ping.top:
+    description: Show players' ping
+    default: true

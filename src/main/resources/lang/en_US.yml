@@ -231,7 +231,7 @@ user:
     error: That home seems to be broken, seek pm for help
     invalid_home: That home is in a removed world
     bed_not_set_yet: You has not set a bed or home
-    unsafe: The teleport destination is unsafe
+    unsafe: The teleportCmdWarpper destination is unsafe
     invalid_name: Invalid home name
     home_limit: You cannot set more than %d homes
     home_limit_one: You can set only one home. Renaming to home
@@ -326,6 +326,19 @@ user:
       [
       {message}
       ]
+  ping:
+    history10s: "Last 10s ping history of %s:
+
+     %s"
+    avgmax30s: "Last 30s ping average: %s&r, max: %s"
+    top:
+      avg: "Page %d/%d, average ping of players: %.2f"
+      player: "No.%d: %sms %s"
+  tps:
+    header: "TPS graph for last %ds"
+    header_verbose: "TPS records for last %ds"
+    header_tick: "Time records for last %d tick"
+    tick_statics: "Avg millis: %.2f, Top millis at %s: %.2f"
 manual:
   help:
     description: Show help message

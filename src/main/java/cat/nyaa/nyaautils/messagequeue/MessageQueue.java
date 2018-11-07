@@ -50,7 +50,7 @@ public class MessageQueue implements IMessageQueue, Listener {
         if (!plugin.cfg.message_queue_enable) return;
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
-        String msg = messages.get(uniqueId);
+        String msg = messages.remove(uniqueId);
         if (msg == null) return;
         Map<Long, List<String>> map =
                 Arrays.stream(msg.split("\n")).map(s -> s.split(":", 2)).collect(Collectors.groupingBy(

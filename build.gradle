@@ -18,7 +18,8 @@ targetCompatibility = 1.8
 
 repositories {
     jcenter()
-
+    mavenLocal()
+    
     maven {
         name 'Spigot'
         url 'https://hub.spigotmc.org/nexus/content/groups/public/'
