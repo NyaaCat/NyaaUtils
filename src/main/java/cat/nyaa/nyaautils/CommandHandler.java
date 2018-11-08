@@ -703,7 +703,11 @@ public class CommandHandler extends CommandReceiver {
         }
         Player p;
         if (sender instanceof Player) {
-            p = ((Player) sender);
+            if (sender.hasPermission("nu.ping.others") && args.top() != null) {
+                p = args.nextPlayer();
+            } else {
+                p = ((Player) sender);
+            }
         } else {
             p = args.nextPlayer();
         }

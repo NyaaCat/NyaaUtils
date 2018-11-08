@@ -159,4 +159,7 @@ permissions:
     default: true
   nu.ping.top:
     description: Show players' ping
-    default: true
+    default: op
+  nu.ping.others:
+    description: Show other player's ping
+    default: op

@@ -30,10 +30,10 @@ public class TpsPingTask extends BukkitRunnable {
     public TpsPingTask(NyaaUtils plugin) {
         this.plugin = plugin;
         Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        Objective pingObj = mainScoreboard.getObjective("ping");
+        Objective pingObj = mainScoreboard.getObjective("nyaautilsping");
         if (plugin.cfg.ping_tab) {
             if (pingObj == null) {
-                pingObj = mainScoreboard.registerNewObjective("ping", "dummy", "Ping");
+                pingObj = mainScoreboard.registerNewObjective("nyaautilsping", "dummy", "Ping");
             }
             pingObj.setDisplaySlot(DisplaySlot.PLAYER_LIST);
         } else if (pingObj != null) {
@@ -93,7 +93,7 @@ public class TpsPingTask extends BukkitRunnable {
             pings.add(playerPing);
             if (plugin.cfg.ping_tab) {
                 Scoreboard scoreboard = player.getScoreboard();
-                Objective playerPingObj = scoreboard.getObjective("ping");
+                Objective playerPingObj = scoreboard.getObjective("nyaautilsping");
                 if (playerPingObj != null) {
                     playerPingObj.getScore(player.getName()).setScore(playerPing);
                 }
