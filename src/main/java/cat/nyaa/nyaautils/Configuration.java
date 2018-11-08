@@ -104,40 +104,40 @@ public class Configuration extends PluginConfigure {
     /* Timer */
     @Serializable
     public int timerCheckInterval = -1;
-    /* TeleportCmdWarpper */
-    @Serializable(name = "teleportCmdWarpper.enable")
+    /* Teleport */
+    @Serializable(name = "teleport.enable")
     public boolean teleportEnable = true;
-    @Serializable(name = "teleportCmdWarpper.home.max")
+    @Serializable(name = "teleport.home.max")
     public int homeMax = 300;
-    @Serializable(name = "teleportCmdWarpper.home.base")
+    @Serializable(name = "teleport.home.base")
     public int homeBase = 10;
-    @Serializable(name = "teleportCmdWarpper.home.world")
+    @Serializable(name = "teleport.home.world")
     public int homeWorld = 20;
-    @Serializable(name = "teleportCmdWarpper.home.distance")
+    @Serializable(name = "teleport.home.distance")
     public int homeDistance = 200;
-    @Serializable(name = "teleportCmdWarpper.home.increment")
+    @Serializable(name = "teleport.home.increment")
     public int homeIncrement = 5;
-    @Serializable(name = "teleportCmdWarpper.sethome.max")
+    @Serializable(name = "teleport.sethome.max")
     public int setHomeMax = 100;
-    @Serializable(name = "teleportCmdWarpper.sethome.min")
+    @Serializable(name = "teleport.sethome.min")
     public int setHomeMin = 10;
-    @Serializable(name = "teleportCmdWarpper.sethome.distance")
+    @Serializable(name = "teleport.sethome.distance")
     public int setHomeDistance = 200;
-    @Serializable(name = "teleportCmdWarpper.sethome.decrement")
+    @Serializable(name = "teleport.sethome.decrement")
     public int setHomeDecrement = 10;
-    @Serializable(name = "teleportCmdWarpper.sethome.world")
+    @Serializable(name = "teleport.sethome.world")
     public int setHomeWorld = 50;
-    @Serializable(name = "teleportCmdWarpper.sethome.default_world")
+    @Serializable(name = "teleport.sethome.default_world")
     public String setHomeDefaultWorld = "world";
-    @Serializable(name = "teleportCmdWarpper.back.max")
+    @Serializable(name = "teleport.back.max")
     public int backMax = 300;
-    @Serializable(name = "teleportCmdWarpper.back.base")
+    @Serializable(name = "teleport.back.base")
     public int backBase = 100;
-    @Serializable(name = "teleportCmdWarpper.back.world")
+    @Serializable(name = "teleport.back.world")
     public int backWorld = 20;
-    @Serializable(name = "teleportCmdWarpper.back.distance")
+    @Serializable(name = "teleport.back.distance")
     public int backDistance = 200;
-    @Serializable(name = "teleportCmdWarpper.back.increment")
+    @Serializable(name = "teleport.back.increment")
     public int backIncrement = 20;
 
     @Serializable(name = "rename.character_limit")
