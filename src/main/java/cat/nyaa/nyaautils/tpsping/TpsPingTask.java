@@ -1,8 +1,8 @@
 package cat.nyaa.nyaautils.tpsping;
 
+import cat.nyaa.nyaacore.Pair;
 import cat.nyaa.nyaacore.utils.PlayerUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
-import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
