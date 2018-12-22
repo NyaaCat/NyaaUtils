@@ -19,7 +19,7 @@ targetCompatibility = 1.8
 repositories {
     jcenter()
     mavenLocal()
-    
+
     maven {
         name 'Spigot'
         url 'https://hub.spigotmc.org/nexus/content/groups/public/'
@@ -52,22 +52,27 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
+    // spigot dependencies
+    compileOnly "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
+
+    // other plugins
     if (gradle.hasProperty("useLocalDependencies") && gradle.useLocalDependencies) {
-        compile project(":NyaaCore")
+        compileOnly project(":NyaaCore")
     } else {
-        compile('cat.nyaa:nyaacore:6.3-SNAPSHOT') {
+        compileOnly('cat.nyaa:nyaacore:6.3-SNAPSHOT') {
             transitive = false
         }
     }
-    compile files('lib/LocketteProAPI.jar')
-    compile files('lib/EssentialsX-2.0.1-468.jar')
-    compile ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
+    compileOnly files('lib/LocketteProAPI.jar')
+    compileOnly files('lib/EssentialsX-2.0.1-468.jar')
+    compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
         exclude group: 'org.bukkit', module: 'bukkit'
     }
-    compile 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
+
+    // annotation processor
+    compileOnly 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
     annotationProcessor 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
     annotationProcessor "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
 }
