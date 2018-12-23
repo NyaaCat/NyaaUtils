@@ -10,10 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -107,9 +104,11 @@ public class SitListener implements Listener {
                 }
             }
             for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.5, 0.7, 0.5)) {
-                if (e instanceof ArmorStand || e instanceof Player) {
-                    player.sendMessage(I18n.format("user.sit.invalid_location"));
-                    return;
+                if (e instanceof LivingEntity) {
+                    if (e.hasMetadata(metadata_key) || (e instanceof Player && e.isInsideVehicle() && e.getVehicle().hasMetadata(metadata_key))) {
+                        player.sendMessage(I18n.format("user.sit.invalid_location"));
+                        return;
+                    }
                 }
             }
             Location safeLoc = player.getLocation().clone();
