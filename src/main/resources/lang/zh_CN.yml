@@ -344,31 +344,40 @@ user:
     not_stackable: 你不能将经验存储在堆叠的物品上
     wrong_nbr: 无效的经验值
   vote:
-    options_header: "=== 投票: %s, 使用 /nu vote [选项ID] 来投票 ==="
-    option: "%d. [%s](%d 票)"
-    options_footer: "=== 剩余 %d 秒 ==="
-    result: "=== %s 的投票结果 ==="
-    need_options: "至少需要两个选项"
-    success: "你成功为 %s 投票"
-    unknown: "未知选项: %s"
-    repeat: "你已经投过票了"
+    options_header: '=== 投票: %s, 使用 /nu vote [选项ID] 来投票 ==='
+    option: '%d. [%s](%d 票)'
+    options_footer: === 剩余 %d 秒 ===
+    result: === %s 的投票结果 ===
+    need_options: 至少需要两个选项
+    success: 你成功为 %s 投票
+    unknown: '未知选项: %s'
+    repeat: 你已经投过票了
   mq:
-    deliver: |-
-      您在 %s 收到一条消息:
-      [
-      {message}
-      ]
-  ping:
-    history10s: "玩家 %s 最近 10s 的 ping ：
+    deliver: '您在 %s 收到一条消息:
 
-    %s"
-    avgmax30s: "最近 30s 的 ping 平均: %s&r, 最大: %s"
+      [
+
+      {message}
+
+      ]'
+  ping:
+    history10s: '玩家 %s 最近 10s 的 ping ：
+
+      %s'
+    avgmax30s: '最近 30s 的 ping 平均: %s&r, 最大: %s'
     top:
-      avg: "第 %d/%d 页，玩家平均延迟：%.2f"
-      player: "No.%d：%s毫秒 %s"
+      avg: 第 %d/%d 页，玩家平均延迟：%.2f
+      player: No.%d：%s毫秒 %s
   tps:
-    header: "%ds 内的 TPS 图表"
-    header_verbose: "%ds 内的 TPS 记录"
+    header: '%ds 内的 TPS 图表'
+    header_verbose: '%ds 内的 TPS 记录'
+    header_tick: 过去 %d 游戏刻的时间记录
+    tick_statics: '平均毫秒: %.2f，最高毫秒位于 %s: %.2f'
+  sit:
+    invalid_location: 你不能坐在这里
+    toggle:
+      enabled: 椅子功能已启用
+      disabled: 椅子功能已关闭
 manual:
   help:
     description: 显示帮助信息
