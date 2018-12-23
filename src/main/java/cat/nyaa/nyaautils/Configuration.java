@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils;
 import cat.nyaa.nyaacore.Message.MessageType;
 import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaacore.configuration.PluginConfigure;
+import cat.nyaa.nyaautils.sit.SitLocation;
 import cat.nyaa.nyaautils.dropprotect.DropProtectMode;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
@@ -244,6 +245,9 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "enhanced_tps.override")
     public boolean tps_override = false;
 
+    public Set<Material> sit_blocks = new HashSet<>();
+    @Serializable(name = "sit.locations")
+    public Map<String, SitLocation> sit_locations = new HashMap<>();
 
     @StandaloneConfig
     public final MailboxLocations mailbox;
@@ -324,6 +328,13 @@ public class Configuration extends PluginConfigure {
             particlesLimits.put(type, new ParticleLimit());
             if (config.isConfigurationSection("particles.limits." + type.name())) {
                 particlesLimits.get(type).deserialize(config.getConfigurationSection("particles.limits." + type.name()));
+            }
+        }
+        for (SitLocation s : sit_locations.values()) {
+            if (s.blocks != null) {
+                for (String name : s.blocks) {
+                    sit_blocks.add(Material.valueOf(name));
+                }
             }
         }
     }

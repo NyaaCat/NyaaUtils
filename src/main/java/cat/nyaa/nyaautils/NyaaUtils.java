@@ -4,6 +4,7 @@ import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
 import cat.nyaa.nyaacore.component.IMessageQueue;
 import cat.nyaa.nyaacore.component.ISystemBalance;
 import cat.nyaa.nyaacore.component.NyaaComponent;
+import cat.nyaa.nyaautils.sit.SitListener;
 import cat.nyaa.nyaautils.commandwarpper.EsschatCmdWarpper;
 import cat.nyaa.nyaautils.commandwarpper.TeleportCmdWarpper;
 import cat.nyaa.nyaautils.commandwarpper.TpsPingCmdWarpper;
@@ -62,6 +63,7 @@ public class NyaaUtils extends JavaPlugin {
     public RedstoneControlListener redstoneControlListener;
     public TpsPingTask tpsPingTask;
     public TpsPingCmdWarpper tpsPingCmdWarpper;
+    public SitListener sitListener;
 
     @Override
     public void onEnable() {
@@ -97,7 +99,7 @@ public class NyaaUtils extends JavaPlugin {
         messageQueueListener = new MessageQueue(this);
         NyaaComponent.register(IMessageQueue.class, messageQueueListener);
         redstoneControlListener = new cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener(this);
-
+        sitListener = new SitListener(this);
         try {
             ISettings settings = ess.getSettings();
             Class<? extends ISettings> essSettingsClass = settings.getClass();

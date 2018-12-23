@@ -339,6 +339,11 @@ user:
     header_verbose: "TPS records for last %ds"
     header_tick: "Time records for last %d tick"
     tick_statics: "Avg millis: %.2f, Top millis at %s: %.2f"
+  sit:
+    invalid_location: "you can't sit here"
+    toggle:
+      enabled: "chairs enabled"
+      disabled: "chairs disabled"
 manual:
   help:
     description: Show help message

@@ -163,3 +163,6 @@ permissions:
   nu.ping.others:
     description: Show other player's ping
     default: op
+  nu.sit:
+    description: allow player sit on blocks
+    default: true
