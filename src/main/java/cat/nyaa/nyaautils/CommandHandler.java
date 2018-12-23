@@ -749,12 +749,12 @@ public class CommandHandler extends CommandReceiver {
     @SubCommand(value = "sit", permission = "nu.sit")
     public void toggleSit(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
-        if (plugin.sitListener.bypassPlayers.contains(p.getUniqueId())) {
-            plugin.sitListener.bypassPlayers.remove(p.getUniqueId());
-            msg(sender, "user.sit.toggle.enabled");
-        } else {
-            plugin.sitListener.bypassPlayers.add(p.getUniqueId());
+        if (plugin.sitListener.enabledPlayers.contains(p.getUniqueId())) {
+            plugin.sitListener.enabledPlayers.remove(p.getUniqueId());
             msg(sender, "user.sit.toggle.disabled");
+        } else {
+            plugin.sitListener.enabledPlayers.add(p.getUniqueId());
+            msg(sender, "user.sit.toggle.enabled");
         }
     }
 

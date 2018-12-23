@@ -34,7 +34,7 @@ public class SitListener implements Listener {
     public static String metadata_key = "nyaautils_chair";
     public final NyaaUtils plugin;
     public HashMap<UUID, Location> safeLocations = new HashMap<>();
-    public Set<UUID> bypassPlayers = new HashSet<>();
+    public Set<UUID> enabledPlayers = new HashSet<>();
     public LoadingCache<UUID, Boolean> messageCooldown = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.SECONDS)
             .build(
@@ -65,7 +65,7 @@ public class SitListener implements Listener {
                 return;
             }
             messageCooldown.put(player.getUniqueId(), true);
-            if (!player.hasPermission("nu.sit") || bypassPlayers.contains(player.getUniqueId()) || player.isInsideVehicle() || !player.getPassengers().isEmpty() || player.getGameMode() == GameMode.SPECTATOR || !player.isOnGround()) {
+            if (!player.hasPermission("nu.sit") || !enabledPlayers.contains(player.getUniqueId()) || player.isInsideVehicle() || !player.getPassengers().isEmpty() || player.getGameMode() == GameMode.SPECTATOR || !player.isOnGround()) {
                 return;
             }
             if (relative.isLiquid() || !(relative.isEmpty() || relative.isPassable())) {
