@@ -6,6 +6,7 @@ import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import net.ess3.api.events.AfkStatusChangeEvent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -49,6 +50,18 @@ public class MessageQueue implements IMessageQueue, Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (!plugin.cfg.message_queue_enable) return;
         Player player = event.getPlayer();
+        sendQueue(player);
+    }
+
+    @EventHandler
+    public void onPlayerAfkBack(AfkStatusChangeEvent event) {
+        if (!plugin.cfg.message_queue_enable) return;
+        if (event.getValue()) return;
+        Player player = event.getAffected().getBase();
+        sendQueue(player);
+    }
+
+    private void sendQueue(Player player) {
         UUID uniqueId = player.getUniqueId();
         String msg = messages.remove(uniqueId);
         if (msg == null) return;
