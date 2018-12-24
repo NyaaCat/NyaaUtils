@@ -1,9 +1,15 @@
 database:
   lpstrategy:
     provider: map
+    # provider: redis
     connection:
       key: java.util.UUID
       value: cat.nyaa.nyaautils.lootprotect.LootProtectListener$VanillaStrategy
+      # redis
+      host: localhost
+      port: 6379
+      database: 1
+      password: password
   lpbypass:
     provider: map
     connection:
@@ -21,6 +27,12 @@ database:
       value: java.util.UUID
   messagequeue:
     provider: map
+    # provider: redis
     connection:
       key: java.util.UUID
-      value: java.util.String
+      value: java.lang.String
+      # redis
+      host: localhost
+      port: 6379
+      database: 0
+      password: password
