@@ -114,15 +114,16 @@ public class SitListener implements Listener {
             Location safeLoc = player.getLocation().clone();
             Entity entity = loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
             if (entity instanceof ArmorStand) {
-                entity.setMetadata(metadata_key, new FixedMetadataValue(plugin, true));
-                entity.setPersistent(false);
-                ((ArmorStand) entity).setCanPickupItems(false);
-                ((ArmorStand) entity).setBasePlate(false);
-                ((ArmorStand) entity).setArms(false);
-                ((ArmorStand) entity).setMarker(true);
-                entity.setInvulnerable(true);
-                ((ArmorStand) entity).setVisible(false);
-                entity.setGravity(false);
+                ArmorStand armorStand = (ArmorStand) entity;
+                armorStand.setVisible(false);
+                armorStand.setMetadata(metadata_key, new FixedMetadataValue(plugin, true));
+                armorStand.setPersistent(false);
+                armorStand.setCanPickupItems(false);
+                armorStand.setBasePlate(false);
+                armorStand.setArms(false);
+                armorStand.setMarker(true);
+                armorStand.setInvulnerable(true);
+                armorStand.setGravity(false);
                 if (entity.addPassenger(player)) {
                     safeLocations.put(player.getUniqueId(), safeLoc);
                 } else {
