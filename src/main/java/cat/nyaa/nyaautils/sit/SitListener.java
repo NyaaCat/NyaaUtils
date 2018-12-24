@@ -169,10 +169,11 @@ public class SitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if (safeLocations.containsKey(player.getUniqueId()) && player.isInsideVehicle() && player.getVehicle() instanceof ArmorStand) {
+        Entity vehicle = player.getVehicle();
+        if (safeLocations.containsKey(player.getUniqueId()) && player.isInsideVehicle() && vehicle instanceof ArmorStand) {
             safeLocations.remove(player.getUniqueId());
             player.leaveVehicle();
-            player.getVehicle().remove();
+            vehicle.remove();
         }
     }
 }
