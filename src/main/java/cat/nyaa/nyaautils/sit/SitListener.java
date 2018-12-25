@@ -10,7 +10,10 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,15 +39,15 @@ public class SitListener implements Listener {
     public HashMap<UUID, Location> safeLocations = new HashMap<>();
     public Set<UUID> enabledPlayers = new HashSet<>();
     public LoadingCache<UUID, Boolean> messageCooldown = CacheBuilder.newBuilder()
-            .expireAfterWrite(2, TimeUnit.SECONDS)
-            .build(
-                    new CacheLoader<UUID, Boolean>() {
-                        @Override
-                        public Boolean load(UUID key) throws Exception {
-                            return true;
-                        }
-                    }
-            );
+                                                                     .expireAfterWrite(2, TimeUnit.SECONDS)
+                                                                     .build(
+                                                                             new CacheLoader<UUID, Boolean>() {
+                                                                                 @Override
+                                                                                 public Boolean load(UUID key) throws Exception {
+                                                                                     return true;
+                                                                                 }
+                                                                             }
+                                                                     );
 
     public SitListener(NyaaUtils plugin) {
         this.plugin = plugin;
@@ -112,22 +115,22 @@ public class SitListener implements Listener {
                 }
             }
             Location safeLoc = player.getLocation().clone();
-            Entity entity = loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
-            if (entity instanceof ArmorStand) {
-                ArmorStand armorStand = (ArmorStand) entity;
-                armorStand.setVisible(false);
+            ArmorStand armorStand = loc.getWorld().spawn(loc, ArmorStand.class, (e) -> {
+                e.setVisible(false);
+                e.setPersistent(false);
+                e.setCanPickupItems(false);
+                e.setBasePlate(false);
+                e.setArms(false);
+                e.setMarker(true);
+                e.setInvulnerable(true);
+                e.setGravity(false);
+            });
+            if (armorStand != null) {
                 armorStand.setMetadata(metadata_key, new FixedMetadataValue(plugin, true));
-                armorStand.setPersistent(false);
-                armorStand.setCanPickupItems(false);
-                armorStand.setBasePlate(false);
-                armorStand.setArms(false);
-                armorStand.setMarker(true);
-                armorStand.setInvulnerable(true);
-                armorStand.setGravity(false);
-                if (entity.addPassenger(player)) {
+                if (armorStand.addPassenger(player)) {
                     safeLocations.put(player.getUniqueId(), safeLoc);
                 } else {
-                    entity.remove();
+                    armorStand.remove();
                 }
             }
         }
