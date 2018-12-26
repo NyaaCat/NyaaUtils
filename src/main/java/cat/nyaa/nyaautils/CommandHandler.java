@@ -801,8 +801,11 @@ public class CommandHandler extends CommandReceiver {
                 if (player.getWorld() == p.getWorld() && player.getLocation().distance(p.getLocation()) + 3 <= r) {
                     continue;
                 }
-                player.teleport(locations.get(success));
-                success++;
+                Location old = player.getLocation().clone();
+                if (player.teleport(locations.get(success))) {
+                    success++;
+                    plugin.ess.getUser(player).setLastLocation(old);
+                }
             }
         }
         msg(sender, "user.tpall.success", success);
