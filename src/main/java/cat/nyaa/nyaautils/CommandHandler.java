@@ -21,7 +21,10 @@ import cat.nyaa.nyaautils.timer.TimerCommands;
 import cat.nyaa.nyaautils.vote.VoteTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -756,6 +759,53 @@ public class CommandHandler extends CommandReceiver {
             plugin.sitListener.enabledPlayers.add(p.getUniqueId());
             msg(sender, "user.sit.toggle.enabled");
         }
+    }
+
+    @SubCommand(value = "tpall", permission = "nu.tpall")
+    public void tpall(CommandSender sender, Arguments args) {
+        Player p = asPlayer(sender);
+        int r = args.nextInt();
+        Block center = p.getLocation().getBlock();
+        int minX = center.getX() - r;
+        int minZ = center.getZ() - r;
+        int maxX = center.getX() + r;
+        int maxZ = center.getZ() + r;
+        int maxY = center.getY() + 1;
+        List<Location> locations = new ArrayList<>();
+        int playerCount = Bukkit.getOnlinePlayers().size() - 1;
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int i = 0; i <= 16; i++) {
+                    Block b = p.getWorld().getBlockAt(x, maxY - i, z);
+                    if (b.getType().isSolid()) {
+                        Block b2 = b.getRelative(BlockFace.UP, 1);
+                        Block b3 = b.getRelative(BlockFace.UP, 2);
+                        if ((b2.isEmpty() || b2.isPassable()) && (b3.isEmpty() || b3.isPassable()) && !b2.isLiquid() && !b3.isLiquid()) {
+                            Location loc = b.getBoundingBox().getCenter().toLocation(b.getWorld());
+                            loc.setY(b.getBoundingBox().getMaxY());
+                            locations.add(loc.clone());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if (locations.size() < playerCount) {
+            msg(sender, "user.tpall.error");
+            return;
+        }
+        Collections.shuffle(locations);
+        int success = 0;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isDead() && player.getUniqueId() != p.getUniqueId()) {
+                if (player.getWorld() == p.getWorld() && player.getLocation().distance(p.getLocation()) + 3 <= r) {
+                    continue;
+                }
+                player.teleport(locations.get(success));
+                success++;
+            }
+        }
+        msg(sender, "user.tpall.success", success);
     }
 
     // TODO:

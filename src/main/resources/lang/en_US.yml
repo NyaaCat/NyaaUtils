@@ -344,6 +344,9 @@ user:
     toggle:
       enabled: "chairs enabled"
       disabled: "chairs disabled"
+  tpall:
+    error: "not enough space"
+    success: "teleported %d players to you"
 manual:
   help:
     description: Show help message
@@ -595,3 +598,9 @@ manual:
     help:
       description: Print help messages
       usage: /nu expcap help
+  sit:
+    description: toggle sit
+    usage: /nu sit
+  tpall:
+    description: teleport all players to you
+    usage: /nu tpall [radius]

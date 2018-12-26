@@ -166,3 +166,6 @@ permissions:
   nu.sit:
     description: allow player sit on blocks
     default: true
+  nu.tpall:
+    description: teleport all players to you
+    default: op
