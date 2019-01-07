@@ -46,8 +46,8 @@ repositories {
     }
 
     maven {
-        name 'ess-repo'
-        url 'http://repo.ess3.net/content/groups/essentials'
+        name 'EssentialsX'
+        url 'https://ci.ender.zone/plugin/repository/everything'
     }
 }
 
@@ -64,7 +64,7 @@ dependencies {
         }
     }
     compileOnly files('lib/LocketteProAPI.jar')
-    compileOnly files('lib/EssentialsX-2.0.1-468.jar')
+    compileOnly 'net.ess3:EssentialsX:2.16.0'
     compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'

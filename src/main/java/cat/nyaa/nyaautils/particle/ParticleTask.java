@@ -8,10 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ParticleTask extends BukkitRunnable {
     public List<UUID> bypassPlayers = new ArrayList<>();
@@ -24,7 +21,7 @@ public class ParticleTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        List<String> vanishedPlayers = plugin.ess.getVanishedPlayers();
+        Collection<String> vanishedPlayers = plugin.ess.getVanishedPlayersNew();
         long time = System.currentTimeMillis() / 50;
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.isValid() && p.getGameMode() != GameMode.SPECTATOR && !vanishedPlayers.contains(p.getName()) &&
