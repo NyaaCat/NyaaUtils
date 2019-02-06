@@ -103,20 +103,7 @@ public class CommandHandler extends CommandReceiver {
             double speed = args.nextDouble();
             int delay = args.nextInt();
             int launchSpeed = args.nextInt();
-            String pName = args.next();
-            if (pName == null) {
-                if (sender instanceof Player) {
-                    pName = sender.getName();
-                } else {
-                    sender.sendMessage(I18n.format("user.launch.missing_name"));
-                    return;
-                }
-            }
-            Player p = Bukkit.getPlayer(pName);
-            if (p == null) {
-                sender.sendMessage(I18n.format("user.launch.player_not_online", pName));
-                return;
-            }
+            Player p = args.nextPlayerOrSender();
 
             ItemStack chestPlate = p.getInventory().getChestplate();
             if (chestPlate == null || chestPlate.getType() != Material.ELYTRA) {
