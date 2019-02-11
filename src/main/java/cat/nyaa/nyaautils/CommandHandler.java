@@ -157,29 +157,7 @@ public class CommandHandler extends CommandReceiver {
         double pitch = args.nextDouble();
         double speed = args.nextDouble();
         int duration = args.nextInt();
-        String pName = args.next();
-        Entity ent;
-        final Entity p;
-        UUID uid;
-        if (pName == null) {
-            if (sender instanceof Player) {
-                pName = ((Player) sender).getUniqueId().toString();
-            } else {
-                sender.sendMessage(I18n.format("user.project.missing_name"));
-                return;
-            }
-        }
-        try {
-            uid = UUID.fromString(pName);
-            ent = Bukkit.getEntity(uid);
-        } catch (Exception e) {
-            ent = Bukkit.getPlayer(pName);
-            if (ent == null) {
-                sender.sendMessage(I18n.format("user.project.player_not_online", pName));
-                return;
-            }
-        }
-        p = ent;
+        final Entity p = args.nextEntityOrSender();
 
         new BukkitRunnable() {
             final int d = duration;
