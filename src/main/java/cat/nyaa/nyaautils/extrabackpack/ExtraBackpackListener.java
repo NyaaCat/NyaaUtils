@@ -12,6 +12,9 @@ public class ExtraBackpackListener implements Listener {
 
     public ExtraBackpackListener(NyaaUtils plugin) {
         this.plugin = plugin;
+        if (!plugin.cfg.bp_enable) {
+            return;
+        }
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 

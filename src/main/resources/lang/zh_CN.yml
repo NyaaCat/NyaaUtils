@@ -386,6 +386,8 @@ user:
     error_saving: 背包保存失败。请联系管理员获取帮助。
     error_state: '%s 的背包第 %d 行保存失败（由 %s 打开）。'
     disabled: 当前背包已被禁用
+    n_lines: '%s 的背包设为 %d 行'
+    no_required_blocks: '%d格范围内没有{block}'
 manual:
   help:
     description: 显示帮助信息

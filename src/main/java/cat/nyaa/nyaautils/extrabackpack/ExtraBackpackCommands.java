@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -41,12 +42,17 @@ public class ExtraBackpackCommands extends CommandReceiver {
 
     @Override
     public void acceptCommand(CommandSender sender, Arguments cmd) {
+        if (!plugin.cfg.bp_enable) {
+            return;
+        }
         String subCommand = cmd.top();
         if (subCommand == null) subCommand = "";
         if (subCommand.length() > 0) {
             super.acceptCommand(sender, cmd);
         } else {
-            open(sender, cmd);
+            if (sender.hasPermission("nu.bp.use")) {
+                open(sender, cmd);
+            }
         }
     }
 
@@ -88,6 +94,9 @@ public class ExtraBackpackCommands extends CommandReceiver {
         asPlayer(sender);
         UUID ownerId = player.getUniqueId();
         int maxLine = args.nextInt();
+        if (maxLine > plugin.cfg.bp_max_lines) {
+            maxLine = plugin.cfg.bp_max_lines;
+        }
         if (ExtraBackpackGUI.isOpened(ownerId)) {
             msg(sender, "user.backpack.already_opened");
             return;
@@ -112,6 +121,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
         if (maxLine < oldMax) {
             deleteLines(asPlayer(sender), ownerId, maxLine, oldMax);
         }
+        msg(sender, "user.backpack.n_lines", player.getName(), maxLine);
     }
 
     private void deleteLines(Player sender, UUID ownerId, int from, int to) {
@@ -142,20 +152,30 @@ public class ExtraBackpackCommands extends CommandReceiver {
             msg(sender, "user.backpack.already_opened");
             return;
         }
+        int maxLine;
         try (Query<ExtraBackpackConfig> query = database.queryTransactional(ExtraBackpackConfig.class).whereEq("player_id", ownerId.toString())) {
             ExtraBackpackConfig cfg = query.selectUniqueForUpdate();
             if (cfg != null) {
-                cfg.setMaxLine(cfg.getMaxLine() + addLine);
+                maxLine = cfg.getMaxLine() + addLine;
+                if (maxLine > plugin.cfg.bp_max_lines) {
+                    maxLine = plugin.cfg.bp_max_lines;
+                }
+                cfg.setMaxLine(maxLine);
                 query.update(cfg);
                 query.commit();
             } else {
                 cfg = new ExtraBackpackConfig();
                 cfg.setPlayerId(ownerId.toString());
-                cfg.setMaxLine(plugin.cfg.bp_default_lines + addLine);
+                maxLine = plugin.cfg.bp_default_lines + addLine;
+                if (maxLine > plugin.cfg.bp_max_lines) {
+                    maxLine = plugin.cfg.bp_max_lines;
+                }
+                cfg.setMaxLine(maxLine);
                 query.insert(cfg);
                 query.commit();
             }
         }
+        msg(sender, "user.backpack.n_lines", maxLine);
     }
 
     @SubCommand(value = "open", permission = "nu.bp.use")
@@ -186,8 +206,8 @@ public class ExtraBackpackCommands extends CommandReceiver {
                                                   ).collect(Collectors.toList());
             boolean match = nearbyBlock.parallelStream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
             if (!match) {
-                new Message(I18n.format("user.backpack.no_required_block"))
-                        .append(LocaleUtils.getNameComponent(new ItemStack(plugin.cfg.bp_require_nearby_block)))
+                new Message("")
+                        .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", LocaleUtils.getNameComponent(new ItemStack(plugin.cfg.bp_require_nearby_block))))
                         .send(sender);
                 return;
             }

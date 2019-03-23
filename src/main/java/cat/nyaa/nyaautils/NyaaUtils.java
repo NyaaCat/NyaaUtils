@@ -101,7 +101,7 @@ public class NyaaUtils extends JavaPlugin {
         mentionListener = new MentionListener(this);
         messageQueueListener = new MessageQueue(this);
         NyaaComponent.register(IMessageQueue.class, messageQueueListener);
-        redstoneControlListener = new cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener(this);
+        redstoneControlListener = new RedstoneControlListener(this);
         sitListener = new SitListener(this);
         extraBackpackListener = new ExtraBackpackListener(this);
         try {
