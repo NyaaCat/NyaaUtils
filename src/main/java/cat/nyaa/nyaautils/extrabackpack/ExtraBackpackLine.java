@@ -22,7 +22,7 @@ public class ExtraBackpackLine {
     public int lineNo;
 
     @Column(name = "items", columnDefinition = "MEDIUMTEXT")
-    public String items;
+    private String items;
 
     @Id
     @Access(AccessType.PROPERTY)
@@ -33,6 +33,10 @@ public class ExtraBackpackLine {
 
     public String getItems() {
         return items;
+    }
+
+    public void setItems(String items) {
+        this.items = items;
     }
 
     public int getLineNo() {
@@ -77,6 +81,6 @@ public class ExtraBackpackLine {
         if (itemStacks.size() != 9) {
             throw new IllegalArgumentException("Invalid line given: " + itemStacks.size() + " items.");
         }
-        items = ItemStackUtils.itemsToBase64(itemStacks);
+        setItems(ItemStackUtils.itemsToBase64(itemStacks));
     }
 }

@@ -6,7 +6,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.server.ServerEvent;
 
 public class ExtraBackpackListener implements Listener {
     private final NyaaUtils plugin;
@@ -27,7 +26,7 @@ public class ExtraBackpackListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getSlot() >= 0 && event.getSlot() == event.getRawSlot() && event.getInventory().getHolder() instanceof ExtraBackpackGUI) {
+        if (event.getInventory().getHolder() instanceof ExtraBackpackGUI) {
             ((ExtraBackpackGUI) event.getInventory().getHolder()).onInventoryClick(event);
         }
     }

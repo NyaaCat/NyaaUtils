@@ -6,17 +6,16 @@ import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.SetMultimap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -25,8 +24,6 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.bukkit.event.inventory.InventoryAction.COLLECT_TO_CURSOR;
 
 public class ExtraBackpackGUI implements InventoryHolder {
 
@@ -98,34 +95,17 @@ public class ExtraBackpackGUI implements InventoryHolder {
             lastState.put(owner, lines.stream().map(ExtraBackpackLine::getItems).collect(Collectors.toList()));
             query.commit();
         }
-        int pageCount = (int) Math.ceil(maxLine / 5.0);
-        List<ExtraBackpackLine> view = lines.stream().skip(page * 5).limit(5).collect(Collectors.toList());
+        int pageCount = (int) Math.ceil(maxLine / 6.0);
+        List<ExtraBackpackLine> view = lines.stream().skip(page * 6).limit(6).collect(Collectors.toList());
         int viewSize = view.size();
         if (viewSize == 0) {
             new Message(I18n.format("user.backpack.invalid_page", page, pageCount)).send(opener);
             return;
         }
         int size = viewSize * 9;
-        if (lines.size() > 5) {
-            size += 9;
-        }
         Inventory inventory = Bukkit.createInventory(this, size, I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount));
         ItemStack[] itemStacks = view.stream().flatMap(l -> l.getItemStacks().stream()).toArray(ItemStack[]::new);
         inventory.setContents(itemStacks);
-        if (page > 0) {
-            ItemStack back = new ItemStack(Material.ARROW);
-            ItemMeta backItemMeta = back.getItemMeta();
-            Objects.requireNonNull(backItemMeta).setDisplayName(I18n.format("user.backpack.back"));
-            back.setItemMeta(backItemMeta);
-            inventory.setItem(viewSize * 9, back);
-        }
-        if (page + 1 < pageCount) {
-            ItemStack nextPage = new ItemStack(Material.ARROW);
-            ItemMeta nextPageMeta = nextPage.getItemMeta();
-            Objects.requireNonNull(nextPageMeta).setDisplayName(I18n.format("user.backpack.next"));
-            nextPage.setItemMeta(nextPageMeta);
-            inventory.setItem(viewSize * 9 + 8, nextPage);
-        }
         opener.openInventory(inventory);
 
         daemonTask = new BukkitRunnable() {
@@ -147,46 +127,41 @@ public class ExtraBackpackGUI implements InventoryHolder {
             event.setCancelled(true);
             return;
         }
-        int slot = event.getRawSlot();
         Inventory inventory = event.getInventory();
-        if (maxLine > 5) {
-            int bottomLine = 5;
-            if (maxLine - 5 * (currentPage + 1) < 0) {
-                bottomLine = maxLine - currentPage * 5;
-            }
-            if (event.getRawSlot() == bottomLine * 9 && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
+        if (event.getAction() == InventoryAction.NOTHING && event.getSlotType() == InventoryType.SlotType.OUTSIDE) {
+            if (event.isLeftClick()) {
+                if (maxLine <= 6) return;
                 event.setCancelled(true);
                 saveAll(inventory);
                 close();
-                this.open(currentPage - 1);
+                this.open(prevPage());
                 return;
-            } else if (event.getRawSlot() == bottomLine * 9 + 8 && event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
+            } else if (event.isRightClick()) {
+                if (maxLine <= 6) return;
                 event.setCancelled(true);
                 saveAll(inventory);
                 close();
-                this.open(currentPage + 1);
-                return;
-            } else if (event.getRawSlot() >= bottomLine * 9) {
-                event.setCancelled(true);
+                this.open(nextPage());
                 return;
             }
         }
+        Bukkit.getScheduler().runTask(plugin, () -> saveAll(inventory));
+    }
 
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (event.getAction() == COLLECT_TO_CURSOR) {
-                saveAll(inventory);
-            } else {
-                int invLineIndex = slot / 9;
-                List<ItemStack> line = Arrays.stream(inventory.getContents()).skip(invLineIndex * 9).limit(9).collect(Collectors.toList());
-                if (line.size() != 9) {
-                    throw new IllegalStateException("Invalid line");
-                }
-                if (!saveLine(invLineIndex, line)) {
-                    close();
-                    new Message(I18n.format("user.backpack.error_saving")).send(opener);
-                }
-            }
-        });
+    private int prevPage() {
+        int prev = currentPage - 1;
+        if (prev < 0) {
+            prev = (int) (Math.ceil(maxLine / 6.0) - 1);
+        }
+        return prev;
+    }
+
+    private int nextPage() {
+        int next = currentPage + 1;
+        if (next >= Math.ceil(maxLine / 6.0)) {
+            next = 0;
+        }
+        return next;
     }
 
     void onInventoryClose(InventoryCloseEvent event) {
@@ -200,22 +175,29 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     private void saveAll(Inventory inventory) {
-        for (int i = 0; i < inventory.getSize() / 9 - (maxLine > 5 ? 1 : 0); ++i) {
+        boolean saved = true;
+        for (int i = 0; i < inventory.getSize() / 9; ++i) {
             List<ItemStack> line = Arrays.stream(inventory.getContents()).skip(i * 9).limit(9).collect(Collectors.toList());
-            saveLine(i, line);
+            saved &= saveLine(i, line);
+        }
+        if (!saved) {
+            close();
+            new Message(I18n.format("user.backpack.error_saving")).send(opener);
         }
     }
 
     private boolean saveLine(int i, List<ItemStack> line) {
         int lineNo = currentPage * 5 + i;
+        String lineLastState = lastState.get(owner).get(lineNo);
+        String desiredState = ItemStackUtils.itemsToBase64(line);
+        if (lineLastState.equals(desiredState)) return true;
         try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", owner.toString()).whereEq("line_no", lineNo)) {
             ExtraBackpackLine backpackLine = query.selectUniqueForUpdate();
-            String lineLastState = lastState.get(owner).get(lineNo);
             String lineCurrentState = backpackLine.getItems();
             if (!lineLastState.equals(lineCurrentState)) {
                 new Message(I18n.format("user.backpack.error_state", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
                 String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
-                String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, ItemStackUtils.itemsToBase64(line));
+                String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
                 Message message = new Message(errLine1 + "\n" + errLine2);
                 Bukkit.getOperators().forEach(op -> message.send(op, true));
                 plugin.getLogger().warning(errLine1);
@@ -223,9 +205,9 @@ public class ExtraBackpackGUI implements InventoryHolder {
                 query.rollback();
                 return false;
             }
-            backpackLine.setItemStacks(line);
+            backpackLine.setItems(desiredState);
             lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
-            plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.items));
+            plugin.getLogger().info(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
             query.update(backpackLine);
             query.commit();
         }
@@ -233,19 +215,6 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     void onInventoryDrag(InventoryDragEvent event) {
-        if (maxLine > 5) {
-            int bottomLine = 5;
-            if (maxLine - 5 * (currentPage + 1) < 0) {
-                bottomLine = maxLine - currentPage * 5;
-            }
-            Set<Integer> bottomSlots = Stream.iterate(bottomLine * 9, i -> i + 1).limit(9).collect(Collectors.toSet());
-            Set<Integer> rawSlots = event.getRawSlots();
-            rawSlots.retainAll(bottomSlots);
-            if (rawSlots.size() != 0) {
-                event.setCancelled(true);
-                return;
-            }
-        }
         Bukkit.getScheduler().runTask(plugin, () -> saveAll(event.getView().getTopInventory()));
     }
 
