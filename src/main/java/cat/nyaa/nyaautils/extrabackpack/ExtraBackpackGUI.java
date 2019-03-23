@@ -6,8 +6,6 @@ import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.SetMultimap;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -47,7 +45,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
     void open(int page) {
         Player currentOpener;
         if ((currentOpener = opened.putIfAbsent(owner, opener)) != null) {
-            if (!currentOpener.equals(opener)) {
+            if (!currentOpener.equals(opener) && opener.getOpenInventory().getTopInventory().getHolder() instanceof ExtraBackpackGUI) {
                 if (opener.hasPermission("nu.bp.admin") && !currentOpener.hasPermission("nu.bp.admin")) {
                     Inventory inventory = currentOpener.getOpenInventory().getTopInventory();
                     if (inventory.getHolder() instanceof ExtraBackpackGUI) {
@@ -77,10 +75,16 @@ public class ExtraBackpackGUI implements InventoryHolder {
                 query.commit();
             }
         }
+        if (maxLine <= 0) {
+            new Message(I18n.format("user.backpack.disabled")).send(opener);
+            opened.remove(owner);
+            return;
+        }
         List<ExtraBackpackLine> lines;
         try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", ownerId)) {
             lines = query.select();
             if (lines.size() > maxLine) {
+                opened.remove(owner);
                 throw new IllegalStateException("Too many lines");
             } else if (lines.size() != maxLine) {
                 for (int cur = lines.size(); cur < maxLine; ++cur) {
@@ -100,10 +104,11 @@ public class ExtraBackpackGUI implements InventoryHolder {
         int viewSize = view.size();
         if (viewSize == 0) {
             new Message(I18n.format("user.backpack.invalid_page", page, pageCount)).send(opener);
+            opened.remove(owner);
             return;
         }
         int size = viewSize * 9;
-        Inventory inventory = Bukkit.createInventory(this, size, I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount));
+        Inventory inventory = Bukkit.createInventory(this, size, I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount - 1));
         ItemStack[] itemStacks = view.stream().flatMap(l -> l.getItemStacks().stream()).toArray(ItemStack[]::new);
         inventory.setContents(itemStacks);
         opener.openInventory(inventory);
@@ -187,7 +192,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     private boolean saveLine(int i, List<ItemStack> line) {
-        int lineNo = currentPage * 5 + i;
+        int lineNo = currentPage * 6 + i;
         String lineLastState = lastState.get(owner).get(lineNo);
         String desiredState = ItemStackUtils.itemsToBase64(line);
         if (lineLastState.equals(desiredState)) return true;
@@ -225,7 +230,13 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     static boolean isOpened(UUID owner) {
-        return opened.containsKey(owner);
+        Player opener = opened.get(owner);
+        if (opener != null && opener.getOpenInventory().getTopInventory().getHolder() instanceof ExtraBackpackGUI) {
+            return true;
+        } else if (opener != null) {
+            opened.remove(owner);
+        }
+        return false;
     }
 
     public static void closeAll() {

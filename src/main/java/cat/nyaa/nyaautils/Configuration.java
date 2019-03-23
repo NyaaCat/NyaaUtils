@@ -249,8 +249,21 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "sit.locations")
     public Map<String, SitLocation> sit_locations = new HashMap<>();
 
-    @Serializable(name = "extrabackpack.default_lines")
-    public int bp_default_lines = 6;
+
+    @Serializable(name = "extra_backpack.enable")
+    public boolean bp_enable = false;
+
+    @Serializable(name = "extra_backpack.start_line")
+    public int bp_default_lines = 0;
+
+    @Serializable(name = "extra_backpack.max_line")
+    public int bp_max_lines = 6;
+
+    @Serializable(name = "extra_backpack.require_nearby_block")
+    public Material bp_require_nearby_block = Material.AIR;
+
+    @Serializable(name = "extra_backpack.require_nearby_distance")
+    public int bp_require_nearby_distance = 5;
 
     @StandaloneConfig
     public final MailboxLocations mailbox;

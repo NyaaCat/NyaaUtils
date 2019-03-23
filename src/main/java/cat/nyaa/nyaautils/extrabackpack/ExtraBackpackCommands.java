@@ -2,19 +2,27 @@ package cat.nyaa.nyaautils.extrabackpack;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.Pair;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.relational.Query;
 import cat.nyaa.nyaacore.database.relational.RelationalDB;
+import cat.nyaa.nyaacore.utils.LocaleUtils;
+import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExtraBackpackCommands extends CommandReceiver {
     private NyaaUtils plugin;
@@ -156,18 +164,47 @@ public class ExtraBackpackCommands extends CommandReceiver {
     }
 
     @DefaultCommand(permission = "nu.bp.use")
-    private void open(CommandSender sender, Arguments args) {
+    private void open(CommandSender commandSender, Arguments args) {
         Player player = args.nextPlayerOrSender();
+        Player sender = asPlayer(commandSender);
+        if (plugin.cfg.bp_require_nearby_block != Material.AIR && !sender.hasPermission("nu.bp.admin")) {
+            Location location = player.getLocation();
+            List<Location> nearbyBlock = IntStream.rangeClosed(-plugin.cfg.bp_require_nearby_distance, plugin.cfg.bp_require_nearby_distance)
+                                                  .parallel()
+                                                  .boxed()
+                                                  .flatMap(x ->
+                                                                   IntStream.rangeClosed(-plugin.cfg.bp_require_nearby_distance, plugin.cfg.bp_require_nearby_distance)
+                                                                            .parallel()
+                                                                            .boxed()
+                                                                            .map(y -> Pair.of(x, y))
+                                                  )
+                                                  .flatMap(p ->
+                                                                   IntStream.rangeClosed(-plugin.cfg.bp_require_nearby_distance, plugin.cfg.bp_require_nearby_distance)
+                                                                            .parallel()
+                                                                            .boxed()
+                                                                            .map(z -> location.clone().add(p.getKey(), p.getValue(), z))
+                                                  ).collect(Collectors.toList());
+            boolean match = nearbyBlock.parallelStream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
+            if (!match) {
+                new Message(I18n.format("user.backpack.no_required_block"))
+                        .append(LocaleUtils.getNameComponent(new ItemStack(plugin.cfg.bp_require_nearby_block)))
+                        .send(sender);
+                return;
+            }
+        }
         int page = 0;
         if (args.top() != null) {
             page = args.nextInt();
         }
+        if (page < 0) {
+            msg(sender, "user.error.bad_int");
+        }
+
         if (!player.equals(sender) && !sender.hasPermission("nu.bp.admin")) {
             msg(sender, "user.error.no_required_permission", "nu.bp.admin");
             return;
         }
-        ExtraBackpackGUI extraBackpackGUI = new ExtraBackpackGUI(plugin, database, player.getUniqueId(), asPlayer(sender));
+        ExtraBackpackGUI extraBackpackGUI = new ExtraBackpackGUI(plugin, database, player.getUniqueId(), sender);
         extraBackpackGUI.open(page);
     }
-
 }

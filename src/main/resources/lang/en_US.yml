@@ -352,10 +352,9 @@ user:
     force_opened: Your backpack is being opened by admin
     invalid_page: 'Invalid page %d. Expected: [0, %d)'
     title: 'Backpack of %s. Page %d/%d'
-    next: Next
-    back: Back
     error_saving: Error saving backpack. Please concat operators for help.
     error_state: 'Backpack of %s line %d failed to save when opened by %s'
+    disabled: Current backpack is disabled
 manual:
   help:
     description: Show help message
