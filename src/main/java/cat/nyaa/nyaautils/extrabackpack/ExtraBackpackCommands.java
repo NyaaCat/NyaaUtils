@@ -175,7 +175,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
                 query.commit();
             }
         }
-        msg(sender, "user.backpack.n_lines", maxLine);
+        msg(sender, "user.backpack.n_lines", player.getName(), maxLine);
     }
 
     @SubCommand(value = "open", permission = "nu.bp.use")
