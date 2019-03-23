@@ -212,7 +212,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
             }
             backpackLine.setItems(desiredState);
             lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
-            plugin.getLogger().info(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
+            plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
             query.update(backpackLine);
             query.commit();
         }
