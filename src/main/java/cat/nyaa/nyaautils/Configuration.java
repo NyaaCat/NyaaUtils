@@ -249,6 +249,9 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "sit.locations")
     public Map<String, SitLocation> sit_locations = new HashMap<>();
 
+    @Serializable(name = "extrabackpack.default_lines")
+    public int bp_default_lines = 6;
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig

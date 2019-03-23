@@ -11,6 +11,7 @@ import cat.nyaa.nyaautils.elytra.ElytraCommands;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.expcapsule.ExpCapsuleCommands;
+import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackCommands;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxCommands;
 import cat.nyaa.nyaautils.particle.ParticleCommands;
@@ -63,6 +64,8 @@ public class CommandHandler extends CommandReceiver {
     public SignEditCommands signEditCommands;
     @SubCommand("expcap")
     public ExpCapsuleCommands expCapsuleCommands;
+    @SubCommand("bp")
+    public ExtraBackpackCommands extraBackpackCommands;
 
     private NyaaUtils plugin;
     private boolean suppressNextCompleteMessage = false;

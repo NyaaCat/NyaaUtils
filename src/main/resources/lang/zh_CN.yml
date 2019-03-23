@@ -378,6 +378,15 @@ user:
     toggle:
       enabled: 椅子功能已启用
       disabled: 椅子功能已关闭
+  backpack:
+    already_opened: 这个背包已经被打开了
+    force_opened: 您的背包被管理员打开了
+    invalid_page: '无效的页码 %d。有效页码：[0, %d)'
+    title: '%s 的背包 第 %d/%d 页'
+    next: 下一页
+    back: 上一页
+    error_saving: 背包保存失败。请联系管理员获取帮助。
+    error_state: '%s 的背包第 %d 行保存失败（由 %s 打开）。'
 manual:
   help:
     description: 显示帮助信息

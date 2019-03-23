@@ -70,6 +70,7 @@ dependencies {
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
         exclude group: 'org.bukkit', module: 'bukkit'
     }
+    compileOnly 'javax.persistence:javax.persistence-api:2.2'
 
     // annotation processor
     compileOnly 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'

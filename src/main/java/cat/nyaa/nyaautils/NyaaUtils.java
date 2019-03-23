@@ -4,6 +4,8 @@ import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
 import cat.nyaa.nyaacore.component.IMessageQueue;
 import cat.nyaa.nyaacore.component.ISystemBalance;
 import cat.nyaa.nyaacore.component.NyaaComponent;
+import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackGUI;
+import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackListener;
 import cat.nyaa.nyaautils.sit.SitListener;
 import cat.nyaa.nyaautils.commandwarpper.EsschatCmdWarpper;
 import cat.nyaa.nyaautils.commandwarpper.TeleportCmdWarpper;
@@ -64,6 +66,7 @@ public class NyaaUtils extends JavaPlugin {
     public TpsPingTask tpsPingTask;
     public TpsPingCmdWarpper tpsPingCmdWarpper;
     public SitListener sitListener;
+    public ExtraBackpackListener extraBackpackListener;
 
     @Override
     public void onEnable() {
@@ -100,6 +103,7 @@ public class NyaaUtils extends JavaPlugin {
         NyaaComponent.register(IMessageQueue.class, messageQueueListener);
         redstoneControlListener = new cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener(this);
         sitListener = new SitListener(this);
+        extraBackpackListener = new ExtraBackpackListener(this);
         try {
             ISettings settings = ess.getSettings();
             Class<? extends ISettings> essSettingsClass = settings.getClass();
@@ -124,6 +128,7 @@ public class NyaaUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        ExtraBackpackGUI.closeAll();
         getServer().getScheduler().cancelTasks(this);
         getCommand("nyaautils").setExecutor(null);
         getCommand("nyaautils").setTabCompleter(null);

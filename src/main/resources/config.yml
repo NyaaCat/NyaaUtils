@@ -36,3 +36,9 @@ database:
       port: 6379
       database: 0
       password: password
+  extrabackpack:
+    provider: sqlite
+    connection:
+      autoscan: true
+      package: cat.nyaa.nyaautils.extrabackpack
+      file: Backpack.db
