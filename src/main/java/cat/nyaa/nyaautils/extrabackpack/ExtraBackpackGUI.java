@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils.extrabackpack;
 
 import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.Pair;
 import cat.nyaa.nyaacore.database.relational.Query;
 import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
@@ -20,6 +21,9 @@ import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,6 +38,9 @@ public class ExtraBackpackGUI implements InventoryHolder {
     private int currentPage = 0;
     private int maxLine = 0;
     private BukkitTask daemonTask = null;
+    // 1: scheduled. 0: done. -1: supressed.
+    private final AtomicInteger saveScheduled = new AtomicInteger(0);
+    private final AtomicBoolean tainted = new AtomicBoolean(false);
 
     ExtraBackpackGUI(NyaaUtils plugin, RelationalDB database, UUID owner, Player opener) {
         this.plugin = plugin;
@@ -43,6 +50,10 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     void open(int page) {
+        if (tainted.get()) {
+            close();
+            throw new IllegalStateException();
+        }
         Player currentOpener;
         if ((currentOpener = opened.putIfAbsent(owner, opener)) != null) {
             if (!currentOpener.equals(opener) && opener.getOpenInventory().getTopInventory().getHolder() instanceof ExtraBackpackGUI) {
@@ -111,18 +122,23 @@ public class ExtraBackpackGUI implements InventoryHolder {
         Inventory inventory = Bukkit.createInventory(this, size, I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount - 1));
         ItemStack[] itemStacks = view.stream().flatMap(l -> l.getItemStacks().stream()).toArray(ItemStack[]::new);
         inventory.setContents(itemStacks);
+        saveScheduled.set(-1);
         opener.openInventory(inventory);
-
-        daemonTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!opener.isOnline() || opener.getOpenInventory().getTopInventory().getHolder() != ExtraBackpackGUI.this) {
-                    saveAll(inventory);
-                    close();
-                    this.cancel();
+        saveScheduled.set(0);
+        if (daemonTask == null) {
+            daemonTask = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!opener.isOnline() || opener.getOpenInventory().getTopInventory().getHolder() != ExtraBackpackGUI.this) {
+                        this.cancel();
+                        new IllegalAccessException().printStackTrace();
+                        saveScheduled.set(1);
+                        saveAll(inventory);
+                        close();
+                    }
                 }
-            }
-        }.runTaskTimer(plugin, 0, 0);
+            }.runTaskTimer(plugin, 0, 0);
+        }
     }
 
     void onInventoryClick(InventoryClickEvent event) {
@@ -137,20 +153,20 @@ public class ExtraBackpackGUI implements InventoryHolder {
             if (event.isLeftClick()) {
                 if (maxLine <= 6) return;
                 event.setCancelled(true);
+                saveScheduled.set(1);
                 saveAll(inventory);
-                close();
-                this.open(prevPage());
+                Bukkit.getScheduler().runTask(plugin, () -> this.open(prevPage()));
                 return;
             } else if (event.isRightClick()) {
                 if (maxLine <= 6) return;
                 event.setCancelled(true);
+                saveScheduled.set(1);
                 saveAll(inventory);
-                close();
-                this.open(nextPage());
+                Bukkit.getScheduler().runTask(plugin, () -> this.open(nextPage()));
                 return;
             }
         }
-        Bukkit.getScheduler().runTask(plugin, () -> saveAll(inventory));
+        scheduleSaveAll(inventory);
     }
 
     private int prevPage() {
@@ -170,63 +186,115 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     void onInventoryClose(InventoryCloseEvent event) {
-        daemonTask.cancel();
-        if (opened.containsKey(owner)) {
+        if (opened.containsKey(owner) && saveScheduled.compareAndSet(0, 1)) {
+            daemonTask.cancel();
             Inventory inventory = event.getInventory();
             saveAll(inventory);
+            opened.remove(owner);
+            lastState.remove(owner);
         }
-        opened.remove(owner);
-        lastState.remove(owner);
     }
 
     private void saveAll(Inventory inventory) {
-        boolean saved = true;
-        for (int i = 0; i < inventory.getSize() / 9; ++i) {
-            List<ItemStack> line = Arrays.stream(inventory.getContents()).skip(i * 9).limit(9).collect(Collectors.toList());
-            saved &= saveLine(i, line);
+        if (saveScheduled.getAndSet(0) != 1) {
+            return;
         }
-        if (!saved) {
-            close();
-            new Message(I18n.format("user.backpack.error_saving")).send(opener);
+        if (inventory.getHolder() != this) {
+            throw new IllegalArgumentException();
+        }
+        boolean saved = true;
+        Map<Integer, Throwable> exceptions = new HashMap<>();
+        synchronized (this) {
+            for (int i = 0; i < inventory.getSize() / 9; ++i) {
+                List<ItemStack> line = Arrays.stream(inventory.getContents()).skip(i * 9).limit(9).collect(Collectors.toList());
+                Pair<Boolean, Throwable> currentResult = saveLine(i, line);
+                saved &= currentResult.getKey();
+                if (currentResult.getValue() != null) {
+                    exceptions.put(i, currentResult.getValue());
+                }
+            }
+            if (!saved) {
+                close();
+                new Message(I18n.format("user.backpack.error_saving")).send(opener);
+                for (Map.Entry<Integer, Throwable> entry : exceptions.entrySet()) {
+                    plugin.getLogger().log(Level.SEVERE, "Failed to save backpack of " + owner.toString() + " line " + entry.getKey(), entry.getValue());
+                }
+            } else {
+                tainted.set(false);
+            }
         }
     }
 
-    private boolean saveLine(int i, List<ItemStack> line) {
-        int lineNo = currentPage * 6 + i;
-        String lineLastState = lastState.get(owner).get(lineNo);
+    private Pair<Boolean, Throwable> saveLine(int i, List<ItemStack> line) {
         String desiredState = ItemStackUtils.itemsToBase64(line);
-        if (lineLastState.equals(desiredState)) return true;
-        try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", owner.toString()).whereEq("line_no", lineNo)) {
-            ExtraBackpackLine backpackLine = query.selectUniqueForUpdate();
-            String lineCurrentState = backpackLine.getItems();
-            if (!lineLastState.equals(lineCurrentState)) {
-                new Message(I18n.format("user.backpack.error_state", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
-                String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
-                String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
-                Message message = new Message(errLine1 + "\n" + errLine2);
-                Bukkit.getOperators().forEach(op -> message.send(op, true));
-                plugin.getLogger().warning(errLine1);
-                plugin.getLogger().warning(errLine2);
-                query.rollback();
-                return false;
+        int lineNo = currentPage * 6 + i;
+        try {
+            if (!lastState.containsKey(owner) || !opened.containsKey(owner)) {
+                if (tainted.get()) {
+                    String tainted = String.format("Tainted backpack of %s closed before saving when backpack opened by %s! Unsaved: %s", owner.toString(), opener.getUniqueId().toString(), desiredState);
+                    Message message = new Message(tainted);
+                    Bukkit.getOperators().forEach(op -> message.send(op, true));
+                    plugin.getLogger().severe(tainted);
+                    new RuntimeException().printStackTrace();
+                } else {
+                    plugin.getLogger().warning(String.format("Trying to save a untainted closed backpack of %s opened by %s! Current: %s", owner.toString(), opener.getUniqueId().toString(), desiredState));
+                    new RuntimeException().printStackTrace();
+                }
+                return Pair.of(false, null);
             }
-            backpackLine.setItems(desiredState);
-            lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
-            plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
-            query.update(backpackLine);
-            query.commit();
+            String lineLastState = lastState.get(owner).get(lineNo);
+            if (lineLastState.equals(desiredState)) return Pair.of(true, null);
+            try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", owner.toString()).whereEq("line_no", lineNo)) {
+                ExtraBackpackLine backpackLine = query.selectUniqueForUpdate();
+                String lineCurrentState = backpackLine.getItems();
+                if (!lineLastState.equals(lineCurrentState)) {
+                    new Message(I18n.format("user.backpack.error_state", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
+                    String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
+                    String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
+                    Message message = new Message(errLine1 + "\n" + errLine2);
+                    Bukkit.getOperators().forEach(op -> message.send(op, true));
+                    plugin.getLogger().warning(errLine1);
+                    plugin.getLogger().warning(errLine2);
+                    query.rollback();
+                    return Pair.of(false, null);
+                }
+                backpackLine.setItems(desiredState);
+                lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
+                plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
+                query.update(backpackLine);
+                query.commit();
+            }
+            return Pair.of(true, null);
+        } catch (Throwable throwable) {
+            new Message(I18n.format("user.backpack.unexpected_error", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
+            String errLine1 = String.format("%s's line %d errored saving when backpack opened by %s! ", owner.toString(), lineNo, opener.getUniqueId().toString());
+            String errLine2 = String.format("Unsaved %s, error: %s", desiredState, throwable.getLocalizedMessage());
+            Message message = new Message(errLine1 + "\n" + errLine2);
+            Bukkit.getOperators().forEach(op -> message.send(op, true));
+            plugin.getLogger().warning(errLine1);
+            plugin.getLogger().warning(errLine2);
+            return Pair.of(false, throwable);
         }
-        return true;
     }
 
     void onInventoryDrag(InventoryDragEvent event) {
-        Bukkit.getScheduler().runTask(plugin, () -> saveAll(event.getView().getTopInventory()));
+        Inventory inventory = event.getInventory();
+        scheduleSaveAll(inventory);
+    }
+
+    private void scheduleSaveAll(Inventory inventory) {
+        saveScheduled.set(1);
+        Bukkit.getScheduler().runTask(plugin, () -> saveAll(inventory));
     }
 
     private void close() {
         opened.remove(owner);
         lastState.remove(owner);
         opener.closeInventory();
+    }
+
+    void taint() {
+        tainted.set(true);
     }
 
     static boolean isOpened(UUID owner) {

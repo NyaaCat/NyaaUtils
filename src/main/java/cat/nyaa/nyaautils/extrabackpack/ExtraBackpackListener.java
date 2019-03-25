@@ -18,18 +18,18 @@ public class ExtraBackpackListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
         if (event.getInventory().getHolder() instanceof ExtraBackpackGUI) {
+            ((ExtraBackpackGUI) event.getInventory().getHolder()).taint();
             ((ExtraBackpackGUI) event.getInventory().getHolder()).onInventoryDrag(event);
         }
     }
 
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getHolder() instanceof ExtraBackpackGUI) {
+            ((ExtraBackpackGUI) event.getInventory().getHolder()).taint();
             ((ExtraBackpackGUI) event.getInventory().getHolder()).onInventoryClick(event);
         }
     }
