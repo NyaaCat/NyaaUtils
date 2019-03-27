@@ -146,6 +146,14 @@ public class ExtraBackpackGUI implements InventoryHolder {
         if (!player.equals(opener)) {
             player.closeInventory();
             event.setCancelled(true);
+            tainted.set(false);
+            return;
+        }
+        if (!player.equals(opened.get(owner))){
+            player.closeInventory();
+            event.setCancelled(true);
+            tainted.set(false);
+            new Message(I18n.format("user.backpack.error_closed")).send(player);
             return;
         }
         Inventory inventory = event.getInventory();

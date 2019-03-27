@@ -357,6 +357,7 @@ user:
     disabled: Current backpack is disabled
     n_lines: 'Backpack of %s set to %d lines'
     no_required_blocks: 'There are no {block} in %d blocks'
+    error_closed: 'Your backpack is already closed!'
 manual:
   help:
     description: Show help message

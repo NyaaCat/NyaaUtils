@@ -388,6 +388,7 @@ user:
     disabled: 当前背包已被禁用
     n_lines: '%s 的背包设为 %d 行'
     no_required_blocks: '%d格范围内没有{block}'
+    error_closed: '你已经关上了背包！'
 manual:
   help:
     description: 显示帮助信息
