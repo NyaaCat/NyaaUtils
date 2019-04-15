@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils.lootprotect;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.NyaaUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -140,6 +142,8 @@ public class LootProtectListener implements Listener {
         }
 
         if (amount > 0) p.giveExp(amount);
+        PlayerExpChangeEvent event = new PlayerExpChangeEvent(p, amount);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     private static int compareByDamagePercentage(ItemStack a, ItemStack b) {

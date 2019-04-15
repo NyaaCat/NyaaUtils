@@ -33,6 +33,7 @@ permissions:
     description: Add item as enchantment source
     default: op
   nu.launch:
+
     description: Launch player into sky
     default: op
   nu.lootprotect:
