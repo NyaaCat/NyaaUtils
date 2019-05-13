@@ -2,7 +2,9 @@ package cat.nyaa.nyaautils.expcapsule;
 
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.ILocalizer;
+import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaautils.Configuration;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
@@ -16,10 +18,12 @@ import java.util.List;
 
 public class ExpCapsuleCommands extends CommandReceiver {
     private final NyaaUtils plugin;
+    private final Configuration cfg;
 
     public ExpCapsuleCommands(NyaaUtils plugin, ILocalizer i18n) {
         super(plugin, i18n);
         this.plugin = plugin;
+        cfg = plugin.cfg;
     }
 
     @Override
@@ -52,11 +56,25 @@ public class ExpCapsuleCommands extends CommandReceiver {
             throw new BadCommandException("user.expcap.not_stackable");
         }
 
-        Integer storedExp = getStoredExp(item);
-        if (storedExp == null) storedExp = 0;
-        storedExp += amount;
-        setStoredExp(item, storedExp);
-        ExperienceUtils.subtractExpPoints(p, amount);
+        Integer storedExpInt = getStoredExp(item);
+        if (storedExpInt == null) storedExpInt = 0;
+        long storedExp = Integer.toUnsignedLong(storedExpInt);
+        int maxExp = cfg.expcap_max_stored_exp;
+        if (storedExp > maxExp) {
+            new Message(I18n.format("user.expcap.bottle_full", maxExp))
+                    .send(p);
+        } else {
+            storedExp += amount;
+            if (storedExp > maxExp){
+                new Message(I18n.format("user.expcap.bottle_full"))
+                    .send(p);
+                amount = Math.toIntExact(amount - (storedExp - maxExp));
+                storedExp = (long) maxExp;
+                new Message(I18n.format("user.expcap.stored_exp",amount));
+            }
+            setStoredExp(item, (int) storedExp);
+            ExperienceUtils.subtractExpPoints(p, amount);
+        }
     }
 
     @SubCommand(value = "restore", permission = "nu.expcap.restore")
@@ -92,6 +110,7 @@ public class ExpCapsuleCommands extends CommandReceiver {
     }
 
     public static final String EXP_CAPSULE_MAGIC = ChatColor.translateAlternateColorCodes('&', "&e&c&a&r");
+
     public static Integer getStoredExp(ItemStack item) {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) return null;
         ItemMeta meta = item.getItemMeta();
@@ -121,7 +140,7 @@ public class ExpCapsuleCommands extends CommandReceiver {
             newLore.add(str);
         }
         if (exp > 0) {
-            newLore.add(0,I18n.format("user.expcap.contain_exp") + EXP_CAPSULE_MAGIC + Integer.toString(exp));
+            newLore.add(0, I18n.format("user.expcap.contain_exp") + EXP_CAPSULE_MAGIC + Integer.toString(exp));
         }
         meta.setLore(newLore);
         item.setItemMeta(meta);

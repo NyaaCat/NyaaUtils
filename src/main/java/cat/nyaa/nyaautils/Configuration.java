@@ -209,6 +209,21 @@ public class Configuration extends PluginConfigure {
     @Serializable
     public Material expCapsuleType = Material.EXPERIENCE_BOTTLE;
 
+    @Serializable(name = "expcap.thrown_orb.maxAmount")
+    public int expcap_max_orb_amount = 30;
+
+    @Serializable(name = "expcap.thrown_orb.minAmount")
+    public int expcap_min_orb_amount = 30;
+
+    @Serializable(name = "expcap.thrown_orb.ticksBetweenSpawn")
+    public int expcap_orb_ticksBetweenSpawn = 1;
+
+    @Serializable(name = "expcap.max_stored_exp")
+    public int expcap_max_stored_exp = Integer.MAX_VALUE;
+
+    @Serializable(name = "expcap.thrown_orb.enabled")
+    public boolean expcap_thron_enabled = true;
+
     @Serializable(name = "vote.enable")
     public boolean vote_enable = true;
     @Serializable(name = "vote.timeout")

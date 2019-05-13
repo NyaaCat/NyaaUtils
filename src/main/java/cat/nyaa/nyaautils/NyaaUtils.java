@@ -4,6 +4,7 @@ import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
 import cat.nyaa.nyaacore.component.IMessageQueue;
 import cat.nyaa.nyaacore.component.ISystemBalance;
 import cat.nyaa.nyaacore.component.NyaaComponent;
+import cat.nyaa.nyaautils.expcapsule.ExpCapListener;
 import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackGUI;
 import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackListener;
 import cat.nyaa.nyaautils.sit.SitListener;
@@ -46,6 +47,7 @@ public class NyaaUtils extends JavaPlugin {
     public DropProtectListener dpListener;
     public DamageStatListener dsListener;
     public ExhibitionListener exhibitionListener;
+    public ExpCapListener expCapListener;
     public MailboxListener mailboxListener;
     public ElytraEnhanceListener elytraEnhanceListener;
     public TeleportCmdWarpper teleportCmdWarpper;
@@ -83,6 +85,7 @@ public class NyaaUtils extends JavaPlugin {
         elytraEnhanceListener = new ElytraEnhanceListener(this);
         teleportCmdWarpper = new TeleportCmdWarpper(this);
         exhibitionListener = new ExhibitionListener(this);
+        expCapListener = new ExpCapListener(this);
         mailboxListener = new MailboxListener(this);
         fuelManager = new FuelManager(this);
         timerManager = new TimerManager(this);
