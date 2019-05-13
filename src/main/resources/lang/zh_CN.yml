@@ -343,6 +343,8 @@ user:
     contain_exp: '存储经验值: '
     not_stackable: 你不能将经验存储在堆叠的物品上
     wrong_nbr: 无效的经验值
+    bottle_full: '经验已存满'
+    stored_exp: '存入了 %d 经验, 共计 %d'
   vote:
     options_header: '=== 投票: %s, 使用 /nu vote [选项ID] 来投票 ==='
     option: '%d. [%s](%d 票)'

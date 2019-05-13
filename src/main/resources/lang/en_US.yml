@@ -311,6 +311,8 @@ user:
     contain_exp: 'Stored Exp: '
     not_stackable: You cannot operate on stacked capsules
     wrong_nbr: Invalid exp amount
+    bottle_full: 'bottle full'
+    stored_exp: 'stored %d exp(s), %d total.'
   vote:
     options_header: "=== Vote: %s, use /nu vote [option id] to vote ==="
     option: "%d. [%s](%d votes)"

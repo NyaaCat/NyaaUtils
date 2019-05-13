@@ -70,8 +70,9 @@ public class ExpCapsuleCommands extends CommandReceiver {
                     .send(p);
                 amount = Math.toIntExact(amount - (storedExp - maxExp));
                 storedExp = (long) maxExp;
-                new Message(I18n.format("user.expcap.stored_exp",amount));
             }
+            new Message(I18n.format("user.expcap.stored_exp",amount, storedExp))
+                    .send(p);
             setStoredExp(item, (int) storedExp);
             ExperienceUtils.subtractExpPoints(p, amount);
         }
