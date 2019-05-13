@@ -213,7 +213,7 @@ public class Configuration extends PluginConfigure {
     public int expcap_max_orb_amount = 30;
 
     @Serializable(name = "expcap.thrown_orb.minAmount")
-    public int expcap_min_orb_amount = 30;
+    public int expcap_min_orb_amount = 1;
 
     @Serializable(name = "expcap.thrown_orb.ticksBetweenSpawn")
     public int expcap_orb_ticksBetweenSpawn = 1;
