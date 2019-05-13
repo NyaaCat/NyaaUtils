@@ -13,9 +13,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class SignEditListener implements Listener {
     private final NyaaUtils plugin;
@@ -26,12 +24,17 @@ public class SignEditListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    public static boolean isSign(Material m) {
+        return m.name().endsWith("_SIGN"); // FIXME: looks suspicious
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlock();
         ItemStack item = event.getItemInHand();
-        if (block != null && item != null && item.getType().equals(Material.SIGN) &&
-                (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN))) {
+        if (block != null && item != null &&
+                isSign(item.getType()) &&
+                isSign(block.getType())) {
             Player player = event.getPlayer();
             if ((player.isOp() && player.getGameMode().equals(GameMode.CREATIVE)) ||
                     !item.hasItemMeta() || !(item.getItemMeta() instanceof BlockStateMeta) ||

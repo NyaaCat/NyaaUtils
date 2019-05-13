@@ -1,7 +1,7 @@
 name: NyaaUtils
 main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
-version: 5.0-dev
+version: ${version}
 depend: [WorldEdit,Essentials,NyaaCore,LangUtils]
 softdepend: [LockettePro,HamsterEcoHelper]
 authors: [RecursiveG,Cylin,Librazy]

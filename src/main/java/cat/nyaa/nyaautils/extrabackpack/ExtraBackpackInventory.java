@@ -26,7 +26,8 @@ public class ExtraBackpackInventory {
         clone.owner = owner;
         boolean empty = inventories.isEmpty();
         for (Inventory inventory : inventories) {
-            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), inventory.getTitle());
+            // FIXME: Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), inventory.getTitle());
+            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), "TITLE MISSING");
             inventory1.setContents(inventory.getContents());
             clone.inventories.add(inventory1);
         }

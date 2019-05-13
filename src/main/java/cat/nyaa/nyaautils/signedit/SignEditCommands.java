@@ -68,7 +68,7 @@ public class SignEditCommands extends CommandReceiver {
     public void commandSign(CommandSender sender, Arguments args) {
         Player player = asPlayer(sender);
         ItemStack item = getItemInHand(sender).clone();
-        if (item.getType() != Material.SIGN) {
+        if (!SignEditListener.isSign(item.getType())) {
             msg(sender, "user.signedit.need_sign");
             return;
         }
