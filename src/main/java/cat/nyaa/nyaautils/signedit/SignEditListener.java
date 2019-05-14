@@ -3,6 +3,7 @@ package cat.nyaa.nyaautils.signedit;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ public class SignEditListener implements Listener {
     }
 
     public static boolean isSign(Material m) {
-        return m.name().endsWith("_SIGN"); // FIXME: looks suspicious
+        return Tag.SIGNS.isTagged(m);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
