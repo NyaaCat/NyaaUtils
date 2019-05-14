@@ -49,7 +49,9 @@ dependencies {
     }
 
     // Other plugins
-    compileOnly 'net.ess3:EssentialsX:2.16.0'
+    compileOnly ('net.ess3:EssentialsX:2.16.0'){
+        exclude group: 'org.bukkit', module: 'bukkit'
+    }
     compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
