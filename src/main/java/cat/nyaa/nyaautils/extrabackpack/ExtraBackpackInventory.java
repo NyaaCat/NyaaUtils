@@ -13,10 +13,12 @@ public class ExtraBackpackInventory {
     List<Inventory> inventories;
     OfflinePlayer owner;
     InventoryHolder holder;
+    ExtraBackpackGUI gui;
 
     ExtraBackpackInventory(InventoryHolder holder) {
         inventories = new LinkedList<>();
         this.holder = holder;
+        this.gui = gui;
     }
 
     @Override
@@ -25,9 +27,11 @@ public class ExtraBackpackInventory {
         clone.size = size;
         clone.owner = owner;
         boolean empty = inventories.isEmpty();
-        for (Inventory inventory : inventories) {
+        for (int i = 0; i < inventories.size(); i++) {
+            Inventory inventory = inventories.get(i);
             // FIXME: Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), inventory.getTitle());
-            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), "TITLE MISSING");
+            String title = holder instanceof ExtraBackpackGUI ? ((ExtraBackpackGUI) holder).getInventoryTitle(i):"";
+            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), title);
             inventory1.setContents(inventory.getContents());
             clone.inventories.add(inventory1);
         }

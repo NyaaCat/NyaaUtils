@@ -210,7 +210,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
         inv.size = lines.size();
         for (int page = 0; page < pageCount; page++) {
             long size = lines.stream().skip(page * 6).limit(6).count();
-            String title = I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount - 1);
+            String title = getInventoryTitle(page);
             Inventory inventory = Bukkit.createInventory(this, (int) size * 9, title);
             List<ExtraBackpackLine> view = lines.stream().skip(page * 6).limit(6).collect(Collectors.toList());
             ItemStack[] itemStacks = view.stream().flatMap(l -> l.getItemStacks().stream()).toArray(ItemStack[]::new);
@@ -218,6 +218,11 @@ public class ExtraBackpackGUI implements InventoryHolder {
             inv.inventories.add(page, inventory);
         }
         return inv;
+    }
+
+    String getInventoryTitle(int index){
+        int pageCount = (int) Math.ceil(maxLine / 6.0);
+        return I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), index, pageCount - 1);
     }
 
     private ExtraBackpackConfig queryConfig(String ownerId) {
