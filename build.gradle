@@ -5,7 +5,7 @@ plugins {
 
 ext.majorVersion = 6
 ext.minorVersion = 4
-ext.minecraftVersion = "1.14.1"
+ext.minecraftVersion = "1.14.3"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -49,13 +49,12 @@ dependencies {
     }
 
     // Other plugins
-    compileOnly ('net.ess3:EssentialsX:2.16.0'){
-        exclude group: 'org.bukkit', module: 'bukkit'
-    }
+    compileOnly('net.ess3:EssentialsX:2.16.0') { transitive = false }
     compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
         exclude group: 'org.bukkit', module: 'bukkit'
+        exclude group: 'com.destroystokyo.paper', module: 'paper-api'
     }
 
     // annotation processor

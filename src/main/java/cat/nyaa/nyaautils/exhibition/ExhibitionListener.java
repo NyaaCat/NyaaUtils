@@ -1,7 +1,6 @@
 package cat.nyaa.nyaautils.exhibition;
 
 import cat.nyaa.nyaacore.Message;
-import cat.nyaa.nyaacore.utils.PlayerUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
@@ -39,7 +38,7 @@ public class ExhibitionListener implements Listener {
             }
             ev.setCancelled(true);
             if (fr.hasItem() && fr.getItemInFrame().getType() == Material.WRITTEN_BOOK) {
-                PlayerUtils.openWrittenBook(ev.getPlayer(), fr.getItemInFrame());
+                ev.getPlayer().openBook(fr.getItemInFrame());
             }
         }
     }
