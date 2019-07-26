@@ -10,13 +10,13 @@ import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
@@ -187,7 +187,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
     private void open(CommandSender commandSender, Arguments args) {
         Player player = args.nextPlayerOrSender();
         Player sender = asPlayer(commandSender);
-        if (plugin.cfg.bp_require_nearby_block != Material.AIR && !sender.hasPermission("nu.bp.admin")) {
+        if (plugin.cfg.bp_require_nearby_block != null && plugin.cfg.bp_require_nearby_block != Material.AIR && plugin.cfg.bp_require_nearby_block.isBlock() && !sender.hasPermission("nu.bp.admin")) {
             Location location = player.getLocation();
             List<Location> nearbyBlock = IntStream.rangeClosed(-plugin.cfg.bp_require_nearby_distance, plugin.cfg.bp_require_nearby_distance)
                                                   .parallel()
@@ -207,7 +207,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
             boolean match = nearbyBlock.parallelStream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
             if (!match) {
                 new Message("")
-                        .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", LocaleUtils.getNameComponent(new ItemStack(plugin.cfg.bp_require_nearby_block))))
+                        .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", new TranslatableComponent(LocaleUtils.getUnlocalizedName(plugin.cfg.bp_require_nearby_block))))
                         .send(sender);
                 return;
             }

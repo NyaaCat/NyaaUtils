@@ -5,7 +5,7 @@ plugins {
 
 ext.majorVersion = 6
 ext.minorVersion = 4
-ext.minecraftVersion = "1.14.3"
+ext.minecraftVersion = "1.14.4"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -29,7 +29,7 @@ repositories {
     maven { name 'Spigot';      url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { name 'Sonatype';    url 'https://oss.sonatype.org/content/groups/public' }
     maven { name 'sk89q';       url 'http://maven.sk89q.com/artifactory/repo/' }
-    maven { name 'vault-repo';  url 'http://nexus.hc.to/content/repositories/pub_releases' }
+    maven { name 'vault-repo';  url 'https://jitpack.io' }
     maven { name 'NyaaCat';     url 'https://ci.nyaacat.com/maven/' }
     maven { name 'NyaaCentral'; url 'https://raw.githubusercontent.com/NyaaCat/NyaaCentral/maven-repo'}
     maven { name 'EssentialsX'; url 'https://ci.ender.zone/plugin/repository/everything' }
@@ -49,8 +49,8 @@ dependencies {
     }
 
     // Other plugins
-    compileOnly('net.ess3:EssentialsX:2.16.0') { transitive = false }
-    compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.0-SNAPSHOT') {
+    compileOnly('net.ess3:EssentialsX:2.17.0') { transitive = false }
+    compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.1-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
         exclude group: 'org.bukkit', module: 'bukkit'
