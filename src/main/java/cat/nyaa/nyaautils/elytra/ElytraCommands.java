@@ -1,9 +1,11 @@
 package cat.nyaa.nyaautils.elytra;
 
-import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -106,14 +108,14 @@ public class ElytraCommands extends CommandReceiver {
         }
     }
 
-    @DefaultCommand(permission = "nu.elytratoggle")
+    @SubCommand(permission = "nu.elytratoggle", isDefaultCommand = true)
     public void commandElytraToggle(CommandSender sender, Arguments args) {
         Player player = asPlayer(sender);
-        if (ElytraEnhanceListener.disableFuelMode.containsKey(player.getUniqueId())) {
+        if (ElytraEnhanceListener.disableFuelMode.contains(player.getUniqueId())) {
             ElytraEnhanceListener.disableFuelMode.remove(player.getUniqueId());
             msg(sender, "user.elytra_enhance.fuelmode_on");
         } else {
-            ElytraEnhanceListener.disableFuelMode.put(player.getUniqueId(), player.getUniqueId());
+            ElytraEnhanceListener.disableFuelMode.add(player.getUniqueId());
             msg(sender, "user.elytra_enhance.fuelmode_off");
         }
     }

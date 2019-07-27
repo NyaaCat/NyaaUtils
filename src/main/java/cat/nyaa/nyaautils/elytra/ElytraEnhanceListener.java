@@ -1,7 +1,5 @@
 package cat.nyaa.nyaautils.elytra;
 
-import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Material;
@@ -14,15 +12,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ElytraEnhanceListener implements Listener {
     public static List<UUID> FuelMode = new ArrayList<>();
-    public static KeyValueDB<UUID, UUID> disableFuelMode = DatabaseUtils.get("database.fueldisabled", KeyValueDB.class);
-    public static HashMap<UUID, Long> duration = new HashMap<UUID, Long>();
+    public static Set<UUID> disableFuelMode = new HashSet<>();
+    public static Map<UUID, Long> duration = new HashMap<UUID, Long>();
     public NyaaUtils plugin;
 
     public ElytraEnhanceListener(NyaaUtils pl) {
@@ -38,7 +33,7 @@ public class ElytraEnhanceListener implements Listener {
                 !plugin.cfg.disabled_world.contains(player.getWorld().getName()) &&
                 player.getLocation().getBlock().isEmpty() &&
                 player.getEyeLocation().getBlock().isEmpty() &&
-                !disableFuelMode.containsKey(player.getUniqueId()) &&
+                !disableFuelMode.contains(player.getUniqueId()) &&
                 !player.isSneaking()) {
             if (!FuelMode.contains(player.getUniqueId()) &&
                     player.getVelocity().length() >= 0.75 &&

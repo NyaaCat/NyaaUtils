@@ -1,12 +1,15 @@
 package cat.nyaa.nyaautils.extrabackpack;
 
-import cat.nyaa.nyaacore.CommandReceiver;
-import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.ILocalizer;
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.Pair;
-import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.relational.Query;
-import cat.nyaa.nyaacore.database.relational.RelationalDB;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
+import cat.nyaa.nyaacore.orm.DatabaseUtils;
+import cat.nyaa.nyaacore.orm.WhereClause;
+import cat.nyaa.nyaacore.orm.backends.IConnectedDatabase;
+import cat.nyaa.nyaacore.orm.backends.ITypedTable;
 import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
@@ -17,7 +20,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,12 +32,20 @@ import java.util.stream.IntStream;
 
 public class ExtraBackpackCommands extends CommandReceiver {
     private NyaaUtils plugin;
-    private final RelationalDB database;
+    private IConnectedDatabase database;
 
-    public ExtraBackpackCommands(Object plugin, LanguageRepository i18n) {
-        super((NyaaUtils) plugin, i18n);
-        database = DatabaseUtils.get("database.extrabackpack", RelationalDB.class);
+    public ExtraBackpackCommands(Object plugin, ILocalizer i18n) {
+        super((Plugin) plugin, i18n);
         this.plugin = (NyaaUtils) plugin;
+        if(this.plugin.cfg.bp_enable) {
+            try {
+                database = DatabaseUtils.connect((Plugin) plugin, ((NyaaUtils) plugin).cfg.backpackBackendConfig);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -67,20 +80,18 @@ public class ExtraBackpackCommands extends CommandReceiver {
             return;
         }
         int oldMax = -1;
-        try (Query<ExtraBackpackConfig> query = database.queryTransactional(ExtraBackpackConfig.class).whereEq("player_id", ownerId.toString())) {
-            ExtraBackpackConfig cfg = query.selectUniqueForUpdate();
-            if (cfg != null) {
-                oldMax = cfg.getMaxLine();
-                cfg.setMaxLine(oldMax - delLine);
-                query.update(cfg);
-                query.commit();
-            } else {
-                cfg = new ExtraBackpackConfig();
-                cfg.setPlayerId(ownerId.toString());
-                cfg.setMaxLine(plugin.cfg.bp_default_lines - delLine);
-                query.insert(cfg);
-                query.commit();
-            }
+        ITypedTable<ExtraBackpackConfig> table = database.getUnverifiedTable(ExtraBackpackConfig.class);
+        WhereClause where = WhereClause.EQ("player_id", ownerId.toString());
+        ExtraBackpackConfig cfg = table.selectUniqueUnchecked(where);
+        if (cfg != null) {
+            oldMax = cfg.getMaxLine();
+            cfg.setMaxLine(oldMax - delLine);
+            table.update(cfg, where, "max_line");
+        } else {
+            cfg = new ExtraBackpackConfig();
+            cfg.playerId = ownerId;
+            cfg.setMaxLine(plugin.cfg.bp_default_lines - delLine);
+            table.insert(cfg);
         }
 
         if (oldMax > 0) {
@@ -102,20 +113,18 @@ public class ExtraBackpackCommands extends CommandReceiver {
             return;
         }
         int oldMax = -1;
-        try (Query<ExtraBackpackConfig> query = database.queryTransactional(ExtraBackpackConfig.class).whereEq("player_id", ownerId.toString())) {
-            ExtraBackpackConfig cfg = query.selectUniqueForUpdate();
-            if (cfg != null) {
-                oldMax = cfg.getMaxLine();
-                cfg.setMaxLine(maxLine);
-                query.update(cfg);
-                query.commit();
-            } else {
-                cfg = new ExtraBackpackConfig();
-                cfg.setPlayerId(ownerId.toString());
-                cfg.setMaxLine(maxLine);
-                query.insert(cfg);
-                query.commit();
-            }
+        ITypedTable<ExtraBackpackConfig> table = database.getUnverifiedTable(ExtraBackpackConfig.class);
+        WhereClause where = WhereClause.EQ("player_id", ownerId.toString());
+        ExtraBackpackConfig cfg = table.selectUniqueUnchecked(where);
+        if (cfg != null) {
+            oldMax = cfg.getMaxLine();
+            cfg.setMaxLine(maxLine);
+            table.update(cfg, where, "max_line");
+        } else {
+            cfg = new ExtraBackpackConfig();
+            cfg.playerId = ownerId;
+            cfg.setMaxLine(maxLine);
+            table.insert(cfg);
         }
 
         if (maxLine < oldMax) {
@@ -125,22 +134,19 @@ public class ExtraBackpackCommands extends CommandReceiver {
     }
 
     private void deleteLines(Player sender, UUID ownerId, int from, int to) {
-        try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class)
-                                                      .whereEq("player_id", ownerId.toString())
-                                                      .where("line_no", ">=", from)
-                                                      .where("line_no", "<", to)) {
-            World world = sender.getLocation().getWorld();
-            List<ExtraBackpackLine> lines = query.select();
-            lines.stream()
-                 .flatMap(l -> l.getItemStacks().stream())
-                 .filter(i -> i != null && i.getType() != Material.AIR)
-                 .forEachOrdered(
-                         itemStack ->
-                                 Objects.requireNonNull(world).dropItemNaturally(sender.getLocation(), itemStack)
-                 );
-            query.delete();
-            query.commit();
-        }
+        ITypedTable<ExtraBackpackLine> table = database.getUnverifiedTable(ExtraBackpackLine.class);
+        WhereClause where = WhereClause.EQ("player_id", ownerId.toString()).where("line_no", ">=", from)
+                .where("line_no", "<", to);
+        World world = sender.getLocation().getWorld();
+        List<ExtraBackpackLine> lines = table.select(where);
+        lines.stream()
+                .flatMap(l -> l.getItemStacks().stream())
+                .filter(i -> i != null && i.getType() != Material.AIR)
+                .forEachOrdered(
+                        itemStack ->
+                                Objects.requireNonNull(world).dropItemNaturally(sender.getLocation(), itemStack)
+                );
+        table.delete(where);
     }
 
     @SubCommand(value = "add", permission = "nu.bp.admin")
@@ -153,27 +159,25 @@ public class ExtraBackpackCommands extends CommandReceiver {
             return;
         }
         int maxLine;
-        try (Query<ExtraBackpackConfig> query = database.queryTransactional(ExtraBackpackConfig.class).whereEq("player_id", ownerId.toString())) {
-            ExtraBackpackConfig cfg = query.selectUniqueForUpdate();
-            if (cfg != null) {
-                maxLine = cfg.getMaxLine() + addLine;
-                if (maxLine > plugin.cfg.bp_max_lines) {
-                    maxLine = plugin.cfg.bp_max_lines;
-                }
-                cfg.setMaxLine(maxLine);
-                query.update(cfg);
-                query.commit();
-            } else {
-                cfg = new ExtraBackpackConfig();
-                cfg.setPlayerId(ownerId.toString());
-                maxLine = plugin.cfg.bp_default_lines + addLine;
-                if (maxLine > plugin.cfg.bp_max_lines) {
-                    maxLine = plugin.cfg.bp_max_lines;
-                }
-                cfg.setMaxLine(maxLine);
-                query.insert(cfg);
-                query.commit();
+        ITypedTable<ExtraBackpackConfig> table = database.getUnverifiedTable(ExtraBackpackConfig.class);
+        WhereClause where = WhereClause.EQ("player_id", ownerId.toString());
+        ExtraBackpackConfig cfg = table.selectUniqueUnchecked(where);
+        if (cfg != null) {
+            maxLine = cfg.getMaxLine() + addLine;
+            if (maxLine > plugin.cfg.bp_max_lines) {
+                maxLine = plugin.cfg.bp_max_lines;
             }
+            cfg.setMaxLine(maxLine);
+            table.update(cfg, where, "max_line");
+        } else {
+            cfg = new ExtraBackpackConfig();
+            cfg.playerId = ownerId;
+            maxLine = plugin.cfg.bp_default_lines + addLine;
+            if (maxLine > plugin.cfg.bp_max_lines) {
+                maxLine = plugin.cfg.bp_max_lines;
+            }
+            cfg.setMaxLine(maxLine);
+            table.insert(cfg);
         }
         msg(sender, "user.backpack.n_lines", player.getName(), maxLine);
     }
@@ -183,7 +187,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
         open(sender, args);
     }
 
-    @DefaultCommand(permission = "nu.bp.use")
+    @SubCommand(permission = "nu.bp.use",isDefaultCommand = true)
     private void open(CommandSender commandSender, Arguments args) {
         Player player = args.nextPlayerOrSender();
         Player sender = asPlayer(commandSender);

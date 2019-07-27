@@ -1,8 +1,11 @@
 package cat.nyaa.nyaautils.expcapsule;
 
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.ILocalizer;
 import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.BadCommandException;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
 import cat.nyaa.nyaautils.Configuration;
 import cat.nyaa.nyaautils.I18n;

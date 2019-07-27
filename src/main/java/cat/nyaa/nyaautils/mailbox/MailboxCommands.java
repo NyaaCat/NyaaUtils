@@ -1,7 +1,9 @@
 package cat.nyaa.nyaautils.mailbox;
 
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.NyaaUtils;

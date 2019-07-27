@@ -1,21 +1,20 @@
 package cat.nyaa.nyaautils.extrabackpack;
 
+import cat.nyaa.nyaacore.orm.annotations.Column;
+import cat.nyaa.nyaacore.orm.annotations.Table;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 
-import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
-@Entity
-@Access(AccessType.FIELD)
-@Table(name = "backpackline")
+@Table("backpackline")
 public class ExtraBackpackLine {
-
+    @Column(name = "id", primary = true)
     public UUID id = UUID.randomUUID();
-
+    @Column(name = "player_id")
     public UUID playerId;
 
     @Column(name = "line_no")
@@ -24,9 +23,6 @@ public class ExtraBackpackLine {
     @Column(name = "items", columnDefinition = "MEDIUMTEXT")
     private String items;
 
-    @Id
-    @Access(AccessType.PROPERTY)
-    @Column(name = "id")
     public String getId() {
         return id.toString();
     }
@@ -41,20 +37,6 @@ public class ExtraBackpackLine {
 
     public int getLineNo() {
         return lineNo;
-    }
-
-    @Access(AccessType.PROPERTY)
-    @Column(name = "player_id")
-    public String getPlayerId() {
-        return playerId.toString();
-    }
-
-    private void setId(UUID id) {
-        this.id = id;
-    }
-
-    private void setId(String id) {
-        this.id = UUID.fromString(id);
     }
 
     public void setLineNo(int lineNo) {

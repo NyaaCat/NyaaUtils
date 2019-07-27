@@ -1,7 +1,5 @@
 package cat.nyaa.nyaautils.lootprotect;
 
-import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -21,10 +19,8 @@ import java.util.stream.Collectors;
 
 public class LootProtectListener implements Listener {
     final private NyaaUtils plugin;
-    @SuppressWarnings("unchecked")
-    final private KeyValueDB<UUID, UUID> bypassPlayer = DatabaseUtils.get("database.lpbypass", KeyValueDB.class);
-    @SuppressWarnings("unchecked")
-    final private KeyValueDB<UUID, VanillaStrategy> bypassVanillaPlayer = DatabaseUtils.get("database.lpstrategy", KeyValueDB.class);
+    final private Map<UUID, UUID> bypassPlayer = new HashMap<>();
+    final private Map<UUID, VanillaStrategy> bypassVanillaPlayer = new HashMap<>();
 
     public enum VanillaStrategy {
         IGNORE,

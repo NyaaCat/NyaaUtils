@@ -2,8 +2,6 @@ package cat.nyaa.nyaautils.messagequeue;
 
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.component.IMessageQueue;
-import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.keyvalue.KeyValueDB;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import net.ess3.api.events.AfkStatusChangeEvent;
@@ -21,14 +19,13 @@ import java.util.stream.Collectors;
 
 public class MessageQueue implements IMessageQueue, Listener {
 
-    private KeyValueDB<UUID, String> messages;
     final private NyaaUtils plugin;
+    private Map<UUID, String> messages;
 
-    @SuppressWarnings("unchecked")
     public MessageQueue(NyaaUtils pl) {
         plugin = pl;
         plugin.getServer().getPluginManager().registerEvents(this, pl);
-        messages = DatabaseUtils.get("database.messagequeue", KeyValueDB.class);
+        messages = new HashMap<>();
     }
 
     @Override

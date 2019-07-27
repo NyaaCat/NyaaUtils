@@ -3,7 +3,7 @@ package cat.nyaa.nyaautils;
 import cat.nyaa.nyaacore.Message.MessageType;
 import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaacore.configuration.PluginConfigure;
-import cat.nyaa.nyaautils.sit.SitLocation;
+import cat.nyaa.nyaacore.orm.backends.BackendConfig;
 import cat.nyaa.nyaautils.dropprotect.DropProtectMode;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.enchant.EnchantSrcConfig;
@@ -15,6 +15,7 @@ import cat.nyaa.nyaautils.particle.ParticleLimit;
 import cat.nyaa.nyaautils.particle.ParticleType;
 import cat.nyaa.nyaautils.realm.RealmConfig;
 import cat.nyaa.nyaautils.repair.RepairConfig;
+import cat.nyaa.nyaautils.sit.SitLocation;
 import cat.nyaa.nyaautils.timer.TimerConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -298,6 +299,7 @@ public class Configuration extends PluginConfigure {
     public final ParticleConfig particleConfig;
 
     private final NyaaUtils plugin;
+    public BackendConfig backpackBackendConfig;
 
     @Override
     protected JavaPlugin getPlugin() {
@@ -327,27 +329,26 @@ public class Configuration extends PluginConfigure {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void deserialize(ConfigurationSection config) {
         // general values load & standalone config load
         ISerializable.deserialize(config, this);
-
+        if (bp_enable) {
+            backpackBackendConfig = BackendConfig.sqliteBackend("Backpack.db");
+            if (config.isConfigurationSection("database.extrabackpack")) {
+                backpackBackendConfig.deserialize(config.getConfigurationSection("database.extrabackpack"));
+            }
+        }
         // Enchantment Max Level constraint
         enchantMaxLevel = new HashMap<>();
         for (Enchantment e : Enchantment.values()) {
-            if (e == null || e.getName() == null) continue;
+            if (e == null) continue;
             enchantMaxLevel.put(e, e.getMaxLevel());
         }
         if (config.isConfigurationSection("enchant.max_level")) {
             ConfigurationSection maxLevel = config.getConfigurationSection("enchant.max_level");
             for (String enchName : maxLevel.getKeys(false)) {
-                Enchantment ench = null;
-                try {
-                    ench = Enchantment.getByKey(NamespacedKey.minecraft(enchName));
-                } catch (IllegalArgumentException e) {
-                    ench = Enchantment.getByName(enchName);
-                }
+                Enchantment ench = Enchantment.getByKey(NamespacedKey.minecraft(enchName));
                 if (ench == null || !NamespacedKey.MINECRAFT.equals(ench.getKey().getNamespace()))
                     continue;
                 if (maxLevel.isInt(enchName)) {

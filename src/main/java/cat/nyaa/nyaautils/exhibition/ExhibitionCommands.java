@@ -1,8 +1,10 @@
 package cat.nyaa.nyaautils.exhibition;
 
-import cat.nyaa.nyaautils.NyaaUtils;
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

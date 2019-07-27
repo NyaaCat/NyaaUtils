@@ -1,7 +1,9 @@
 package cat.nyaa.nyaautils.timer;
 
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.sk89q.worldedit.IncompleteRegionException;
@@ -33,7 +35,7 @@ public class TimerCommands extends CommandReceiver {
             msg(sender, "manual.timer.create.usage");
             return;
         }
-        String name = args.next();
+        String name = args.nextString();
         if (plugin.timerManager.createTimer(name)) {
             msg(sender, "user.timer.timer_create");
             plugin.cfg.save();

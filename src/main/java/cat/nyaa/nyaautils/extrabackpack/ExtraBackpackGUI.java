@@ -2,8 +2,9 @@ package cat.nyaa.nyaautils.extrabackpack;
 
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.Pair;
-import cat.nyaa.nyaacore.database.relational.Query;
-import cat.nyaa.nyaacore.database.relational.RelationalDB;
+import cat.nyaa.nyaacore.orm.WhereClause;
+import cat.nyaa.nyaacore.orm.backends.IConnectedDatabase;
+import cat.nyaa.nyaacore.orm.backends.ITypedTable;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
@@ -30,7 +31,7 @@ import java.util.stream.Stream;
 public class ExtraBackpackGUI implements InventoryHolder {
 
     private final NyaaUtils plugin;
-    private final RelationalDB database;
+    private final IConnectedDatabase database;
     private final UUID owner;
     private final Player opener;
     private ExtraBackpackInventory extraBackpack;
@@ -43,7 +44,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
     private final AtomicInteger saveScheduled = new AtomicInteger(0);
     private final AtomicBoolean tainted = new AtomicBoolean(false);
 
-    ExtraBackpackGUI(NyaaUtils plugin, RelationalDB database, UUID owner, Player opener) {
+    ExtraBackpackGUI(NyaaUtils plugin, IConnectedDatabase database, UUID owner, Player opener) {
         this.plugin = plugin;
         this.database = database;
         this.owner = owner;
@@ -163,26 +164,24 @@ public class ExtraBackpackGUI implements InventoryHolder {
             }
             String lineLastState = lastState.get(owner).get(lineNo);
             if (lineLastState.equals(desiredState)) return Pair.of(true, null);
-            try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", owner.toString()).whereEq("line_no", lineNo)) {
-                ExtraBackpackLine backpackLine = query.selectUniqueForUpdate();
-                String lineCurrentState = backpackLine.getItems();
-                if (!lineLastState.equals(lineCurrentState)) {
-                    new Message(I18n.format("user.backpack.error_state", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
-                    String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
-                    String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
-                    Message message = new Message(errLine1 + "\n" + errLine2);
-                    Bukkit.getOperators().forEach(op -> message.send(op, true));
-                    plugin.getLogger().warning(errLine1);
-                    plugin.getLogger().warning(errLine2);
-                    query.rollback();
-                    return Pair.of(false, null);
-                }
-                backpackLine.setItems(desiredState);
-                lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
-                plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
-                query.update(backpackLine);
-                query.commit();
+            ITypedTable<ExtraBackpackLine> table = database.getUnverifiedTable(ExtraBackpackLine.class);
+            WhereClause where = WhereClause.EQ("player_id", owner.toString()).whereEq("line_no", lineNo);
+            ExtraBackpackLine backpackLine = table.selectUniqueUnchecked(where);
+            String lineCurrentState = backpackLine.getItems();
+            if (!lineLastState.equals(lineCurrentState)) {
+                new Message(I18n.format("user.backpack.error_state", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
+                String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
+                String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
+                Message message = new Message(errLine1 + "\n" + errLine2);
+                Bukkit.getOperators().forEach(op -> message.send(op, true));
+                plugin.getLogger().warning(errLine1);
+                plugin.getLogger().warning(errLine2);
+                return Pair.of(false, null);
             }
+            backpackLine.setItems(desiredState);
+            lastState.get(owner).set(backpackLine.getLineNo(), backpackLine.getItems());
+            plugin.getLogger().finer(() -> String.format("Saving %d: %s (%s)", lineNo, line, backpackLine.getItems()));
+            table.update(backpackLine, where);
             return Pair.of(true, null);
         } catch (Throwable throwable) {
             new Message(I18n.format("user.backpack.unexpected_error", Bukkit.getOfflinePlayer(owner).getName(), lineNo, opener.getUniqueId())).broadcast(new Permission("nu.bp.admin"));
@@ -198,13 +197,13 @@ public class ExtraBackpackGUI implements InventoryHolder {
 
     private ExtraBackpackInventory getInventory(UUID owner) {
         String ownerId = owner.toString();
-        queryConfig(ownerId);
+        queryConfig(owner);
         if (maxLine <= 0) {
             return null;
         }
 //        Inventory inventory = Bukkit.createInventory(this, size, I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), page, pageCount - 1));
         List<ExtraBackpackLine> lines;
-        lines = queryLines(owner, ownerId);
+        lines = queryLines(owner);
         ExtraBackpackInventory inv = new ExtraBackpackInventory(this);
         int pageCount = (int) Math.ceil(maxLine / 6.0);
         inv.size = lines.size();
@@ -225,18 +224,18 @@ public class ExtraBackpackGUI implements InventoryHolder {
         return I18n.format("user.backpack.title", Bukkit.getOfflinePlayer(owner).getName(), index, pageCount - 1);
     }
 
-    private ExtraBackpackConfig queryConfig(String ownerId) {
-        try (Query<ExtraBackpackConfig> query = database.queryTransactional(ExtraBackpackConfig.class).whereEq("player_id", ownerId)) {
-            ExtraBackpackConfig cfg = query.selectUniqueForUpdate();
+    private ExtraBackpackConfig queryConfig(UUID ownerId) {
+        try {
+            ITypedTable<ExtraBackpackConfig> table = database.getUnverifiedTable(ExtraBackpackConfig.class);
+            WhereClause where = WhereClause.EQ("player_id", ownerId);
+            ExtraBackpackConfig cfg = table.selectUniqueUnchecked(where);
             if (cfg != null) {
                 maxLine = cfg.getMaxLine();
-                query.commit();
             } else {
                 cfg = new ExtraBackpackConfig();
-                cfg.setPlayerId(ownerId);
+                cfg.playerId = ownerId;
                 cfg.setMaxLine(maxLine);
-                query.insert(cfg);
-                query.commit();
+                table.insert(cfg);
             }
             return cfg;
         } catch (Exception e) {
@@ -244,26 +243,25 @@ public class ExtraBackpackGUI implements InventoryHolder {
         }
     }
 
-    private List<ExtraBackpackLine> queryLines(UUID owner, String ownerId) {
+    private List<ExtraBackpackLine> queryLines(UUID owner) {
         List<ExtraBackpackLine> lines;
-        try (Query<ExtraBackpackLine> query = database.queryTransactional(ExtraBackpackLine.class).whereEq("player_id", ownerId)) {
-            lines = query.select();
-            if (lines.size() > maxLine) {
-                opened.remove(owner);
-                throw new IllegalStateException("Too many lines");
-            } else if (lines.size() != maxLine) {
-                for (int cur = lines.size(); cur < maxLine; ++cur) {
-                    ExtraBackpackLine l = new ExtraBackpackLine();
-                    l.setPlayerId(ownerId);
-                    l.setLineNo(cur);
-                    l.setItemStacks(Stream.generate(() -> new ItemStack(Material.AIR)).limit(9).collect(Collectors.toList()));
-                    query.insert(l);
-                    lines.add(l);
-                }
+        ITypedTable<ExtraBackpackLine> table = database.getUnverifiedTable(ExtraBackpackLine.class);
+        WhereClause where = WhereClause.EQ("player_id", owner.toString());
+        lines = table.select(where);
+        if (lines.size() > maxLine) {
+            opened.remove(owner);
+            throw new IllegalStateException("Too many lines");
+        } else if (lines.size() != maxLine) {
+            for (int cur = lines.size(); cur < maxLine; ++cur) {
+                ExtraBackpackLine l = new ExtraBackpackLine();
+                l.playerId = owner;
+                l.setLineNo(cur);
+                l.setItemStacks(Stream.generate(() -> new ItemStack(Material.AIR)).limit(9).collect(Collectors.toList()));
+                table.insert(l);
+                lines.add(l);
             }
-            lastState.put(owner, lines.stream().map(ExtraBackpackLine::getItems).collect(Collectors.toList()));
-            query.commit();
         }
+        lastState.put(owner, lines.stream().map(ExtraBackpackLine::getItems).collect(Collectors.toList()));
         return lines;
     }
 

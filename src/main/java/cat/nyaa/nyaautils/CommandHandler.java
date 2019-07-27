@@ -1,9 +1,12 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaacore.Pair;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.BadCommandException;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
 import cat.nyaa.nyaacore.utils.PlayerUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
@@ -580,7 +583,7 @@ public class CommandHandler extends CommandReceiver {
     @SubCommand(value = "tps", permission = "nu.tps")
     public void tps(CommandSender sender, Arguments args) {
         if (!plugin.cfg.tps_enable) {
-            throw new BadCommandException();
+            return;
         }
         List<Byte> tpsHistory = plugin.tpsPingTask.tpsHistory();
         int verbose = args.argInt("v", args.argInt("verbose", 0));
@@ -670,7 +673,7 @@ public class CommandHandler extends CommandReceiver {
     @SubCommand(value = "ping", permission = "nu.ping")
     public void ping(CommandSender sender, Arguments args) {
         if (!plugin.cfg.ping_enable) {
-            throw new BadCommandException();
+            return;
         }
         Player p;
         if (sender instanceof Player) {

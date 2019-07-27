@@ -1,9 +1,11 @@
 package cat.nyaa.nyaautils.enchant;
 
 import cat.nyaa.nyaacore.BasicItemMatcher;
-import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.Message;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
@@ -112,7 +114,7 @@ public class EnchantCommands extends CommandReceiver {
         }
     }
 
-    @DefaultCommand(permission = "nu.enchant")
+    @SubCommand(permission = "nu.enchant", isDefaultCommand = true)
     public void commandEnchantDefault(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         if (args.top() == null) {
