@@ -58,21 +58,8 @@ dependencies {
     }
 
     // annotation processor
-    compileOnly 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
-    annotationProcessor 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
     annotationProcessor "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
 }
-
-// Language string check
-// String nyaaCoreLangDir = gradle.hasProperty("NyaaCoreLangDirs") ? gradle.NyaaCoreLangDirs : null
-// if (nyaaCoreLangDir == null) { nyaaCoreLangDir = System.getenv("NYAACORE_LANG_DIR") }
-//
-// tasks.withType(JavaCompile) {
-//     options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor", "-Xlint:deprecation"]
-//     if (nyaaCoreLangDir != null) {
-//         options.compilerArgs += ["-ALANG_DIR_ADDITIONAL_PATH=" + nyaaCoreLangDir]
-//     }
-// }
 
 // publications
 task sourcesJar(type: Jar) {

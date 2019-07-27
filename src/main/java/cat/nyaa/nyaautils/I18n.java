@@ -2,7 +2,6 @@ package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.librazy.nclangchecker.LangKey;
 
 public class I18n extends LanguageRepository {
     public static I18n instance = null;
@@ -26,7 +25,7 @@ public class I18n extends LanguageRepository {
         load();
     }
 
-    public static String format(@LangKey String key, Object... args) {
+    public static String format(String key, Object... args) {
         return instance.getFormatted(key, args);
     }
 }

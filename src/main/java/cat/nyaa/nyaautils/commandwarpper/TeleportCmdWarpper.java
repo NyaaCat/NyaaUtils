@@ -21,7 +21,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.librazy.nclangchecker.LangKey;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -246,7 +245,7 @@ public class TeleportCmdWarpper implements Listener {
         return 0;
     }
 
-    private void msg(CommandSender target, @LangKey String template, Object... args) {
+    private void msg(CommandSender target, String template, Object... args) {
         target.sendMessage(I18n.format(template, args));
     }
 }

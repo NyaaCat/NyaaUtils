@@ -6,11 +6,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.Repairable;
-import org.librazy.nclangchecker.LangKey;
-import org.librazy.nclangchecker.LangKeyType;
 
 public class RepairInstance {
-    @LangKey(type = LangKeyType.SUFFIX) public enum RepairStat {
+    public enum RepairStat {
         UNREPAIRABLE,
         UNREPAIRABLE_REPAIRED,
         UNREPAIRABLE_UNBREAKABLE,
