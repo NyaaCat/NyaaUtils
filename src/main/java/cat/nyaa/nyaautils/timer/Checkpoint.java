@@ -28,14 +28,14 @@ public class Checkpoint implements ISerializable {
 
     }
 
-    public Checkpoint(Location maxPos, Location minPos) {
-        this.world = maxPos.getWorld().getName();
-        this.max_x = maxPos.getBlockX();
-        this.max_y = maxPos.getBlockY();
-        this.max_z = maxPos.getBlockZ();
-        this.min_x = minPos.getBlockX();
-        this.min_y = minPos.getBlockY();
-        this.min_z = minPos.getBlockZ();
+    public Checkpoint(Location pos1, Location pos2) {
+        this.world = pos1.getWorld().getName();
+        this.max_x = Math.max(pos1.getBlockX(), pos2.getBlockX());
+        this.max_y = Math.max(pos1.getBlockY(), pos2.getBlockY());
+        this.max_z = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+        this.min_x = Math.min(pos2.getBlockX(), pos1.getBlockX());
+        this.min_y = Math.min(pos2.getBlockY(), pos1.getBlockY());
+        this.min_z = Math.min(pos2.getBlockZ(), pos1.getBlockZ());
     }
 
     public String getWorld() {

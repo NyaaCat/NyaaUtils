@@ -35,11 +35,18 @@ public class Realm implements ISerializable {
     public Realm() {
 
     }
+
     public Realm(Location pos1, Location pos2, RealmType type, OfflinePlayer owner) {
-        setMaxPos(pos1);
-        setMinPos(pos2);
+        this.maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
+        this.maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
+        this.maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+        this.minX = Math.min(pos2.getBlockX(), pos1.getBlockX());
+        this.minY = Math.min(pos2.getBlockY(), pos1.getBlockY());
+        this.minZ = Math.min(pos2.getBlockZ(), pos1.getBlockZ());
         setType(type);
-        setOwner(owner);
+        if (owner != null) {
+            setOwner(owner);
+        }
     }
 
     public int getPriority() {

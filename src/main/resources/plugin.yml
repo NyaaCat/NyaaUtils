@@ -2,8 +2,8 @@ name: NyaaUtils
 main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
 version: ${version}
-depend: [WorldEdit,Essentials,NyaaCore]
-softdepend: [LockettePro,HamsterEcoHelper]
+depend: [Essentials,NyaaCore]
+softdepend: [LockettePro,HamsterEcoHelper,WorldEdit]
 authors: [RecursiveG,Cylin,Librazy]
 website: "https://github.com/NyaaCat/nyaautils"
 api-version: 1.13

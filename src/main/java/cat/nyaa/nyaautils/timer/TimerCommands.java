@@ -6,7 +6,6 @@ import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
 import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
@@ -97,53 +96,52 @@ public class TimerCommands extends CommandReceiver {
     }
 
     @SubCommand(value = "addcheckpoint", permission = "nu.createtimer")
-    public void commandAddCheckpoint(CommandSender sender, Arguments args) throws IncompleteRegionException {
+    public void commandAddCheckpoint(CommandSender sender, Arguments args) {
         if (args.length() < 3) {
             msg(sender, "manual.timer.addcheckpoint.usage");
             return;
         }
         Player player = asPlayer(sender);
-        String name = args.next();
-        int checkpointID = -1;
-        if (args.length() == 4) {
-            checkpointID = args.nextInt();
-        }
+        String name = args.nextString();
         Timer timer = plugin.timerManager.getTimer(name);
         if (timer == null) {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        Region selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
-        if (selection == null) {
+        Location pos1 = null;
+        Location pos2 = null;
+        if (args.remains() >= 6) {
+            pos1 = new Location(player.getWorld(), args.nextInt(), args.nextInt(), args.nextInt());
+            pos2 = new Location(player.getWorld(), args.nextInt(), args.nextInt(), args.nextInt());
+        } else if (plugin.worldEditPlugin != null) {
+            Region selection = null;
+            try {
+                selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
+                if (selection != null) {
+                    pos1 = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
+                    pos2 = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
+                }
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+        }
+        if (pos1 == null) {
             msg(sender, "user.timer.select");
             return;
         }
-        Location minimumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
-        Location maximumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
-        for (int x = minimumPoint.getBlockX(); x <= maximumPoint.getBlockX(); x++) {
-            for (int y = minimumPoint.getBlockY(); y <= maximumPoint.getBlockY(); y++) {
-                for (int z = minimumPoint.getBlockZ(); z <= maximumPoint.getBlockZ(); z++) {
-                    for (Checkpoint c : plugin.timerManager.getCheckpoint(
-                            new Location(maximumPoint.getWorld(), x, y, z), false)) {
-                        if (c.getTimerName().equals(name)) {
-                            msg(sender, "user.timer.checkpoint_conflict", c.getCheckpointID());
-                            return;
-                        }
-                    }
-                }
-            }
+        int checkpointID = -1;
+        if (args.remains() == 1) {
+            checkpointID = args.nextInt();
         }
         int id = 0;
         if (checkpointID == -1) {
-            id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(
-                    BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint()), BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint()));
+            id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(pos1, pos2);
         } else {
-            id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(checkpointID,
-                    BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint()), BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint()));
+            id = plugin.cfg.timerConfig.timers.get(name).addCheckpoint(checkpointID, pos1, pos2);
         }
-        msg(sender, "user.timer.checkpoint_info", id, maximumPoint.getWorld().getName(),
-                minimumPoint.getBlockX(), minimumPoint.getBlockY(), minimumPoint.getBlockZ(),
-                maximumPoint.getBlockX(), maximumPoint.getBlockY(), maximumPoint.getBlockZ());
+        msg(sender, "user.timer.checkpoint_info", id, player.getWorld().getName(),
+                pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ(),
+                pos2.getBlockX(), pos2.getBlockY(), pos2.getBlockZ());
         plugin.cfg.save();
     }
 

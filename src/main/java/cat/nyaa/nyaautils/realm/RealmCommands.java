@@ -6,7 +6,6 @@ import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
 import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
@@ -28,26 +27,38 @@ public class RealmCommands extends CommandReceiver {
     }
 
     @SubCommand(value = "create", permission = "nu.realm.admin")
-    public void commandCreate(CommandSender sender, Arguments args) throws IncompleteRegionException {
+    public void commandCreate(CommandSender sender, Arguments args) {
         if (args.length() < 4) {
             msg(sender, "manual.realm.create.usage");
             return;
         }
         Player player = asPlayer(sender);
-        String name = args.next();
+        String name = args.nextString();
         if (plugin.cfg.realmConfig.realmList.containsKey(name)) {
             msg(sender, "user.realm.exist", name);
             return;
         }
-        String type = args.next().toUpperCase();
-        RealmType realmType;
-        try {
-            realmType = RealmType.valueOf(type);
-        } catch (IllegalArgumentException e) {
-            msg(sender, "user.realm.type_error", type);
+        RealmType realmType = args.nextEnum(RealmType.class);
+        Location pos1 = null;
+        Location pos2 = null;
+        if (args.remains() >= 6) {
+            pos1 = new Location(player.getWorld(), args.nextInt(), args.nextInt(), args.nextInt());
+            pos2 = new Location(player.getWorld(), args.nextInt(), args.nextInt(), args.nextInt());
+        } else if (plugin.worldEditPlugin != null) {
+            try {
+                Region selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
+                if (selection != null) {
+                    pos1 = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
+                    pos2 = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
+                }
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
+        }
+        if (pos1 == null) {
+            msg(sender, "user.realm.select");
             return;
         }
-
         OfflinePlayer owner = null;
         if (realmType == RealmType.PRIVATE) {
             if (args.length() == 5) {
@@ -57,22 +68,7 @@ public class RealmCommands extends CommandReceiver {
                 return;
             }
         }
-
-        Region selection = plugin.worldEditPlugin.getSession(player).getSelection(BukkitAdapter.adapt(player.getWorld()));
-        if (selection == null) {
-            msg(sender, "user.realm.select");
-            return;
-        }
-        Location minimumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMinimumPoint());
-        Location maximumPoint = BukkitAdapter.adapt(player.getWorld(), selection.getMaximumPoint());
-        Realm realm = new Realm();
-        realm.setType(realmType);
-        realm.setName(name);
-        realm.setMaxPos(maximumPoint);
-        realm.setMinPos(minimumPoint);
-        if (owner != null) {
-            realm.setOwner(owner);
-        }
+        Realm realm = new Realm(pos1, pos2, realmType, owner);
         plugin.cfg.realmConfig.realmList.put(name, realm);
         plugin.cfg.save();
         msg(sender, "user.realm.create");

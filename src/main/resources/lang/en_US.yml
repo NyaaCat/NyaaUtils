@@ -505,7 +505,7 @@ manual:
     usage: /nu timer help
     create:
       description: Create timer
-      usage: /nu timer create [timer name]
+      usage: /nu timer create [timer name] [x1] [y1] [z1] [x2] [y2] [z2]
     remove:
       description: Remove timer
       usage: /nu timer remove [timer name]
@@ -539,7 +539,7 @@ manual:
     usage: /nu realm help
     create:
       description: Create realm
-      usage: /nu realm create [name] [type] [player]
+      usage: /nu realm create [name] [type] [x1] [y1] [z1] [x2] [y2] [z2] [player]
     remove:
       description: Remove realm
       usage: /nu realm remove [name]
