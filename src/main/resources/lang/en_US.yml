@@ -505,7 +505,7 @@ manual:
     usage: /nu timer help
     create:
       description: Create timer
-      usage: /nu timer create [timer name] [x1] [y1] [z1] [x2] [y2] [z2]
+      usage: /nu timer create [timer name]
     remove:
       description: Remove timer
       usage: /nu timer remove [timer name]
@@ -520,8 +520,8 @@ manual:
       usage: /nu timer togglebroadcast [timer name]
     addcheckpoint:
       description: Add checkpoint to timer
-      usage: /nu timer addcheckpoint [timer name] or /nu timer addcheckpoint [timer
-        name] [checkpoint id]
+      usage: /nu timer addcheckpoint [timer name] [x1] [y1] [z1] [x2] [y2] [z2] or /nu timer addcheckpoint [timer
+        name] [x1] [y1] [z1] [x2] [y2] [z2] [checkpoint id]
     removecheckpoint:
       description: Remove checkpoint from timer
       usage: /nu timer addcheckpoint [timer name] [checkpoint id]

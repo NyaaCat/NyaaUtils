@@ -37,6 +37,7 @@ public class Realm implements ISerializable {
     }
 
     public Realm(Location pos1, Location pos2, RealmType type, OfflinePlayer owner) {
+        world = pos1.getWorld().getName();
         this.maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
         this.maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
         this.maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());

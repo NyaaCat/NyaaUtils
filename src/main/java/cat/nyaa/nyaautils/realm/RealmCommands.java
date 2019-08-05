@@ -69,6 +69,7 @@ public class RealmCommands extends CommandReceiver {
             }
         }
         Realm realm = new Realm(pos1, pos2, realmType, owner);
+        realm.setName(name);
         plugin.cfg.realmConfig.realmList.put(name, realm);
         plugin.cfg.save();
         msg(sender, "user.realm.create");
