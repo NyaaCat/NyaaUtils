@@ -208,7 +208,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
                                                                             .boxed()
                                                                             .map(z -> location.clone().add(p.getKey(), p.getValue(), z))
                                                   ).collect(Collectors.toList());
-            boolean match = nearbyBlock.parallelStream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
+            boolean match = nearbyBlock.stream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
             if (!match) {
                 new Message("")
                         .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", new TranslatableComponent(LocaleUtils.getUnlocalizedName(plugin.cfg.bp_require_nearby_block))))
