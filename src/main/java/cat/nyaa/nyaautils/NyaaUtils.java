@@ -18,12 +18,8 @@ import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.mention.MentionListener;
 import cat.nyaa.nyaautils.messagequeue.MessageQueue;
-<<<<<<< HEAD
-import cat.nyaa.nyaautils.misc.journeymap.bukkit.events.JourneyMapEvents;
 import cat.nyaa.nyaautils.misc.journeymap.bukkit.network.JourneyMapBukkitPacketHandler;
 import cat.nyaa.nyaautils.misc.journeymap.common.network.JourneyMapPacketManager;
-=======
->>>>>>> parent of 5748db7... add journey map world uuid sending support
 import cat.nyaa.nyaautils.particle.ParticleListener;
 import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
@@ -131,9 +127,6 @@ public class NyaaUtils extends JavaPlugin {
         }
 
         JourneyMapPacketManager.init(new JourneyMapBukkitPacketHandler(this));
-        JourneyMapEvents journeyMapEvents = new JourneyMapEvents(this);
-        getServer().getPluginManager().registerEvents(journeyMapEvents, this);
-
         voteTask = null;
         if (cfg.ping_enable || cfg.tps_enable) {
             tpsPingTask = new TpsPingTask(this);
