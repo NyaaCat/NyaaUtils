@@ -125,6 +125,7 @@ public class NyaaUtils extends JavaPlugin {
             e.printStackTrace();
             getLogger().warning("Unexpected error when enabling mention notify in EssentialsX commands");
         }
+
         JourneyMapPacketManager.init(new JourneyMapBukkitPacketHandler(this));
         voteTask = null;
         if (cfg.ping_enable || cfg.tps_enable) {
