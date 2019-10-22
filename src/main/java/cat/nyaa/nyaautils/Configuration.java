@@ -281,6 +281,9 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "extra_backpack.require_nearby_distance")
     public int bp_require_nearby_distance = 5;
 
+    @Serializable(name = "misc.sendWorldUUID")
+    public boolean misc_send_world_uuid = false;
+
     @StandaloneConfig
     public final MailboxLocations mailbox;
     @StandaloneConfig

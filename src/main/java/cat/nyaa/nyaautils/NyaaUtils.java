@@ -18,6 +18,8 @@ import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.mention.MentionListener;
 import cat.nyaa.nyaautils.messagequeue.MessageQueue;
+import cat.nyaa.nyaautils.misc.journeymap.bukkit.network.JourneyMapBukkitPacketHandler;
+import cat.nyaa.nyaautils.misc.journeymap.common.network.JourneyMapPacketManager;
 import cat.nyaa.nyaautils.particle.ParticleListener;
 import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
@@ -123,7 +125,7 @@ public class NyaaUtils extends JavaPlugin {
             e.printStackTrace();
             getLogger().warning("Unexpected error when enabling mention notify in EssentialsX commands");
         }
-
+        JourneyMapPacketManager.init(new JourneyMapBukkitPacketHandler(this));
         voteTask = null;
         if (cfg.ping_enable || cfg.tps_enable) {
             tpsPingTask = new TpsPingTask(this);
