@@ -5,7 +5,7 @@ plugins {
 
 ext.majorVersion = 7
 ext.minorVersion = 0
-ext.minecraftVersion = "1.14.4"
+ext.minecraftVersion = "1.15"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 

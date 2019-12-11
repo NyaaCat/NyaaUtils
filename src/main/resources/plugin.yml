@@ -6,7 +6,7 @@ depend: [Essentials,NyaaCore]
 softdepend: [LockettePro,HamsterEcoHelper,WorldEdit]
 authors: [RecursiveG,Cylin,Librazy]
 website: "https://github.com/NyaaCat/nyaautils"
-api-version: 1.13
+api-version: 1.15
 commands:
   nyaautils:
     description: The command for NyaaUtils
