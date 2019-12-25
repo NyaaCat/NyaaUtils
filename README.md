@@ -1,10 +1,12 @@
-## nyaautils
+# NyaaUtils [![Build Status](https://ci.nyaacat.com/job/NyaaUtils/badge/icon)](https://ci.nyaacat.com/job/NyaaUtils/)
 
 Gaming utilities/helpers for NyaaCat Minecraft Server
 
-Detailed function manual please refer to [Wiki](https://github.com/NyaaCat/nyaautils/wiki).
+Detailed function manual please refer to [Wiki](https://github.com/NyaaCat/NyaaUtils/wiki).
 
-Using NyaaCore API version 5.0
+## Version history
+- 7.1.x: Minecraft 1.15.1, since build 258
+- 7.0.x: Miencraft 1.14.4
 
-[![Build Status](https://travis-ci.org/NyaaCat/NyaaUtils.svg?branch=master)](https://travis-ci.org/NyaaCat/NyaaUtils)
-
+You can find all builds from [Nyaa CI](https://ci.nyaacat.com/job/NyaaUtils/) or
+[Release Page](https://github.com/NyaaCat/NyaaUtils/releases)

@@ -1,28 +1,24 @@
-plugins {
-    id 'java-library'
-    id 'maven-publish'
-}
+apply plugin: "java-library"
+apply plugin: "maven-publish"
 
+// Plugin config
+ext.pluginNameUpper = "NyaaUtils"
+ext.pluginNameLower = ext.pluginNameUpper.toLowerCase()
 ext.majorVersion = 7
-ext.minorVersion = 0
-ext.minecraftVersion = "1.15"
+ext.minorVersion = 1
+ext.minecraftVersion = "1.15.1"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 // Suppiled by Jenkins
 ext.buildNumber = System.env.BUILD_NUMBER == null ? "x"                : "$System.env.BUILD_NUMBER"
 ext.mavenDirectory = System.env.MAVEN_DIR == null ? "$projectDir/repo" : "$System.env.MAVEN_DIR"
+ext.jdDirectory = System.env.JAVADOCS_DIR == null ? null               : "$System.env.JAVADOCS_DIR"
 
 // Version used for distribution. Different from maven repo
 group = "cat.nyaa"
-archivesBaseName = "NyaaUtils-mc$minecraftVersion"
+archivesBaseName = "${pluginNameUpper}-mc$minecraftVersion"
 version = "$majorVersion.$minorVersion.$buildNumber"
-
-// extra compile warnings
-compileJava {
-    options.compilerArgs += ["-Xlint:deprecation,unchecked,rawtypes"]
-    options.encoding = 'UTF-8'
-}
 
 repositories {
     jcenter()
@@ -31,7 +27,6 @@ repositories {
     maven { name 'sk89q';       url 'http://maven.sk89q.com/artifactory/repo/' }
     maven { name 'vault-repo';  url 'https://jitpack.io' }
     maven { name 'NyaaCat';     url 'https://ci.nyaacat.com/maven/' }
-    maven { name 'NyaaCentral'; url 'https://raw.githubusercontent.com/NyaaCat/NyaaCentral/maven-repo'}
     maven { name 'EssentialsX'; url 'https://ci.ender.zone/plugin/repository/everything' }
 }
 
@@ -49,54 +44,81 @@ dependencies {
     }
 
     // Other plugins
-    compileOnly('net.ess3:EssentialsX:2.17.0') { transitive = false }
+    compileOnly('net.ess3:EssentialsX:2.17.1') { transitive = false }
     compileOnly ('com.sk89q.worldedit:worldedit-bukkit:7.0.1-SNAPSHOT') {
         exclude group: 'io.papermc', module: 'paperlib'
         exclude group: 'org.bstats.bStats-Metrics', module: 'bstats-bukkit'
         exclude group: 'org.bukkit', module: 'bukkit'
         exclude group: 'com.destroystokyo.paper', module: 'paper-api'
     }
-
-    // annotation processor
-    annotationProcessor "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
 }
 
-// publications
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.java.srcDirs
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-processResources { // modify version string
+// source file modification (modify version string)
+processResources {
     filesMatching("**/plugin.yml") {
         expand 'version': project.version
     }
 }
+
+// source file jar
+task sourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+// javadoc generation options
+javadoc {
+    // javadoc output folder
+    if (project.jdDirectory != null) destinationDir = file("${jdDirectory}/${pluginNameLower}-${version}")
+
+    options {
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+        links 'https://hub.spigotmc.org/javadocs/spigot/'
+        links 'https://google.github.io/guava/releases/21.0/api/docs/'
+        links 'https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/'
+
+        locale 'en_US'
+        encoding 'UTF-8'
+        docEncoding 'UTF-8'
+        addBooleanOption('keywords', true)
+        addStringOption('Xdoclint:none', '-quiet')
+
+        if (JavaVersion.current() > JavaVersion.VERSION_1_9) {
+            addBooleanOption('html5', true)
+        }
+
+        windowTitle = "${pluginNameUpper} Javadoc"
+        docTitle = "${pluginNameUpper} (mc$minecraftVersion-${project.version})"
+    }
+}
+
+// javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set("javadoc")
+    from javadoc.destinationDir
+}
+
+// compile options
+compileJava {
+    options.compilerArgs += ["-Xlint:deprecation"]
+}
+
+// maven publish
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            group      project.group
+            artifactId pluginNameLower
+            version    "$majorVersion.$minorVersion-SNAPSHOT"
+
+            from components.java
             artifact sourcesJar
             artifact javadocJar
-            groupId "cat.nyaa"
-            artifactId "nyaautils"
-            version "$majorVersion.$minorVersion-SNAPSHOT"
-            from components.java
         }
     }
     repositories {
         maven {
-            url "$mavenDirectory"
+            url mavenDirectory
         }
-    }
-}
-javadoc {
-    (options as StandardJavadocDocletOptions).with {
-        links 'https://docs.oracle.com/javase/8/docs/api/'
-        links 'https://hub.spigotmc.org/javadocs/bukkit/'
-        links 'https://google.github.io/guava/releases/21.0/api/docs/'
-        links 'https://nyaacat.github.io/NyaaCentral/NyaaCore/6.1-mc1.13/javadoc/'
     }
 }
