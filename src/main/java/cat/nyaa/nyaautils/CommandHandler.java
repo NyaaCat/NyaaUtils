@@ -71,7 +71,6 @@ public class CommandHandler extends CommandReceiver {
     public ExtraBackpackCommands extraBackpackCommands;
 
     private NyaaUtils plugin;
-    private boolean suppressNextCompleteMessage = false;
 
     public CommandHandler(NyaaUtils plugin, LanguageRepository i18n) {
         super(plugin, i18n);
@@ -667,7 +666,6 @@ public class CommandHandler extends CommandReceiver {
                     sender::sendMessage
             );
         }
-        suppressNextCompleteMessage = true;
     }
 
     @SubCommand(value = "ping", permission = "nu.ping")
@@ -807,14 +805,5 @@ public class CommandHandler extends CommandReceiver {
             return ChatColor.GOLD;
         }
         return ChatColor.RED;
-    }
-
-    @Override
-    protected boolean showCompleteMessage() {
-        try {
-            return !suppressNextCompleteMessage;
-        } finally {
-            suppressNextCompleteMessage = false;
-        }
     }
 }
