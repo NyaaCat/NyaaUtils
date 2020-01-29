@@ -543,7 +543,7 @@ public class CommandHandler extends CommandReceiver {
     }
 
     private boolean hasPexOrLp() {
-        return plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null;
+        return plugin.getServer().getPluginManager().getPlugin("PermissionsEx") != null || plugin.getServer().getPluginManager().getPlugin("LuckPerms") != null;
     }
 
     @SubCommand(value = "vote", permission = "nu.vote")
