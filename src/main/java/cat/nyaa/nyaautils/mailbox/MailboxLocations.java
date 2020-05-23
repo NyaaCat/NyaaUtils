@@ -99,7 +99,7 @@ public class MailboxLocations extends FileConfigure {
         name = name.toLowerCase();
         if (name.equals(nameMap.get(uuid))) return;
         if (nameMap.containsValue(name)) return;
-        nameMap.put(uuid, name);
+        nameMap.forcePut(uuid, name);
         save();
     }
 
