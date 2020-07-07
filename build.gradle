@@ -5,8 +5,8 @@ apply plugin: "maven-publish"
 ext.pluginNameUpper = "NyaaUtils"
 ext.pluginNameLower = ext.pluginNameUpper.toLowerCase()
 ext.majorVersion = 7
-ext.minorVersion = 1
-ext.minecraftVersion = "1.15.1"
+ext.minorVersion = 2
+ext.minecraftVersion = "1.16.1"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
