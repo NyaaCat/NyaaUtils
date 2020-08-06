@@ -239,9 +239,11 @@ user:
     timer_not_found: 未找到计时器 %s
     timer_enable: 计时器 %s 已启用
     timer_disable: 计时器 %s 已禁用
-    timer_info: 计时器：%s，检查点：%d，状态：%s，是否广播：%s
-    broadcast_enable: 广播已启用
-    broadcast_disable: 广播已禁用
+    timer_info: '计时器: %s, 检查点: %d, 状态: %s, 是否广播检查点: %s, 是否广播结束点: %s'
+    checkpoint_broadcast_enable: 检查点广播已启用
+    checkpoint_broadcast_disable: 检查点广播已关闭
+    finishpoint_broadcast_enable: 结束点广播已启用
+    finishpoint_broadcast_disable: 结束点广播已关闭
     checkpoint_remove: 检查点 %s 已移除
     checkpoint_not_found: 未找到检查点 %s
     checkpoint_broadcast: '[%s] 玩家 %s 已通过检查点 %d，用时 [ %d 分 %.2f 秒 ] '
@@ -544,9 +546,12 @@ manual:
     disable:
       description: 禁用计时器
       usage: /nu timer disable [计时器名称]
-    togglebroadcast:
-      description: 切换某计时器是否广播
-      usage: /nu timer togglebroadcast [计时器名称]
+    togglepointbroadcast:
+      description: 切换某计时器是否广播检查点
+      usage: /nu timer togglepointbroadcast [timer name]
+    togglefinishbroadcast:
+      description: 切换某计时器是否广播完成点
+      usage: /nu timer togglepointbroadcast [timer name]
     addcheckpoint:
       description: 向计时器添加检查点
       usage: /nu timer addcheckpoint [计时器名称] 或 /nu timer addcheckpoint [计时器名称] [检查点ID]

@@ -55,19 +55,19 @@ public class TimerListener implements Listener {
                     } else if (timer.getPlayerNextCheckpoint(p) == checkpoint.getCheckpointID()) {
                         timer.setPlayerCurrentCheckpoint(p, timer.getPlayerNextCheckpoint(p));
                         if (timer.getPlayerCurrentCheckpoint(p) == timer.getCheckpointList().size() - 1) {
-                            timer.broadcast(p, I18n.format("user.timer.finish_0", p.getName(), timer.getName()));
+                            timer.broadcast(p, I18n.format("user.timer.finish_0", p.getName(), timer.getName()), Timer.CheckPointType.FINISH);
                             PlayerStats stats = timer.getPlayerStats(p);
                             stats.updateCheckpointTime(timer.getPlayerCurrentCheckpoint(p));
                             for (int i = 1; i < stats.time.size(); i++) {
                                 double time = stats.getCheckpointTime(i, i - 1);
                                 int minute = (int) (time / 60);
                                 double second = time % 60;
-                                timer.broadcast(p, I18n.format("user.timer.finish_1", i, minute, second));
+                                timer.broadcast(p, I18n.format("user.timer.finish_1", i, minute, second), Timer.CheckPointType.FINISH);
                             }
                             double time = stats.getCheckpointTime(timer.getPlayerCurrentCheckpoint(p), 0);
                             int minute = (int) (time / 60);
                             double second = time % 60;
-                            timer.broadcast(p, I18n.format("user.timer.finish_2", minute, second));
+                            timer.broadcast(p, I18n.format("user.timer.finish_2", minute, second), Timer.CheckPointType.FINISH);
                             timer.removePlayer(p);
                         } else {
                             timer.setPlayerCurrentCheckpoint(p, checkpoint.getCheckpointID());
@@ -76,7 +76,7 @@ public class TimerListener implements Listener {
                             int minute = (int) (time / 60);
                             double second = time % 60;
                             timer.broadcast(p, I18n.format("user.timer.checkpoint_broadcast",
-                                    checkpoint.getTimerName(), p.getName(), checkpoint.getCheckpointID(), minute, second));
+                                    checkpoint.getTimerName(), p.getName(), checkpoint.getCheckpointID(), minute, second), Timer.CheckPointType.NORMAL);
                             return;
                         }
                     } else {

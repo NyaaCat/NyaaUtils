@@ -166,8 +166,10 @@ user:
     timer_enable: ''
     timer_disable: ''
     timer_info: ''
-    broadcast_enable: ''
-    broadcast_disable: ''
+    checkpoint_broadcast_enable: ''
+    checkpoint_broadcast_disable: ''
+    finishpoint_broadcast_enable: ''
+    finishpoint_broadcast_disable: ''
     checkpoint_remove: ''
     checkpoint_not_found: ''
     checkpoint_broadcast: ''
@@ -418,7 +420,10 @@ manual:
     disable:
       description: ''
       usage: ''
-    togglebroadcast:
+    togglepointbroadcast:
+      description: ''
+      usage: ''
+    togglefinishbroadcast:
       description: ''
       usage: ''
     addcheckpoint:

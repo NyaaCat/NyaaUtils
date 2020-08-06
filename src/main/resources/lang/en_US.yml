@@ -204,9 +204,11 @@ user:
     timer_not_found: Timer %s not found
     timer_enable: Timer %s enabled
     timer_disable: Timer %s has been disabled
-    timer_info: 'Timer: %s, Checkpoints: %d, status: %s, Broadcast: %s'
-    broadcast_enable: Broadcast enabled
-    broadcast_disable: Broadcast disabled
+    timer_info: 'Timer: %s, Checkpoints: %d, Status: %s, Point Broadcast: %s, Finish Broadcast: %s'
+    checkpoint_broadcast_enable: Checkpoint broadcast enabled
+    checkpoint_broadcast_disable: Checkpoint broadcast disabled
+    finishpoint_broadcast_enable: Finishpoint broadcast enabled
+    finishpoint_broadcast_disable: Finishpoint broadcast disabled
     checkpoint_remove: Checkpoint %s has been removed
     checkpoint_not_found: Checkpoint %s not found
     checkpoint_broadcast: '[%s] Player %s reached checkpoint %d, time [ %d min %.2fs
@@ -515,9 +517,12 @@ manual:
     disable:
       description: Disable a timer
       usage: /nu timer disable [timer name]
-    togglebroadcast:
-      description: Toggle broadcast
-      usage: /nu timer togglebroadcast [timer name]
+    togglepointbroadcast:
+      description: Toggle normal checkpoint broadcast
+      usage: /nu timer togglepointbroadcast [timer name]
+    togglefinishbroadcast:
+      description: Toggle finish broadcast
+      usage: /nu timer togglepointbroadcast [timer name]
     addcheckpoint:
       description: Add checkpoint to timer
       usage: /nu timer addcheckpoint [timer name] [x1] [y1] [z1] [x2] [y2] [z2] or /nu timer addcheckpoint [timer

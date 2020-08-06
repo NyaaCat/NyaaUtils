@@ -2,6 +2,7 @@ apply plugin: "java-library"
 apply plugin: "maven-publish"
 
 // Plugin config
+compileJava.options.encoding = 'UTF-8'
 ext.pluginNameUpper = "NyaaUtils"
 ext.pluginNameLower = ext.pluginNameUpper.toLowerCase()
 ext.majorVersion = 7
@@ -9,6 +10,7 @@ ext.minorVersion = 2
 ext.minecraftVersion = "1.16.1"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
 
 // Suppiled by Jenkins
 ext.buildNumber = System.env.BUILD_NUMBER == null ? "x"                : "$System.env.BUILD_NUMBER"

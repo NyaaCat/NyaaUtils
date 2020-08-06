@@ -124,11 +124,11 @@ public class TimerCommands extends CommandReceiver {
             } catch (Exception e) {
                 //e.printStackTrace();
             }
-        }
-        if (pos1 == null) {
+        } else {
             msg(sender, "user.timer.select");
             return;
         }
+
         int checkpointID = -1;
         if (args.remains() == 1) {
             checkpointID = args.nextInt();
@@ -167,10 +167,10 @@ public class TimerCommands extends CommandReceiver {
         }
     }
 
-    @SubCommand(value = "togglebroadcast", permission = "nu.createtimer")
-    public void commandToggleBroadcast(CommandSender sender, Arguments args) {
+    @SubCommand(value = "togglepointbroadcast", permission = "nu.createtimer")
+    public void commandTogglePointBroadcast(CommandSender sender, Arguments args) {
         if (args.length() != 3) {
-            msg(sender, "manual.timer.togglebroadcast.usage");
+            msg(sender, "manual.timer.togglepointbroadcast.usage");
             return;
         }
         String name = args.next();
@@ -179,10 +179,30 @@ public class TimerCommands extends CommandReceiver {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        if (plugin.cfg.timerConfig.timers.get(name).toggleBroadcast()) {
-            msg(sender, "user.timer.broadcast_enable");
+        if (plugin.cfg.timerConfig.timers.get(name).togglePointBroadcast()) {
+            msg(sender, "user.timer.checkpoint_broadcast_enable");
         } else {
-            msg(sender, "user.timer.broadcast_disable");
+            msg(sender, "user.timer.checkpoint_broadcast_disable");
+        }
+        plugin.cfg.save();
+    }
+
+    @SubCommand(value = "togglefinishbroadcast", permission = "nu.createtimer")
+    public void commandFinishPointBroadcast(CommandSender sender, Arguments args) {
+        if (args.length() != 3) {
+            msg(sender, "manual.timer.togglefinishbroadcast.usage");
+            return;
+        }
+        String name = args.next();
+        Timer timer = plugin.timerManager.getTimer(name);
+        if (timer == null) {
+            msg(sender, "user.timer.timer_not_found", name);
+            return;
+        }
+        if (plugin.cfg.timerConfig.timers.get(name).toggleFinishBroadcast()) {
+            msg(sender, "user.timer.finishpoint_broadcast_enable");
+        } else {
+            msg(sender, "user.timer.finishpoint_broadcast_disable");
         }
         plugin.cfg.save();
     }
@@ -199,9 +219,10 @@ public class TimerCommands extends CommandReceiver {
             msg(sender, "user.timer.timer_not_found", name);
             return;
         }
-        String broadcast = I18n.format("user.info." + (timer.broadcast ? "enabled" : "disabled"));
+        String point_broadcast = I18n.format("user.info." + (timer.point_broadcast ? "enabled" : "disabled"));
+        String finish_broadcast = I18n.format("user.info." + (timer.finish_broadcast ? "enabled" : "disabled"));
         String status = I18n.format("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
-        msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, broadcast);
+        msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, point_broadcast, finish_broadcast);
         for (Checkpoint c : timer.getCheckpointList()) {
             msg(sender, "user.timer.checkpoint_info", c.getCheckpointID(), c.getMaxPos().getWorld().getName(),
                     c.getMaxPos().getBlockX(), c.getMaxPos().getBlockY(), c.getMaxPos().getBlockZ(),
@@ -214,9 +235,10 @@ public class TimerCommands extends CommandReceiver {
         HashMap<String, Timer> timers = plugin.cfg.timerConfig.timers;
         msg(sender, "user.timer.list", timers.size());
         for (Timer timer : timers.values()) {
-            String broadcast = I18n.format("user.info." + (timer.broadcast ? "enabled" : "disabled"));
+            String point_broadcast = I18n.format("user.info." + (timer.point_broadcast ? "enabled" : "disabled"));
+            String finish_broadcast = I18n.format("user.info." + (timer.finish_broadcast ? "enabled" : "disabled"));
             String status = I18n.format("user.info." + (timer.isEnabled() ? "enabled" : "disabled"));
-            msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, broadcast);
+            msg(sender, "user.timer.timer_info", timer.getName(), timer.getCheckpointList().size(), status, point_broadcast, finish_broadcast);
         }
     }
 }

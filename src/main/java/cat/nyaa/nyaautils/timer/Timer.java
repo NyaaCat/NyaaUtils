@@ -12,7 +12,9 @@ import java.util.UUID;
 
 public class Timer implements ISerializable {
     @Serializable
-    public boolean broadcast = true;
+    public boolean point_broadcast = false;
+    @Serializable
+    public boolean finish_broadcast = true;
     public HashMap<UUID, Integer> currentCheckpoint = new HashMap<>();
     public HashMap<UUID, PlayerStats> playerStats = new HashMap<>();
     @Serializable
@@ -40,7 +42,7 @@ public class Timer implements ISerializable {
     }
 
     public Checkpoint getCheckpoint(int id) {
-        if (id <= checkpointList.size()) {
+        if (id < checkpointList.size()) {
             return checkpointList.get(id);
         }
         return null;
@@ -54,9 +56,14 @@ public class Timer implements ISerializable {
         this.name = name;
     }
 
-    public boolean toggleBroadcast() {
-        broadcast = !broadcast;
-        return broadcast;
+    public boolean togglePointBroadcast() {
+        point_broadcast = !point_broadcast;
+        return point_broadcast;
+    }
+
+    public boolean toggleFinishBroadcast(){
+        finish_broadcast = !finish_broadcast;
+        return finish_broadcast;
     }
 
     public int addCheckpoint(Location pos1, Location pos2) {
@@ -137,11 +144,19 @@ public class Timer implements ISerializable {
         return playerStats.get(player.getUniqueId());
     }
 
-    public void broadcast(Player player, String msg) {
-        if (broadcast) {
-            Bukkit.broadcastMessage(msg);
-        } else {
-            player.sendMessage(msg);
+    public void broadcast(Player player, String msg, CheckPointType type) {
+        if(type== CheckPointType.NORMAL){
+            if(point_broadcast){
+                Bukkit.broadcastMessage(msg);
+            }else{
+                player.sendMessage(msg);
+            }
+        }else{
+            if(finish_broadcast){
+                Bukkit.broadcastMessage(msg);
+            }else{
+                player.sendMessage(msg);
+            }
         }
     }
 
@@ -157,9 +172,14 @@ public class Timer implements ISerializable {
         Timer timer = new Timer();
         timer.setName(getName());
         timer.setCheckpointList(getCheckpointList());
-        timer.broadcast = broadcast;
+        timer.point_broadcast = point_broadcast;
+        timer.finish_broadcast = finish_broadcast;
         timer.enable = enable;
         return timer;
+    }
+
+    public enum CheckPointType {
+        NORMAL,FINISH
     }
 
     @Override
