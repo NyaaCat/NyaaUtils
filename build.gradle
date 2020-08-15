@@ -4,7 +4,7 @@ plugins {
 }
 
 ext.majorVersion = 7
-ext.minorVersion = 0
+ext.minorVersion = 2
 ext.minecraftVersion = "1.15"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -94,7 +94,7 @@ publishing {
 }
 javadoc {
     (options as StandardJavadocDocletOptions).with {
-        links 'https://docs.oracle.com/javase/8/docs/api/'
+        links 'https://docs.oracle.com/en/java/javase/14/docs/api/'
         links 'https://hub.spigotmc.org/javadocs/bukkit/'
         links 'https://google.github.io/guava/releases/21.0/api/docs/'
         links 'https://nyaacat.github.io/NyaaCentral/NyaaCore/6.1-mc1.13/javadoc/'
