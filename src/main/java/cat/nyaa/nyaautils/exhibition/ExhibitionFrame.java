@@ -7,24 +7,80 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Vector;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 import static org.bukkit.Material.AIR;
 
 public class ExhibitionFrame {
     private static final String MAGIC_TITLE = ChatColor.translateAlternateColorCodes('&', "&b&e&a&3&f");
+    private static final Base64.Encoder b64Encoder = Base64.getEncoder();
+    private static final Base64.Decoder b64Decoder = Base64.getDecoder();
     private final ItemFrame frame;
-
     private ItemStack baseItem;
     private String ownerUUID;
     private String ownerName;
     private List<String> descriptions;
     private boolean itemSet = false;
+
+    private ExhibitionFrame(ItemFrame frame) {
+        if (frame == null) throw new IllegalArgumentException();
+        this.frame = frame;
+        decodeItem();
+    }
+
+    public static ExhibitionFrame fromItemFrame(ItemFrame frame) {
+        if (frame == null) return null;
+        return new ExhibitionFrame(frame);
+    }
+
+    public static ExhibitionFrame fromPlayerEye(Player p) {
+        Entity itemF = RayTraceUtils.getTargetEntity(p);
+        if (itemF instanceof ItemFrame) {
+            return new ExhibitionFrame((ItemFrame) itemF);
+        } else {
+            return null;
+        }
+    }
+
+    public static boolean isFrameInnerItem(ItemStack item) {
+        return item != null
+                && item.hasItemMeta()
+                && item.getItemMeta().hasLore()
+                && item.getItemMeta().getLore().size() >= 1
+                && item.getItemMeta().getLore().get(0).startsWith(MAGIC_TITLE);
+    }
+
+    private static String base64(String str) {
+        return b64Encoder.encodeToString(str.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String deBase64(String base64) {
+        try {
+            return new String(b64Decoder.decode(base64), StandardCharsets.UTF_8);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    private boolean isExhibitionItem(List<String> lore) {
+        if (lore.size() < 3) return false;
+        boolean isExhibitionItem = false;
+        if (lore.get(0).startsWith(MAGIC_TITLE)) {
+            try {
+                UUID.fromString(lore.get(1));
+                isExhibitionItem = true;
+            } catch (IllegalArgumentException ignore) {
+
+            }
+        }
+        return isExhibitionItem;
+    }
 
     private void decodeItem() {
         itemSet = false;
@@ -38,7 +94,7 @@ public class ExhibitionFrame {
         if (!frame.getItem().hasItemMeta()) return;
         if (!frame.getItem().getItemMeta().hasLore()) return;
         List<String> lore = frame.getItem().getItemMeta().getLore();
-        if (lore.size() >= 1 && lore.get(0).startsWith(MAGIC_TITLE)) {
+        if (isExhibitionItem(lore)) {
             String lenStr = lore.get(0).substring(MAGIC_TITLE.length());
             int len = -1;
             try {
@@ -79,7 +135,7 @@ public class ExhibitionFrame {
         if (ownerUUID == null) ownerUUID = "";
         if (ownerName == null) ownerName = "";
         List<String> metaList = new ArrayList<>();
-        metaList.add(MAGIC_TITLE + Integer.toString(3 + descriptions.size()));
+        metaList.add(MAGIC_TITLE + (3 + descriptions.size()));
         metaList.add(ownerUUID);
         metaList.add(ownerName);
         for (String line : descriptions) {
@@ -95,26 +151,6 @@ public class ExhibitionFrame {
         meta.setLore(metaList);
         item.setItemMeta(meta);
         frame.setItem(item);
-    }
-
-    private ExhibitionFrame(ItemFrame frame) {
-        if (frame == null) throw new IllegalArgumentException();
-        this.frame = frame;
-        decodeItem();
-    }
-
-    public static ExhibitionFrame fromItemFrame(ItemFrame frame) {
-        if (frame == null) return null;
-        return new ExhibitionFrame(frame);
-    }
-
-    public static ExhibitionFrame fromPlayerEye(Player p) {
-        Entity itemF = RayTraceUtils.getTargetEntity(p);
-        if (itemF instanceof ItemFrame) {
-            return new ExhibitionFrame((ItemFrame) itemF);
-        } else {
-            return null;
-        }
     }
 
     public boolean hasItem() {
@@ -179,34 +215,5 @@ public class ExhibitionFrame {
             else descriptions.set(line, str);
         }
         encodeItem();
-    }
-
-    public static boolean isFrameInnerItem(ItemStack item) {
-        return item != null
-                && item.hasItemMeta()
-                && item.getItemMeta().hasLore()
-                && item.getItemMeta().getLore().size() >= 1
-                && item.getItemMeta().getLore().get(0).startsWith(MAGIC_TITLE);
-    }
-
-    private static final Base64.Encoder b64Encoder = Base64.getEncoder();
-    private static final Base64.Decoder b64Decoder = Base64.getDecoder();
-
-    private static String base64(String str) {
-        try {
-            return b64Encoder.encodeToString(str.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException ex) { // WTF utf8 not supported?
-            return "";
-        }
-    }
-
-    private static String deBase64(String base64) {
-        try {
-            return new String(b64Decoder.decode(base64), "UTF-8");
-        } catch (UnsupportedEncodingException ex) { // WTF utf8 not supported?
-            return "";
-        } catch (IllegalArgumentException ex) {
-            return null;
-        }
     }
 }

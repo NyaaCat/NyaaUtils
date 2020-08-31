@@ -7,7 +7,7 @@ ext.pluginNameUpper = "NyaaUtils"
 ext.pluginNameLower = ext.pluginNameUpper.toLowerCase()
 ext.majorVersion = 8
 ext.minorVersion = 0
-ext.minecraftVersion = "1.16.1"
+ext.minecraftVersion = "1.16.2"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -16,6 +16,32 @@ targetCompatibility = 1.8
 ext.buildNumber = System.env.BUILD_NUMBER == null ? "x"                : "$System.env.BUILD_NUMBER"
 ext.mavenDirectory = System.env.MAVEN_DIR == null ? "$projectDir/repo" : "$System.env.MAVEN_DIR"
 ext.jdDirectory = System.env.JAVADOCS_DIR == null ? null               : "$System.env.JAVADOCS_DIR"
+
+// Search for spigot nms jar file
+String spigotNmsPath = "";
+if (System.env.NMS_JAR != null) {
+    // use NMS_JAR if it's explicitly specified
+    spigotNmsPath = "$System.env.NMS_JAR"
+    if (new File(spigotNmsPath).exists()) {
+        logger.warn("NMS jar is set manually: ${spigotNmsPath}")
+    } else {
+        throw new GradleException("NMS jar not found: ${spigotNmsPath}")
+    }
+} else if (new File("${mavenDirectory}/spigot-${minecraftVersion}-latest.jar").exists()) {
+    // ci environment
+    spigotNmsPath = "${mavenDirectory}/spigot-${minecraftVersion}-latest.jar"
+} else {
+    // check local dir (dev environment)
+    spigotNmsPath = "${projectDir}/../nms_binaries/spigot-${minecraftVersion}.jar"
+    if (!(new File(spigotNmsPath).exists())) {
+        // nms not found, download from nyaaci
+        def f = new File(spigotNmsPath)
+        println "Downloading spigot-${minecraftVersion}.jar"
+        f.getParentFile().mkdirs();
+        new URL("https://ci.nyaacat.com/maven/spigot-${minecraftVersion}-latest.jar").withInputStream{ i -> f.withOutputStream{ it << i }}
+    }
+}
+println ("Found NMS jar: ${spigotNmsPath}")
 
 // Version used for distribution. Different from maven repo
 group = "cat.nyaa"
@@ -36,7 +62,7 @@ repositories {
 dependencies {
     // spigot dependencies
     compileOnly "org.spigotmc:spigot-api:$minecraftVersion-R0.1-SNAPSHOT"
-
+    compileOnly files(spigotNmsPath)
     // Nyaa plugins
     if (gradle.hasProperty("useLocalDependencies") && gradle.useLocalDependencies) {
         compileOnly project(":NyaaCore")
