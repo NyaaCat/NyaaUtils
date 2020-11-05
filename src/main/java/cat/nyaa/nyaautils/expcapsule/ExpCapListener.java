@@ -31,7 +31,7 @@ public class ExpCapListener implements Listener {
 
     private final JavaPlugin plugin;
     private Configuration cfg;
-    private HashMap<UUID, Integer> thrownExpMap = new HashMap<>();
+    private HashMap<UUID, Long> thrownExpMap = new HashMap<UUID, Long>();
 
     public ExpCapListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -51,7 +51,7 @@ public class ExpCapListener implements Listener {
             ItemStack item = event.getItem();
             if (item == null) return;
             if (item.getType().equals(Material.EXPERIENCE_BOTTLE)) {
-                Integer storedExp = ExpCapsuleCommands.getStoredExp(item);
+                Long storedExp = ExpCapsuleCommands.getStoredExp(item);
                 thrownExpMap.put(event.getPlayer().getUniqueId(), storedExp);
             }
         }
@@ -65,7 +65,7 @@ public class ExpCapListener implements Listener {
             if (shooter instanceof Player) {
                 event.getEntity().setMetadata("nu_expcap_exp",
                         new FixedMetadataValue(plugin,
-                                thrownExpMap.computeIfAbsent(((Player) shooter).getUniqueId(), uuid -> 0)
+                                thrownExpMap.computeIfAbsent(((Player) shooter).getUniqueId(), uuid -> 0L)
                         )
                 );
             }
@@ -81,23 +81,23 @@ public class ExpCapListener implements Listener {
             if (metadataValue == null) {
                 return;
             }
-            int exp = metadataValue.asInt();
+            long exp = metadataValue.asLong();
             if (exp <= 0)return;
             //生成的经验球数量大于1,小于总经验数
-            int maxOrbAmount = Math.min(exp,cfg.expcap_max_orb_amount);
+            long maxOrbAmount = Math.min(exp,cfg.expcap_max_orb_amount);
             int minOrbAmount = Math.max(1, ((NyaaUtils) plugin).cfg.expcap_min_orb_amount);
-            int orbAmount = Math.min(Math.max(exp, minOrbAmount), maxOrbAmount);
+            long orbAmount = Math.min(Math.max(exp, minOrbAmount), maxOrbAmount);
             Location location = event.getEntity().getLocation();
-            int expPerOrb = exp / orbAmount;
+            long expPerOrb = exp / orbAmount;
             int delay = 0;
             int step = Math.max(cfg.expcap_orb_ticksBetweenSpawn,0);
             //整形除法可能导致实际生成经验量偏少
-            int spawnedExp = orbAmount * expPerOrb;
-            int remain = exp - spawnedExp;
+            long spawnedExp = orbAmount * expPerOrb;
+            long remain = exp - spawnedExp;
             final World world = location.getWorld();
             if (world == null) return;
             world.spawn(location, ExperienceOrb.class, experienceOrb -> {
-                experienceOrb.setExperience(remain);
+                experienceOrb.setExperience((int) Math.min(Integer.MAX_VALUE, remain));
             });
 
             for (int i = 0; i < orbAmount; i++) {
@@ -115,7 +115,7 @@ public class ExpCapListener implements Listener {
                     }
                     if (!world.getBlockAt(location).getType().isSolid()) add = location;
                     world.spawn(add, ExperienceOrb.class, experienceOrb -> {
-                        experienceOrb.setExperience(expPerOrb);
+                        experienceOrb.setExperience((int) Math.min(Integer.MAX_VALUE, expPerOrb));
                     });
                 },delay+=step);
             }
