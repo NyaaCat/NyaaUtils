@@ -1,24 +1,29 @@
 package cat.nyaa.nyaautils.exhibition;
 
 import cat.nyaa.nyaacore.utils.RayTraceUtils;
+import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.bukkit.Material.AIR;
 
 public class ExhibitionFrame {
-    private static final String MAGIC_TITLE = ChatColor.translateAlternateColorCodes('&', "&b&e&a&3&f");
+    private static final NamespacedKey keyUid = new NamespacedKey(NyaaUtils.instance, "exhibitionKeyUid");
+    private static final NamespacedKey keyName = new NamespacedKey(NyaaUtils.instance, "exhibitionKeyName");
+    private static final NamespacedKey keyDescription = new NamespacedKey(NyaaUtils.instance, "exhibitionKeyDescription");
+    //translate legacy
+    private static final String MAGIC_TITLE = ChatColor.translateAlternateColorCodes('&', "&f");
     private static final Base64.Encoder b64Encoder = Base64.getEncoder();
     private static final Base64.Decoder b64Decoder = Base64.getDecoder();
     private final ItemFrame frame;
@@ -31,7 +36,21 @@ public class ExhibitionFrame {
     private ExhibitionFrame(ItemFrame frame) {
         if (frame == null) throw new IllegalArgumentException();
         this.frame = frame;
+        if (isLegacyItem(frame.getItem())){
+            decodeLegacy();
+            encodeItem();
+            return;
+        }
         decodeItem();
+    }
+
+    private static boolean isLegacyItem(ItemStack item) {
+        if (item == null) return false;
+        if (item.getType() == AIR) return false;
+        if (!item.hasItemMeta()) return false;
+        ItemMeta itemMeta = item.getItemMeta();
+        if (!itemMeta.hasLore()) return false;
+        return isLegacyItem(itemMeta.getLore());
     }
 
     public static ExhibitionFrame fromItemFrame(ItemFrame frame) {
@@ -53,7 +72,7 @@ public class ExhibitionFrame {
                 && item.hasItemMeta()
                 && item.getItemMeta().hasLore()
                 && item.getItemMeta().getLore().size() >= 1
-                && item.getItemMeta().getLore().get(0).startsWith(MAGIC_TITLE);
+                && isLegacyItem(item) || isExhibitionItem(item);
     }
 
     private static String base64(String str) {
@@ -68,7 +87,15 @@ public class ExhibitionFrame {
         }
     }
 
-    private boolean isExhibitionItem(List<String> lore) {
+    private static boolean isExhibitionItem(ItemStack itemStack) {
+        if (itemStack == null || !itemStack.hasItemMeta()) {
+            return false;
+        }
+        PersistentDataContainer persistentDataContainer = itemStack.getItemMeta().getPersistentDataContainer();
+        return persistentDataContainer.has(keyUid, PersistentDataType.STRING);
+    }
+
+    private static boolean isLegacyItem(List<String> lore) {
         if (lore.size() < 3) return false;
         boolean isExhibitionItem = false;
         if (lore.get(0).startsWith(MAGIC_TITLE)) {
@@ -82,7 +109,7 @@ public class ExhibitionFrame {
         return isExhibitionItem;
     }
 
-    private void decodeItem() {
+    private void decodeLegacy(){
         itemSet = false;
         ownerName = "";
         ownerUUID = "";
@@ -93,8 +120,9 @@ public class ExhibitionFrame {
         baseItem = frame.getItem().clone();
         if (!frame.getItem().hasItemMeta()) return;
         if (!frame.getItem().getItemMeta().hasLore()) return;
+
         List<String> lore = frame.getItem().getItemMeta().getLore();
-        if (isExhibitionItem(lore)) {
+        if (isLegacyItem(lore)) {
             String lenStr = lore.get(0).substring(MAGIC_TITLE.length());
             int len = -1;
             try {
@@ -124,6 +152,33 @@ public class ExhibitionFrame {
         }
     }
 
+    private void decodeItem() {
+        itemSet = false;
+        ownerName = "";
+        ownerUUID = "";
+        descriptions = new ArrayList<>();
+        if (frame == null) return;
+        ItemStack item = frame.getItem();
+        if (item == null) return;
+        if (item.getType() == AIR) return;
+        baseItem = item.clone();
+        if (!item.hasItemMeta()) return;
+        if (!isExhibitionItem(item)){
+            return;
+        }
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        String uuid = persistentDataContainer.get(keyUid, PersistentDataType.STRING);
+        String name = persistentDataContainer.get(keyName, PersistentDataType.STRING);
+        String des = persistentDataContainer.get(keyDescription, PersistentDataType.STRING);
+        List<String> strings = splitDescription(des).stream()
+                .map(ExhibitionFrame::deBase64)
+                .collect(Collectors.toList());
+        ownerUUID = uuid;
+        ownerName = name;
+        descriptions = strings;
+    }
+
     private void encodeItem() {
         if (frame == null) return;
         if (baseItem == null || baseItem.getType() == AIR) return;
@@ -134,23 +189,37 @@ public class ExhibitionFrame {
         if (descriptions == null) descriptions = new ArrayList<>();
         if (ownerUUID == null) ownerUUID = "";
         if (ownerName == null) ownerName = "";
-        List<String> metaList = new ArrayList<>();
-        metaList.add(MAGIC_TITLE + (3 + descriptions.size()));
-        metaList.add(ownerUUID);
-        metaList.add(ownerName);
-        for (String line : descriptions) {
-            metaList.add(base64(line));
-        }
-        metaList.add(MAGIC_TITLE);
-
+        List<String> encodedDescription = descriptions.stream()
+                .map(ExhibitionFrame::base64)
+                .collect(Collectors.toList());
+        String des = joinDescription(encodedDescription);
         ItemStack item = baseItem.clone();
         ItemMeta meta = item.getItemMeta();
-        if (meta.hasLore()) {
-            metaList.addAll(meta.getLore());
-        }
-        meta.setLore(metaList);
+        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        persistentDataContainer.set(keyUid, PersistentDataType.STRING, ownerUUID);
+        persistentDataContainer.set(keyName, PersistentDataType.STRING, ownerName);
+        persistentDataContainer.set(keyDescription, PersistentDataType.STRING, des);
         item.setItemMeta(meta);
         frame.setItem(item);
+    }
+
+    private String joinDescription(List<String> descriptions) {
+        StringBuilder sb = new StringBuilder();
+        descriptions.forEach(s -> {
+            sb.append(s).append("|");
+        });
+        if (sb.length()>0) {
+            sb.deleteCharAt(sb.length()-1);
+        }
+        return sb.toString();
+    }
+
+    private List<String> splitDescription(String descriptions){
+        if (descriptions == null){
+            return new ArrayList<>();
+        }
+        String[] split = descriptions.split("\\|");
+        return new ArrayList<>(Arrays.asList(split));
     }
 
     public boolean hasItem() {
