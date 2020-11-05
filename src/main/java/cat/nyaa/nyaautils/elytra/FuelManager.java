@@ -6,10 +6,12 @@ import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,8 @@ import java.util.Random;
 public class FuelManager {
     private final NyaaUtils plugin;
 
-    public String lore_prefix = ChatColor.translateAlternateColorCodes('&', "&r&9&e&a&1&4&0&2&r");
+    private static final NamespacedKey keyFuelId = new NamespacedKey(NyaaUtils.instance, "fuelId");
+    private static final NamespacedKey keyFuelDurability = new NamespacedKey(NyaaUtils.instance, "fuelDurability");
 
     public FuelManager(NyaaUtils pl) {
         plugin = pl;
@@ -74,21 +77,15 @@ public class FuelManager {
         if (fuel == null) {
             return;
         }
-        String hex = toHexString(fuelID) + toHexString(durability) + toHexString(new Random().nextInt(65535));
-        String str = "";
-        for (int i = 0; i < hex.length(); i++) {
-            str += ChatColor.COLOR_CHAR + hex.substring(i, i + 1);
-        }
-        str += ChatColor.COLOR_CHAR + "r";
         ItemMeta meta = fuel.getItem().getItemMeta();
         List<String> lore;
+        String fuelLore = I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability());
         if (meta.hasLore()) {
             lore = meta.getLore();
-            lore.set(0, lore_prefix + str + lore.get(0));
-            lore.add(lore_prefix + I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
+            lore.set(0, fuelLore);
         } else {
             lore = new ArrayList<>();
-            lore.add(lore_prefix + str + I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability()));
+            lore.add(fuelLore);
         }
         item.setType(fuel.getItem().getType());
         item.setData(fuel.getItem().getData());
@@ -97,31 +94,27 @@ public class FuelManager {
     }
 
     public int getFuelID(ItemStack item) {
-        if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
-            String lore = item.getItemMeta().getLore().get(0);
-            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.startsWith(lore_prefix)) {
-                try {
-                    return Integer.parseInt(lore.substring(lore_prefix.length(),
-                            lore_prefix.length() + 8).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), ""), 16);
-                } catch (NumberFormatException e) {
-                    return -1;
-                }
+        if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta()) {
+            ItemMeta itemMeta = item.getItemMeta();
+            PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+            Integer id = persistentDataContainer.get(keyFuelId, PersistentDataType.INTEGER);
+            if (id == null) {
+                return -1;
             }
+            return id;
         }
         return -1;
     }
 
     public int getFuelDurability(ItemStack item) {
-        if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta() && item.getItemMeta().hasLore()) {
-            String lore = item.getItemMeta().getLore().get(0);
-            if (lore != null && lore.length() >= (lore_prefix.length() + 24 + 2) && lore.contains(lore_prefix)) {
-                try {
-                    return Integer.parseInt(lore.substring(lore_prefix.length() + 8,
-                            lore_prefix.length() + 16).replaceAll(String.valueOf(ChatColor.COLOR_CHAR), ""), 16);
-                } catch (NumberFormatException e) {
-                    return -1;
-                }
+        if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta()) {
+            ItemMeta itemMeta = item.getItemMeta();
+            PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+            Integer durability = persistentDataContainer.get(keyFuelDurability, PersistentDataType.INTEGER);
+            if (durability == null) {
+                return -1;
             }
+            return durability;
         }
         return -1;
     }
