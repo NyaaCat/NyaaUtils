@@ -16,6 +16,9 @@ commands:
     usage: "/<command> [SubCommand...] [Arguments...] or /<command> help"
 
 permissions:
+  nu.upgrade:
+    description: upgrade permission node for commands
+    default: true
   nu.command:
     description: Base permission node for commands
     default: true

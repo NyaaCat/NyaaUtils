@@ -11,10 +11,13 @@ import cat.nyaa.nyaautils.Configuration;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,5 +151,29 @@ public class ExpCapsuleCommands extends CommandReceiver {
         }
         meta.setLore(newLore);
         item.setItemMeta(meta);
+    }
+
+    private static final NamespacedKey expcapKey = new NamespacedKey(NyaaUtils.instance, "expcap");
+
+    public void upgradeExpCap(ItemStack itemStack){
+        Integer exp = getStoredExp(itemStack);
+        ItemMeta meta = itemStack.getItemMeta();
+        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        persistentDataContainer.set(expcapKey, PersistentDataType.LONG, exp.longValue());
+
+        List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+        List<String> newLore = new ArrayList<>();
+        for (String str : lore) {
+            if (str.contains(EXP_CAPSULE_MAGIC)) continue;
+            newLore.add(str);
+        }
+        if (lore.size() == 0 && exp > 0){
+            lore.add(0, "");
+        }
+        if (exp > 0) {
+            newLore.set(0, I18n.format("user.expcap.contain_exp", Long.toString(exp)));
+        }
+        meta.setLore(newLore);
+        itemStack.setItemMeta(meta);
     }
 }

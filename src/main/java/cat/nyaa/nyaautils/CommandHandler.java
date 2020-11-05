@@ -782,6 +782,40 @@ public class CommandHandler extends CommandReceiver {
         msg(sender, "user.tpall.success", success);
     }
 
+    @SubCommand(value = "upgrade", permission = "nu.upgrade")
+    public void onUpgradeItem(CommandSender sender, Arguments args){
+        Player player = asPlayer(sender);
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        if (itemInMainHand == null){
+            msg(sender, "user.info.no_item_hand");
+            return;
+        }
+        Integer storedExp = ExpCapsuleCommands.getStoredExp(itemInMainHand);
+        if (storedExp != null) {
+            upgradeExpCap(itemInMainHand);
+            UpgradeList instance = UpgradeList.getInstance();
+            instance.Ids.add(player.getName());
+            instance.save();
+            return;
+        }
+        int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
+        if (fuelID != -1){
+            upgradeFuel(itemInMainHand);
+            UpgradeList instance = UpgradeList.getInstance();
+            instance.Ids.add(player.getName());
+            instance.save();
+            return;
+        }
+    }
+
+    private void upgradeFuel(ItemStack fuel) {
+        plugin.fuelManager.upgrade(fuel);
+    }
+
+    private void upgradeExpCap(ItemStack itemInMainHand) {
+        plugin.commandHandler.expCapsuleCommands.upgradeExpCap(itemInMainHand);
+    }
+
     // TODO:
     private ChatColor pingColor(double ping) {
         if (ping <= 30) {

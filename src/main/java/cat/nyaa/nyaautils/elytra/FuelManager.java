@@ -6,10 +6,13 @@ import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +22,19 @@ public class FuelManager {
     private final NyaaUtils plugin;
 
     public String lore_prefix = ChatColor.translateAlternateColorCodes('&', "&r&9&e&a&1&4&0&2&r");
+    private static final NamespacedKey keyFuelId = new NamespacedKey(NyaaUtils.instance, "fuelId");
+    private static final NamespacedKey keyFuelDurability = new NamespacedKey(NyaaUtils.instance, "fuelDurability");
 
     public FuelManager(NyaaUtils pl) {
         plugin = pl;
+    }
+
+    public void upgrade(ItemStack itemStack){
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        persistentDataContainer.set(keyFuelId, PersistentDataType.INTEGER, getFuelID(itemStack));
+        persistentDataContainer.set(keyFuelDurability, PersistentDataType.INTEGER, getFuelDurability(itemStack) );
+        itemStack.setItemMeta(itemMeta);
     }
 
     public int getFuelAmount(Player player, boolean exact) {
