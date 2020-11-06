@@ -29,12 +29,16 @@ public class FuelManager {
         plugin = pl;
     }
 
-    public void upgrade(ItemStack itemStack){
-        ItemMeta itemMeta = itemStack.getItemMeta();
+    public void upgrade(FuelItem fuelItem, ItemStack item){
+        ItemStack fuel = fuelItem.getItem();
+        ItemMeta itemMeta = item.getItemMeta();
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        persistentDataContainer.set(keyFuelId, PersistentDataType.INTEGER, getFuelID(itemStack));
-        persistentDataContainer.set(keyFuelDurability, PersistentDataType.INTEGER, getFuelDurability(itemStack) );
-        itemStack.setItemMeta(itemMeta);
+        persistentDataContainer.set(keyFuelId, PersistentDataType.INTEGER, fuelItem.getItemID());
+        persistentDataContainer.set(keyFuelDurability, PersistentDataType.INTEGER, getFuelDurability(item));
+        item.setItemMeta(itemMeta);
+        persistentDataContainer.set(keyFuelDurability, PersistentDataType.INTEGER, fuelItem.getMaxDurability());
+        fuel.setItemMeta(itemMeta);
+        fuelItem.setItem(item);
     }
 
     public int getFuelAmount(Player player, boolean exact) {

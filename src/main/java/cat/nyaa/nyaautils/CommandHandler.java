@@ -11,6 +11,8 @@ import cat.nyaa.nyaacore.utils.ExperienceUtils;
 import cat.nyaa.nyaacore.utils.PlayerUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
+import cat.nyaa.nyaautils.elytra.FuelItem;
+import cat.nyaa.nyaautils.elytra.FuelManager;
 import cat.nyaa.nyaautils.enchant.EnchantCommands;
 import cat.nyaa.nyaautils.exhibition.ExhibitionCommands;
 import cat.nyaa.nyaautils.expcapsule.ExpCapsuleCommands;
@@ -885,7 +887,8 @@ public class CommandHandler extends CommandReceiver {
 
             int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
             if (fuelID != -1){
-                upgradeFuel(itemInMainHand);
+                FuelItem fuel = plugin.fuelManager.getFuel(fuelID);
+                upgradeFuel(fuel, itemInMainHand);
                 UpgradeList instance = UpgradeList.getInstance();
                 instance.ids.add(player.getName());
                 instance.save();
@@ -900,8 +903,8 @@ public class CommandHandler extends CommandReceiver {
         return false;
     }
 
-    private void upgradeFuel(ItemStack fuel) {
-        plugin.fuelManager.upgrade(fuel);
+    private void upgradeFuel(FuelItem fuel, ItemStack item) {
+        plugin.fuelManager.upgrade(fuel, item);
     }
 
     private void upgradeExpCap(ItemStack itemInMainHand) {
