@@ -177,6 +177,7 @@ public class ExhibitionFrame {
         ownerUUID = uuid;
         ownerName = name;
         descriptions = strings;
+        itemSet = true;
     }
 
     private void encodeItem() {
@@ -238,6 +239,7 @@ public class ExhibitionFrame {
         ownerName = owner.getName();
         descriptions = new ArrayList<>();
         itemSet = true;
+        frame.setFixed(true);
         encodeItem();
     }
 
@@ -245,6 +247,7 @@ public class ExhibitionFrame {
         if (!isSet()) return;
         decodeItem();
         itemSet = false;
+        frame.setFixed(false);
         encodeItem();
     }
 
