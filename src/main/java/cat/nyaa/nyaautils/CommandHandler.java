@@ -814,7 +814,6 @@ public class CommandHandler extends CommandReceiver {
         }
         int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
         if (fuelID != -1){
-            upgradeFuel(itemInMainHand);
             ItemMeta itemMeta = itemInMainHand.getItemMeta();
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
 
