@@ -858,6 +858,9 @@ public class CommandHandler extends CommandReceiver {
     }
 
     private boolean isUpgradeable(ItemStack itemStack) {
+        if (itemStack == null){
+            return false;
+        }
         Integer storedExp = ExpCapsuleCommands.getStoredExp(itemStack);
         int fuelID = plugin.fuelManager.getFuelID(itemStack);
 
