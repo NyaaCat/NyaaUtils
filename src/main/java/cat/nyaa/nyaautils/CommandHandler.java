@@ -29,11 +29,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Container;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -45,6 +49,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -830,6 +835,36 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.info.no_item_hand");
             return;
         }
+        if (itemInMainHand.getItemMeta() instanceof BlockStateMeta){
+            BlockState blockState = ((BlockStateMeta) itemInMainHand.getItemMeta()).getBlockState();
+            if (blockState instanceof Container){
+                Inventory inventory = ((Container) blockState).getInventory();
+                AtomicInteger failed = new AtomicInteger(0);
+                AtomicInteger succeeded = new AtomicInteger(0);
+                Arrays.stream(inventory.getContents())
+                        .filter(itemStack -> isUpgradeable(itemStack))
+                        .forEach(itemStack -> {
+                            if (upgradeItem(sender, player, itemStack)) {
+                                succeeded.addAndGet(1);
+                            } else {
+                                failed.addAndGet(1);
+                            }
+                        });
+                msg(sender, "user.info.upgraded", succeeded.get(), failed.get());
+            }
+            return;
+        }
+        upgradeItem(sender, player, itemInMainHand);
+    }
+
+    private boolean isUpgradeable(ItemStack itemStack) {
+        Integer storedExp = ExpCapsuleCommands.getStoredExp(itemStack);
+        int fuelID = plugin.fuelManager.getFuelID(itemStack);
+
+        return storedExp != null || fuelID != -1;
+    }
+
+    private boolean upgradeItem(CommandSender sender, Player player, ItemStack itemInMainHand) {
         Integer storedExp = ExpCapsuleCommands.getStoredExp(itemInMainHand);
         try{
             if (storedExp != null) {
@@ -838,7 +873,7 @@ public class CommandHandler extends CommandReceiver {
                 instance.ids.add(player.getName());
                 instance.save();
                 msg(sender, "user.info.upgrade_complete");
-                return;
+                return true;
             }
 
             int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
@@ -848,14 +883,14 @@ public class CommandHandler extends CommandReceiver {
                 instance.ids.add(player.getName());
                 instance.save();
                 msg(sender, "user.info.upgrade_complete");
-                return;
+                return true;
             }
         }catch (Exception e){
             msg(sender, "user.info.upgrade_failed");
             NyaaUtils.instance.getLogger().log(Level.SEVERE, "failed to upgrade item", e);
         }
         msg(sender, "user.info.upgrade_invalid_item");
-
+        return false;
     }
 
     private void upgradeFuel(ItemStack fuel) {

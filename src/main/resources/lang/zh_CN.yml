@@ -11,6 +11,7 @@ user:
     upgrade_invalid_item: 物品无效
     valid: 该物品已成功升级
     invalid: 该物品没有成功升级
+    upgraded: 已成功升级 %d 个物品, 失败 %d 个
   error:
     bad_command: 无效的命令：%s
     not_int: 不是有效的整数
