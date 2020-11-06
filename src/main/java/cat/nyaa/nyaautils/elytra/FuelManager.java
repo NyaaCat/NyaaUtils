@@ -22,8 +22,8 @@ public class FuelManager {
     private final NyaaUtils plugin;
 
     public String lore_prefix = ChatColor.translateAlternateColorCodes('&', "&r&9&e&a&1&4&0&2&r");
-    private static final NamespacedKey keyFuelId = new NamespacedKey(NyaaUtils.instance, "fuelId");
-    private static final NamespacedKey keyFuelDurability = new NamespacedKey(NyaaUtils.instance, "fuelDurability");
+    public static final NamespacedKey keyFuelId = new NamespacedKey(NyaaUtils.instance, "fuelId");
+    public static final NamespacedKey keyFuelDurability = new NamespacedKey(NyaaUtils.instance, "fuelDurability");
 
     public FuelManager(NyaaUtils pl) {
         plugin = pl;

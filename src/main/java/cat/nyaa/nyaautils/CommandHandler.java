@@ -36,6 +36,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -46,6 +48,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static cat.nyaa.nyaautils.elytra.FuelManager.keyFuelId;
 
 public class CommandHandler extends CommandReceiver {
     @SubCommand("exhibition")
@@ -783,6 +787,41 @@ public class CommandHandler extends CommandReceiver {
         msg(sender, "user.tpall.success", success);
     }
 
+    @SubCommand(value = "check", permission = "nu.upgrade")
+    public void onCheck(CommandSender sender, Arguments args){
+        Player player = asPlayer(sender);
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        if (itemInMainHand == null){
+            msg(sender, "user.info.no_item_hand");
+            return;
+        }
+        Integer storedExp = ExpCapsuleCommands.getStoredExp(itemInMainHand);
+        if (storedExp != null){
+            Integer exp = ExpCapsuleCommands.getStoredExp(itemInMainHand);
+            ItemMeta meta = itemInMainHand.getItemMeta();
+            PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+            if (persistentDataContainer.has(ExpCapsuleCommands.expcapKey, PersistentDataType.LONG)) {
+                msg(sender, "user.info.valid");
+            }else {
+                msg(sender, "user.info.invalid");
+            }
+            return;
+        }
+        int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
+        if (fuelID != -1){
+            upgradeFuel(itemInMainHand);
+            ItemMeta itemMeta = itemInMainHand.getItemMeta();
+            PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+
+            if (persistentDataContainer.has(keyFuelId, PersistentDataType.INTEGER)) {
+                msg(sender, "user.info.valid");
+            }else {
+                msg(sender, "user.info.invalid");
+            }
+            return;
+        }
+        msg(sender, "user.info.upgrade_invalid_item");
+    }
     @SubCommand(value = "upgrade", permission = "nu.upgrade")
     public void onUpgradeItem(CommandSender sender, Arguments args){
         Player player = asPlayer(sender);

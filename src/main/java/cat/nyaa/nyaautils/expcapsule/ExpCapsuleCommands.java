@@ -153,12 +153,13 @@ public class ExpCapsuleCommands extends CommandReceiver {
         item.setItemMeta(meta);
     }
 
-    private static final NamespacedKey expcapKey = new NamespacedKey(NyaaUtils.instance, "expcap");
+    public static final NamespacedKey expcapKey = new NamespacedKey(NyaaUtils.instance, "expcap");
 
     public void upgradeExpCap(ItemStack itemStack){
         Integer exp = getStoredExp(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
         persistentDataContainer.set(expcapKey, PersistentDataType.LONG, exp.longValue());
+        itemStack.setItemMeta(meta);
     }
 }
