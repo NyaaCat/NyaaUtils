@@ -139,8 +139,8 @@ public class ExpCapsuleCommands extends CommandReceiver {
             if (str.contains(EXP_CAPSULE_MAGIC)) continue;
             newLore.add(str);
         }
-        if (lore.size() == 0 && exp > 0){
-            lore.add(0, "");
+        if (newLore.size() == 0 && exp > 0){
+            newLore.add(0, "");
         }
         if (exp > 0) {
             newLore.set(0, I18n.format("user.expcap.contain_exp", Long.toString(exp)));

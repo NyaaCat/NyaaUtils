@@ -82,6 +82,9 @@ public class FuelManager {
         String fuelLore = I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability());
         if (meta.hasLore()) {
             lore = meta.getLore();
+            if (lore.size() == 0) {
+                lore.add("");
+            }
             lore.set(0, fuelLore);
         } else {
             lore = new ArrayList<>();
