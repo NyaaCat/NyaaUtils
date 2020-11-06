@@ -91,6 +91,7 @@ public class NyaaUtils extends JavaPlugin {
         fuelManager = new FuelManager(this);
         timerManager = new TimerManager(this);
         timerListener = new TimerListener(this);
+        UpgradeList.getInstance().load();
         if (Bukkit.getPluginManager().isPluginEnabled("WorldEdit")) {
             worldEditPlugin = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         }
