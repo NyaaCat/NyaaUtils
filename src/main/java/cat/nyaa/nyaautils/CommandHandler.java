@@ -852,6 +852,7 @@ public class CommandHandler extends CommandReceiver {
                                 failed.addAndGet(1);
                             }
                         });
+                inventory.setContents(contents);
                 itemInMainHand.setItemMeta(itemMeta);
                 msg(sender, "user.info.upgraded", succeeded.get(), failed.get());
             }
