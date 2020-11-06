@@ -24,7 +24,10 @@ public class UpgradeList extends FileConfigure {
     @Override
     public void deserialize(ConfigurationSection config) {
         List<String> idsList = (List<String>) config.get("ids");
-        this.ids = new HashSet<>(idsList);
+        this.ids = new HashSet<>();
+        if (idsList !=null){
+            ids.addAll(idsList);
+        }
     }
 
     @Override
