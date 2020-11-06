@@ -835,13 +835,15 @@ public class CommandHandler extends CommandReceiver {
             msg(sender, "user.info.no_item_hand");
             return;
         }
-        if (itemInMainHand.getItemMeta() instanceof BlockStateMeta){
-            BlockState blockState = ((BlockStateMeta) itemInMainHand.getItemMeta()).getBlockState();
+        ItemMeta itemMeta = itemInMainHand.getItemMeta();
+        if (itemMeta instanceof BlockStateMeta){
+            BlockState blockState = ((BlockStateMeta) itemMeta).getBlockState();
             if (blockState instanceof Container){
                 Inventory inventory = ((Container) blockState).getInventory();
                 AtomicInteger failed = new AtomicInteger(0);
                 AtomicInteger succeeded = new AtomicInteger(0);
-                Arrays.stream(inventory.getContents())
+                ItemStack[] contents = inventory.getContents();
+                Arrays.stream(contents)
                         .filter(itemStack -> isUpgradeable(itemStack))
                         .forEach(itemStack -> {
                             if (upgradeItem(sender, player, itemStack)) {
@@ -850,6 +852,7 @@ public class CommandHandler extends CommandReceiver {
                                 failed.addAndGet(1);
                             }
                         });
+                itemInMainHand.setItemMeta(itemMeta);
                 msg(sender, "user.info.upgraded", succeeded.get(), failed.get());
             }
             return;
