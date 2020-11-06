@@ -342,7 +342,7 @@ user:
     not_enough_exp_cap: 胶囊中没有足够的经验
     wrong_cap_type: 错误的胶囊类型
     current_exp: '你在存储前的经验值: %d'
-    contain_exp: '存储经验值: '
+    contain_exp: '存储经验值: %s'
     not_stackable: 你不能将经验存储在堆叠的物品上
     wrong_nbr: 无效的经验值
     bottle_full: '经验已存满'

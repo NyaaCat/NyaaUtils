@@ -78,6 +78,10 @@ public class FuelManager {
             return;
         }
         ItemMeta meta = fuel.getItem().getItemMeta();
+        PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+        persistentDataContainer.set(keyFuelId, PersistentDataType.INTEGER, fuelID);
+        persistentDataContainer.set(keyFuelDurability, PersistentDataType.INTEGER, durability);
+
         List<String> lore;
         String fuelLore = I18n.format("user.elytra_enhance.fuel_durability", durability, fuel.getMaxDurability());
         if (meta.hasLore()) {

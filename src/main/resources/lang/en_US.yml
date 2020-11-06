@@ -310,7 +310,7 @@ user:
     not_enough_exp_cap: Not enough exp in capsule
     wrong_cap_type: Incorrect capsule type
     current_exp: 'Your exp point before storing: %d'
-    contain_exp: 'Stored Exp: '
+    contain_exp: 'Stored Exp: %s'
     not_stackable: You cannot operate on stacked capsules
     wrong_nbr: Invalid exp amount
     bottle_full: 'bottle full'
