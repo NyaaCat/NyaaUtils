@@ -1,9 +1,12 @@
 package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaacore.configuration.FileConfigure;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UpgradeList extends FileConfigure {
@@ -15,8 +18,19 @@ public class UpgradeList extends FileConfigure {
         return instance;
     }
 
-    @Serializable
-    Set<String> Ids = new HashSet<>();
+    @Serializable(manualSerialization = true)
+    Set<String> ids = new HashSet<>();
+
+    @Override
+    public void deserialize(ConfigurationSection config) {
+        List<String> idsList = (List<String>) config.get("ids");
+        this.ids = new HashSet<>(idsList);
+    }
+
+    @Override
+    public void serialize(ConfigurationSection config) {
+        config.set("ids", new ArrayList<>(ids));
+    }
 
     @Override
     protected String getFileName() {

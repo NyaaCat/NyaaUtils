@@ -6,6 +6,9 @@ user:
     no_item_offhand: No item in off hand
     enabled: Enabled
     disabled: Disabled
+    upgrade_complete: 升级成功！
+    upgrade_failed: 升级失败，请联系管理员
+    upgrade_invalid_item: 物品无效
   error:
     bad_command: 'Wrong command: %s'
     not_int: Not a valid integer

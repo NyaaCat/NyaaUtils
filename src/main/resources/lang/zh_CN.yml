@@ -6,6 +6,9 @@ user:
     no_item_offhand: 副手中没有物品
     enabled: 已启用
     disabled: 已禁用
+    upgrade_complete: 升级成功！
+    upgrade_failed: 升级失败，请联系管理员
+    upgrade_invalid_item: 物品无效
   error:
     bad_command: 无效的命令：%s
     not_int: 不是有效的整数

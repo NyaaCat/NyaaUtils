@@ -43,6 +43,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -791,21 +792,31 @@ public class CommandHandler extends CommandReceiver {
             return;
         }
         Integer storedExp = ExpCapsuleCommands.getStoredExp(itemInMainHand);
-        if (storedExp != null) {
-            upgradeExpCap(itemInMainHand);
-            UpgradeList instance = UpgradeList.getInstance();
-            instance.Ids.add(player.getName());
-            instance.save();
-            return;
+        try{
+            if (storedExp != null) {
+                upgradeExpCap(itemInMainHand);
+                UpgradeList instance = UpgradeList.getInstance();
+                instance.ids.add(player.getName());
+                instance.save();
+                msg(sender, "user.info.upgrade_complete");
+                return;
+            }
+
+            int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
+            if (fuelID != -1){
+                upgradeFuel(itemInMainHand);
+                UpgradeList instance = UpgradeList.getInstance();
+                instance.ids.add(player.getName());
+                instance.save();
+                msg(sender, "user.info.upgrade_complete");
+                return;
+            }
+        }catch (Exception e){
+            msg(sender, "user.info.upgrade_failed");
+            NyaaUtils.instance.getLogger().log(Level.SEVERE, "failed to upgrade item", e);
         }
-        int fuelID = plugin.fuelManager.getFuelID(itemInMainHand);
-        if (fuelID != -1){
-            upgradeFuel(itemInMainHand);
-            UpgradeList instance = UpgradeList.getInstance();
-            instance.Ids.add(player.getName());
-            instance.save();
-            return;
-        }
+        msg(sender, "user.info.upgrade_invalid_item");
+
     }
 
     private void upgradeFuel(ItemStack fuel) {
