@@ -160,20 +160,5 @@ public class ExpCapsuleCommands extends CommandReceiver {
         ItemMeta meta = itemStack.getItemMeta();
         PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
         persistentDataContainer.set(expcapKey, PersistentDataType.LONG, exp.longValue());
-
-        List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
-        List<String> newLore = new ArrayList<>();
-        for (String str : lore) {
-            if (str.contains(EXP_CAPSULE_MAGIC)) continue;
-            newLore.add(str);
-        }
-        if (lore.size() == 0 && exp > 0){
-            lore.add(0, "");
-        }
-        if (exp > 0) {
-            newLore.set(0, I18n.format("user.expcap.contain_exp", Long.toString(exp)));
-        }
-        meta.setLore(newLore);
-        itemStack.setItemMeta(meta);
     }
 }
