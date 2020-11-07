@@ -4,7 +4,8 @@ package cat.nyaa.nyaautils.elytra;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import org.bukkit.ChatColor;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -14,18 +15,25 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class FuelManager {
     private final NyaaUtils plugin;
 
     private static final NamespacedKey keyFuelId = new NamespacedKey(NyaaUtils.instance, "fuelId");
     private static final NamespacedKey keyFuelDurability = new NamespacedKey(NyaaUtils.instance, "fuelDurability");
+    private static final int cacheKey = 1;
 
     public FuelManager(NyaaUtils pl) {
         plugin = pl;
     }
+    
+    private Cache<Integer, Set<Material>> fuelMaterialCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build();
 
     public int getFuelAmount(Player player, boolean exact) {
         int fuel = 0;
@@ -101,7 +109,19 @@ public class FuelManager {
     }
 
     public int getFuelID(ItemStack item) {
-        if (item != null && !item.getType().equals(Material.AIR) && item.hasItemMeta()) {
+        boolean isItem = item != null && !item.getType().equals(Material.AIR);
+        if (!isItem){
+            return -1;
+        }
+        Set<Material> types = fuelMaterialCache.getIfPresent(cacheKey);
+        if (types == null){
+            types = loadCache();
+        }
+        Material type = item.getType();
+        if (!types.contains(type)){
+            return -1;
+        }
+        if (item.hasItemMeta()) {
             ItemMeta itemMeta = item.getItemMeta();
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
             Integer id = persistentDataContainer.get(keyFuelId, PersistentDataType.INTEGER);
@@ -111,6 +131,15 @@ public class FuelManager {
             return id;
         }
         return -1;
+    }
+
+    private Set<Material> loadCache() {
+        Set<Material> materials = new HashSet<>();
+        plugin.cfg.fuelConfig.fuel.values().stream().forEach(fuelItem -> {
+            materials.add(fuelItem.getItem().getType());
+        });
+        fuelMaterialCache.put(cacheKey, materials);
+        return materials;
     }
 
     public int getFuelDurability(ItemStack item) {
@@ -139,5 +168,9 @@ public class FuelManager {
             return "0000".substring(0, 4 - string.length()) + string;
         }
         return string;
+    }
+
+    public void invalidateCache() {
+        fuelMaterialCache.invalidateAll();
     }
 }

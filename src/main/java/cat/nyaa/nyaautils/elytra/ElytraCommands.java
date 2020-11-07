@@ -60,6 +60,7 @@ public class ElytraCommands extends CommandReceiver {
                     plugin.cfg.save();
                     msg(sender, "user.elytra_enhance.fuel_info", fuelID, durability);
                     plugin.fuelManager.updateItem(item, fuelID, durability);
+                    plugin.fuelManager.invalidateCache();
                 }
             } else {
                 item.setAmount(1);
@@ -77,6 +78,7 @@ public class ElytraCommands extends CommandReceiver {
             if (plugin.fuelManager.getFuelID(item) != -1 &&
                     plugin.fuelManager.getFuel(plugin.fuelManager.getFuelID(item)) != null) {
                 plugin.cfg.fuelConfig.fuel.remove(plugin.fuelManager.getFuelID(item));
+                plugin.fuelManager.invalidateCache();
                 msg(sender, "user.elytra_enhance.remove");
                 NyaaUtils.instance.cfg.save();
                 msg(sender, "user.elytra_enhance.save_success");
