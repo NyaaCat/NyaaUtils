@@ -34,6 +34,10 @@ public class ExhibitionCommands extends CommandReceiver {
             msg(sender, "user.exhibition.no_item_frame");
             return;
         }
+        if (f.getItemFrame().isFixed()){
+            msg(sender, "user.exhibition.already_set");
+            return;
+        }
         if (!f.hasItem()) {
             msg(sender, "user.exhibition.no_item");
             return;
