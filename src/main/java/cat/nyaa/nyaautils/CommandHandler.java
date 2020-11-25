@@ -8,6 +8,7 @@ import cat.nyaa.nyaacore.cmdreceiver.BadCommandException;
 import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
 import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.ExperienceUtils;
+import cat.nyaa.nyaacore.utils.HexColorUtils;
 import cat.nyaa.nyaacore.utils.PlayerUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.elytra.ElytraCommands;
@@ -260,14 +261,14 @@ public class CommandHandler extends CommandReceiver {
                 return;
             }
         }
-        prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+        prefix = HexColorUtils.hexColored(prefix);
         for (String k : plugin.cfg.custom_fixes_prefix_blockedWords) {
-            if (ChatColor.stripColor(prefix).toUpperCase().contains(k.toUpperCase())) {
+            if (HexColorUtils.stripEssentialsFormat(prefix).toUpperCase().contains(k.toUpperCase())) {
                 msg(sender, "user.warn.blocked_words", k);
                 return;
             }
         }
-        if (ChatColor.stripColor(prefix).length() > plugin.cfg.custom_fixes_prefix_maxlength) {
+        if (HexColorUtils.stripEssentialsFormat(prefix).length() > plugin.cfg.custom_fixes_prefix_maxlength) {
             msg(sender, "user.prefix.prefix_too_long", plugin.cfg.custom_fixes_prefix_maxlength);
             return;
         }
@@ -289,7 +290,7 @@ public class CommandHandler extends CommandReceiver {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_prefix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
-        VaultUtils.setPlayerPrefix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), hasPexOrLp());
+        VaultUtils.setPlayerPrefix(p, HexColorUtils.hexColored(plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), hasPexOrLp());
         msg(sender, "user.prefix.success", prefix);
     }
 
@@ -308,14 +309,14 @@ public class CommandHandler extends CommandReceiver {
                 return;
             }
         }
-        suffix = ChatColor.translateAlternateColorCodes('&', suffix);
+        suffix = HexColorUtils.hexColored(suffix);
         for (String k : plugin.cfg.custom_fixes_suffix_blockedWords) {
-            if (ChatColor.stripColor(suffix).toUpperCase().contains(k.toUpperCase())) {
+            if (HexColorUtils.stripEssentialsFormat(suffix).toUpperCase().contains(k.toUpperCase())) {
                 msg(sender, "user.warn.blocked_words", k);
                 return;
             }
         }
-        if (ChatColor.stripColor(suffix).length() > plugin.cfg.custom_fixes_suffix_maxlength) {
+        if (HexColorUtils.stripEssentialsFormat(suffix).length() > plugin.cfg.custom_fixes_suffix_maxlength) {
             msg(sender, "user.suffix.suffix_too_long", plugin.cfg.custom_fixes_suffix_maxlength);
             return;
         }
@@ -337,7 +338,7 @@ public class CommandHandler extends CommandReceiver {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_suffix_expCost);
         }
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
-        VaultUtils.setPlayerSuffix(p, ChatColor.translateAlternateColorCodes('&', plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), hasPexOrLp());
+        VaultUtils.setPlayerSuffix(p, HexColorUtils.hexColored(plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), hasPexOrLp());
         msg(sender, "user.suffix.success", suffix);
     }
 
@@ -379,7 +380,9 @@ public class CommandHandler extends CommandReceiver {
         }
         Player p = asPlayer(sender);
         String name = args.next().replace("§", "");
-        if (plugin.cfg.renameCharacterLimit != 0 && ChatColor.stripColor(name).length() > NyaaUtils.instance.cfg.renameCharacterLimit) {
+        String s = HexColorUtils.stripEssentialsFormat(name);
+        if (plugin.cfg.renameCharacterLimit != 0 && s.length() > NyaaUtils.instance.cfg.renameCharacterLimit) {
+            p.sendMessage(String.format("stripped %s, length %d", s, s.length()));
             msg(p, "user.rename.name_too_long", name, NyaaUtils.instance.cfg.renameCharacterLimit);
             return;
         }
@@ -389,9 +392,9 @@ public class CommandHandler extends CommandReceiver {
                 return;
             }
         }
-        name = ChatColor.translateAlternateColorCodes('&', name);
+        name = HexColorUtils.hexColored(name);
         for (String k : plugin.cfg.renameBlockedWords) {
-            if (ChatColor.stripColor(name).toUpperCase().contains(k.toUpperCase()) && !p.hasPermission("nu.rename.blacklist")) {
+            if (HexColorUtils.stripEssentialsFormat(name).toUpperCase().contains(k.toUpperCase()) && !p.hasPermission("nu.rename.blacklist")) {
                 msg(p, "user.warn.blocked_words", k);
                 return;
             }
@@ -425,7 +428,7 @@ public class CommandHandler extends CommandReceiver {
             }
         }
         ItemMeta itemStackMeta = item.getItemMeta();
-        itemStackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        itemStackMeta.setDisplayName(HexColorUtils.hexColored(name));
         item.setItemMeta(itemStackMeta);
         if (expCost > 0) {
             ExperienceUtils.subtractExpPoints(p, expCost);
@@ -442,16 +445,17 @@ public class CommandHandler extends CommandReceiver {
         }
         String lore = args.next().replace("§", "");
         Player p = asPlayer(sender);
-        lore = ChatColor.translateAlternateColorCodes('&', lore);
+        lore = HexColorUtils.hexColored(lore);
         ItemStack item = p.getInventory().getItemInMainHand();
         if (item == null || item.getType().equals(Material.AIR)) {
             msg(sender, "user.info.no_item_hand");
             return;
+
         }
         String[] line = lore.split("/n");
         List<String> lines = new ArrayList<>();
         for (String s : line) {
-            lines.add(ChatColor.translateAlternateColorCodes('&', s));
+            lines.add(HexColorUtils.hexColored(s));
         }
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.setLore(lines);
@@ -467,7 +471,7 @@ public class CommandHandler extends CommandReceiver {
         }
         String lore = args.next().replace("§", "");
         Player p = asPlayer(sender);
-        lore = ChatColor.translateAlternateColorCodes('&', lore);
+        lore = HexColorUtils.hexColored(lore);
         ItemStack item = p.getInventory().getItemInMainHand();
         if (item == null || item.getType().equals(Material.AIR)) {
             msg(sender, "user.info.no_item_hand");
@@ -476,7 +480,7 @@ public class CommandHandler extends CommandReceiver {
         String[] line = lore.split("/n");
         List<String> lines = item.getItemMeta().getLore() == null ? new ArrayList<>() : item.getItemMeta().getLore();
         for (String s : line) {
-            lines.add(ChatColor.translateAlternateColorCodes('&', s));
+            lines.add(HexColorUtils.hexColored(s));
         }
         ItemMeta itemStackMeta = item.getItemMeta();
         itemStackMeta.setLore(lines);
@@ -492,7 +496,7 @@ public class CommandHandler extends CommandReceiver {
         }
         String author = args.next();
         Player p = asPlayer(sender);
-        author = ChatColor.translateAlternateColorCodes('&', author);
+        author = HexColorUtils.hexColored(author);
         ItemStack item = p.getInventory().getItemInMainHand();
         if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {
             msg(sender, "user.setbook.no_book");
@@ -512,7 +516,7 @@ public class CommandHandler extends CommandReceiver {
         }
         String title = args.next();
         Player p = asPlayer(sender);
-        title = ChatColor.translateAlternateColorCodes('&', title);
+        title = HexColorUtils.hexColored(title);
 
         ItemStack item = p.getInventory().getItemInMainHand();
         if (item == null || !item.getType().equals(Material.WRITTEN_BOOK)) {

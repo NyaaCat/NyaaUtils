@@ -6,6 +6,7 @@ import cat.nyaa.nyaacore.cmdreceiver.Arguments;
 import cat.nyaa.nyaacore.cmdreceiver.BadCommandException;
 import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
 import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
+import cat.nyaa.nyaacore.utils.HexColorUtils;
 import cat.nyaa.nyaacore.utils.RayTraceUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
@@ -48,8 +49,8 @@ public class SignEditCommands extends CommandReceiver {
             block = RayTraceUtils.rayTraceBlock(player);
             if (block != null && block.getState() instanceof Sign) {
                 String text = args.nextString();
-                text = ChatColor.translateAlternateColorCodes('&', text);
-                if (ChatColor.stripColor(text).length() > plugin.cfg.signedit_max_length) {
+                text = HexColorUtils.hexColored(text);
+                if (HexColorUtils.stripEssentialsFormat(text).length() > plugin.cfg.signedit_max_length) {
                     throw new BadCommandException("user.signedit.too_long", plugin.cfg.signedit_max_length);
                 }
                 if ("CLEAR".equalsIgnoreCase(text)) {
@@ -78,8 +79,8 @@ public class SignEditCommands extends CommandReceiver {
             int line = args.nextInt();
             String text = args.nextString();
             checkFormatCodes(text);
-            text = ChatColor.translateAlternateColorCodes('&', text);
-            if (ChatColor.stripColor(text).length() > plugin.cfg.signedit_max_length) {
+            text = HexColorUtils.hexColored( text);
+            if (HexColorUtils.stripEssentialsFormat(text).length() > plugin.cfg.signedit_max_length) {
                 throw new BadCommandException("user.signedit.too_long", plugin.cfg.signedit_max_length);
             }
             if (line >= 0 && line < 4) {

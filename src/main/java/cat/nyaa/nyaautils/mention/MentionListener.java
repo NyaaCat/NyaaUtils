@@ -1,5 +1,6 @@
 package cat.nyaa.nyaautils.mention;
 
+import cat.nyaa.nyaacore.utils.HexColorUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatMessageType;
@@ -50,7 +51,7 @@ public class MentionListener implements Listener {
     public static void notify(Player sender, String m, Set<Player> playersNotified, NyaaUtils plugin) {
         playersNotified.forEach(p -> {
             if (m != null) {
-                String raw = ChatColor.translateAlternateColorCodes('&', m);
+                String raw = HexColorUtils.hexColored(m);
                 String msg = sender.getDisplayName() + ChatColor.RESET + ": " + raw;
                 switch (plugin.cfg.mention_notification) {
                     case TITLE:
@@ -90,7 +91,7 @@ public class MentionListener implements Listener {
 
                                 @Override
                                 public void run() {
-                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(sender.getDisplayName() + ChatColor.RESET + ": " + ChatColor.COLOR_CHAR + color.next() + ChatColor.stripColor(raw)));
+                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(sender.getDisplayName() + ChatColor.RESET + ": " + ChatColor.COLOR_CHAR + color.next() + HexColorUtils.stripEssentialsFormat(raw)));
                                     if (!color.hasNext()) this.cancel();
                                 }
                             }.runTaskTimer(plugin, 0, 20);

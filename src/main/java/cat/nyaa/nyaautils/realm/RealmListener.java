@@ -1,6 +1,7 @@
 package cat.nyaa.nyaautils.realm;
 
 
+import cat.nyaa.nyaacore.utils.HexColorUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import cat.nyaa.nyaacore.Message;
@@ -80,7 +81,7 @@ public class RealmListener implements Listener {
             return;
         } else if (!currentRealm.containsKey(id) || !Realm.__DEFAULT__.equals(currentRealmName)) {
             currentRealm.put(id, Realm.__DEFAULT__);
-            new Message(ChatColor.translateAlternateColorCodes('&', plugin.cfg.realm_default_name))
+            new Message(HexColorUtils.hexColored( plugin.cfg.realm_default_name))
                     .send(player, plugin.cfg.realm_notification_type);
         }
         return;

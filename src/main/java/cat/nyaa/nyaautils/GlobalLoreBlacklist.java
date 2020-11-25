@@ -2,6 +2,7 @@ package cat.nyaa.nyaautils;
 
 import cat.nyaa.nyaacore.configuration.FileConfigure;
 import cat.nyaa.nyaacore.configuration.ISerializable;
+import cat.nyaa.nyaacore.utils.HexColorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -76,9 +77,9 @@ public class GlobalLoreBlacklist extends FileConfigure {
 
     public boolean canEnchant(List<String> lore) {
         for (String s : lore) {
-            if (aclMap.containsKey(ChatColor.stripColor(s))) {
-                if (aclMap.get(ChatColor.stripColor(s)).enchant != this.default_enchant) {
-                    return aclMap.get(ChatColor.stripColor(s)).enchant;
+            if (aclMap.containsKey(HexColorUtils.stripEssentialsFormat(s))) {
+                if (aclMap.get(HexColorUtils.stripEssentialsFormat(s)).enchant != this.default_enchant) {
+                    return aclMap.get(HexColorUtils.stripEssentialsFormat(s)).enchant;
                 }
             }
         }
@@ -88,9 +89,9 @@ public class GlobalLoreBlacklist extends FileConfigure {
 
     public boolean canRepair(List<String> lore) {
         for (String s : lore) {
-            if (aclMap.containsKey(ChatColor.stripColor(s))) {
-                if (aclMap.get(ChatColor.stripColor(s)).repair != this.default_repair) {
-                    return aclMap.get(ChatColor.stripColor(s)).repair;
+            if (aclMap.containsKey(HexColorUtils.stripEssentialsFormat(s))) {
+                if (aclMap.get(HexColorUtils.stripEssentialsFormat(s)).repair != this.default_repair) {
+                    return aclMap.get(HexColorUtils.stripEssentialsFormat(s)).repair;
                 }
             }
         }
