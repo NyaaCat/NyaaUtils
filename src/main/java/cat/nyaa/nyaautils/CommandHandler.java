@@ -261,7 +261,6 @@ public class CommandHandler extends CommandReceiver {
                 return;
             }
         }
-        prefix = HexColorUtils.hexColored(prefix);
         for (String k : plugin.cfg.custom_fixes_prefix_blockedWords) {
             if (HexColorUtils.stripEssentialsFormat(prefix).toUpperCase().contains(k.toUpperCase())) {
                 msg(sender, "user.warn.blocked_words", k);
@@ -289,6 +288,7 @@ public class CommandHandler extends CommandReceiver {
         if (plugin.cfg.custom_fixes_prefix_expCost > 0) {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_prefix_expCost);
         }
+        prefix = HexColorUtils.hexColored(prefix);
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_prefix_moneyCost);
         VaultUtils.setPlayerPrefix(p, HexColorUtils.hexColored(plugin.cfg.custom_fixes_prefix_format).replace("{prefix}", prefix), hasPexOrLp());
         msg(sender, "user.prefix.success", prefix);
@@ -309,7 +309,6 @@ public class CommandHandler extends CommandReceiver {
                 return;
             }
         }
-        suffix = HexColorUtils.hexColored(suffix);
         for (String k : plugin.cfg.custom_fixes_suffix_blockedWords) {
             if (HexColorUtils.stripEssentialsFormat(suffix).toUpperCase().contains(k.toUpperCase())) {
                 msg(sender, "user.warn.blocked_words", k);
@@ -337,6 +336,7 @@ public class CommandHandler extends CommandReceiver {
         if (plugin.cfg.custom_fixes_suffix_expCost > 0) {
             ExperienceUtils.subtractExpPoints(p, plugin.cfg.custom_fixes_suffix_expCost);
         }
+        suffix = HexColorUtils.hexColored(suffix);
         VaultUtils.withdraw(p, plugin.cfg.custom_fixes_suffix_moneyCost);
         VaultUtils.setPlayerSuffix(p, HexColorUtils.hexColored(plugin.cfg.custom_fixes_suffix_format).replace("{suffix}", suffix), hasPexOrLp());
         msg(sender, "user.suffix.success", suffix);
