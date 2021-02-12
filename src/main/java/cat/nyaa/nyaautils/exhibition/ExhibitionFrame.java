@@ -257,6 +257,14 @@ public class ExhibitionFrame {
         return p.getUniqueId().toString().equals(ownerUUID);
     }
 
+    public void inv() {
+        frame.setVisible(false);
+    }
+
+    public void uninv() {
+        frame.setVisible(true);
+    }
+
     public ItemFrame getItemFrame() {
         return frame;
     }
