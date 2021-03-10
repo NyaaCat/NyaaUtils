@@ -144,6 +144,8 @@ public class ExpCapsuleCommands extends CommandReceiver {
         }
         if (exp > 0) {
             newLore.set(0, I18n.format("user.expcap.contain_exp", Long.toString(exp)));
+        }else {
+            newLore.set(0, "");
         }
         meta.setLore(newLore);
         item.setItemMeta(meta);
