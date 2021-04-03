@@ -69,6 +69,7 @@ public class MailboxLocations extends FileConfigure {
         }
 
         for (Player p : plugin.getServer().getOnlinePlayers()) {
+            nameMap.remove(p.getUniqueId());
             nameMap.put(p.getUniqueId(), p.getName().toLowerCase());
         }
     }
