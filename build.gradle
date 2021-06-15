@@ -6,10 +6,10 @@ compileJava.options.encoding = 'UTF-8'
 ext.pluginNameUpper = "NyaaUtils"
 ext.pluginNameLower = ext.pluginNameUpper.toLowerCase()
 ext.majorVersion = 8
-ext.minorVersion = 0
-ext.minecraftVersion = "1.16.4"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+ext.minorVersion = 1
+ext.minecraftVersion = "1.17"
+sourceCompatibility = 16
+targetCompatibility = 16
 
 
 // Suppiled by Jenkins
@@ -18,7 +18,7 @@ ext.mavenDirectory = System.env.MAVEN_DIR == null ? "$projectDir/repo" : "$Syste
 ext.jdDirectory = System.env.JAVADOCS_DIR == null ? null               : "$System.env.JAVADOCS_DIR"
 
 // Search for spigot nms jar file
-String spigotNmsPath = "";
+String spigotNmsPath = ""
 if (System.env.NMS_JAR != null) {
     // use NMS_JAR if it's explicitly specified
     spigotNmsPath = "$System.env.NMS_JAR"
@@ -37,7 +37,7 @@ if (System.env.NMS_JAR != null) {
         // nms not found, download from nyaaci
         def f = new File(spigotNmsPath)
         println "Downloading spigot-${minecraftVersion}.jar"
-        f.getParentFile().mkdirs();
+        f.getParentFile().mkdirs()
         new URL("https://ci.nyaacat.com/maven/spigot-${minecraftVersion}-latest.jar").withInputStream{ i -> f.withOutputStream{ it << i }}
     }
 }
@@ -46,13 +46,13 @@ println ("Found NMS jar: ${spigotNmsPath}")
 // Version used for distribution. Different from maven repo
 group = "cat.nyaa"
 archivesBaseName = "${pluginNameUpper}-mc$minecraftVersion"
-version = "$majorVersion.$minorVersion.$buildNumber"
+version = "$majorVersion.$minorVersion.$buildNumber".toString()
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven { name 'Spigot';      url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { name 'Sonatype';    url 'https://oss.sonatype.org/content/groups/public' }
-    maven { name 'sk89q';       url 'http://maven.sk89q.com/artifactory/repo/' }
+    maven { name 'sk89q';       url 'https://maven.sk89q.com/artifactory/repo/' }
     maven { name 'vault-repo';  url 'https://jitpack.io' }
     maven { name 'NyaaCat';     url 'https://ci.nyaacat.com/maven/' }
     maven { name 'EssentialsX'; url 'https://ci.ender.zone/plugin/repository/everything' }
@@ -100,8 +100,8 @@ javadoc {
     // javadoc output folder
     if (project.jdDirectory != null) destinationDir = file("${jdDirectory}/${pluginNameLower}-${version}")
 
-    options {
-        links 'https://docs.oracle.com/en/java/javase/14/docs/api/'
+    (options as StandardJavadocDocletOptions).with {
+        links 'https://docs.oracle.com/en/java/javase/16/docs/api/'
         links 'https://hub.spigotmc.org/javadocs/spigot/'
         links 'https://google.github.io/guava/releases/21.0/api/docs/'
         links 'https://ci.md-5.net/job/BungeeCord/ws/chat/target/apidocs/'
@@ -112,9 +112,7 @@ javadoc {
         addBooleanOption('keywords', true)
         addStringOption('Xdoclint:none', '-quiet')
 
-        if (JavaVersion.current() > JavaVersion.VERSION_1_9) {
-            addBooleanOption('html5', true)
-        }
+        addBooleanOption('html5', true)
 
         windowTitle = "${pluginNameUpper} Javadoc"
         docTitle = "${pluginNameUpper} (mc$minecraftVersion-${project.version})"
