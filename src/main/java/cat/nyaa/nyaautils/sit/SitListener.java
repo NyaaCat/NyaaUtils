@@ -59,7 +59,7 @@ public class SitListener implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.hasBlock() && !event.hasItem()) {
             Block block = event.getClickedBlock();
             BlockFace face = event.getBlockFace();
-            if (face == BlockFace.DOWN || block.isLiquid() || !plugin.cfg.sit_blocks.contains(block.getType())) {
+            if (face == BlockFace.DOWN || block == null || block.isLiquid() || !plugin.cfg.sit_blocks.contains(block.getType())) {
                 return;
             }
             Block relative = block.getRelative(0, 1, 0);
