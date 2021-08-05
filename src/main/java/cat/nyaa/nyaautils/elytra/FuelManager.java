@@ -103,7 +103,9 @@ public class FuelManager {
             lore.add(fuelLore);
         }
         item.setType(fuel.getItem().getType());
-        item.setData(fuel.getItem().getData());
+        if(fuel.getItem().getType().isLegacy()) {
+            item.setData(fuel.getItem().getData());
+        }
         meta.setLore(lore);
         item.setItemMeta(meta);
     }
