@@ -6,6 +6,7 @@ user:
     no_item_offhand: No item in off hand
     enabled: Enabled
     disabled: Disabled
+    reload: Plugin reloaded
   error:
     bad_command: 'Wrong command: %s'
     not_int: Not a valid integer
@@ -118,6 +119,12 @@ user:
     line_removed: Line %d removed
     line_changed: Line %d changed
     desc_protected: You cannot set description of a protected frame
+    already_inv: The item frame is already invisible
+    not_inv: The item frame is not invisible
+    set: The item frame is set
+    unset: Unset the item frame
+    inv: Make the item frame invisible
+    uninv: Now the item frame is visible
   format:
     message: "&r&&f0 &0 black\n&r&&f1 &1 dark blue\n&r&&f2 &2 dark green\n&r&&f3 &3\
       \ dark aqua\n&r&&f4 &4 dark red\n&r&&f5 &5 dark purple\n&r&&f6 &6 gold\n&r&&f7\
@@ -378,6 +385,27 @@ manual:
   dp:
     description: Toggle drop protect status
     usage: /nu dp
+  bp:
+    add:
+      description: Add lines to player's extrabackpack
+      usage: /nu bp add {player} <value>
+    set:
+      description: Set lines to player's extrabackpack
+      usage: /nu bp set {player} <value>
+    del:
+      description: Delete lines from player's extrabackpack
+      usage: /nu bp del {player} <value>
+    open:
+      description: Force open player's extrabackpack
+      usage: /nu bp open {player}
+    description: Open extrabackpack
+    usage: /nu bp
+  ping:
+    description: Display the ping in 10sec
+    usage: /nu ping
+  pingtop:
+    description: Display pingtop
+    usage: /nu pingtop
   launch:
     description: Launch player into sky and open their elytra
     usage: /nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]
@@ -414,7 +442,7 @@ manual:
   setbooktitle:
     description: Set book title
     usage: /nu setbooktitle [title]
-  setbookunsign:
+  setbookunsigned:
     description: Unsign book
     usage: /nu setbookunsign
   vote:
@@ -456,6 +484,12 @@ manual:
     unset:
       description: Destroy the ItemFrame looking at
       usage: /nu exhibition unset
+    inv:
+      description: Make the Itemframe looking at invisible
+      usage: /nu exhibition inv
+    uninv:
+      description: Make the Itemframe looking at visible
+      usage: /nu exhibition uninv
     desc:
       description: Change the description of the exhibition
       usage: /nu exhibition desc <lineNumber> [description]
@@ -551,6 +585,12 @@ manual:
     info:
       description: Show realm info
       usage: /nu realm info
+    mute:
+      description: Mute realm notification
+      usage: /nu realm mute
+    unmute:
+      description: Unmute realm notification
+      usage: /nu realm unmute
     list:
       description: list all realms
       usage: /nu realm list
@@ -622,3 +662,6 @@ manual:
   tpall:
     description: teleport all players to you
     usage: /nu tpall [radius]
+  tps:
+    description: Display TPS in 10sec.
+    usage: /nu tps
