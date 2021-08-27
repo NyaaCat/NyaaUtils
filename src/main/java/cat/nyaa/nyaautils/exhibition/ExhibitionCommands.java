@@ -50,6 +50,7 @@ public class ExhibitionCommands extends CommandReceiver {
             p.getWorld().dropItem(p.getEyeLocation(), f.getItemFrame().getItem());
         }
         f.set(p);
+        msg(sender, "user.exhibition.set");
     }
 
     @SubCommand(value = "unset", permission = "nu.exhibition.unset")
@@ -70,14 +71,56 @@ public class ExhibitionCommands extends CommandReceiver {
         }
         if (f.ownerMatch(p)) {
             f.unset();
+            msg(sender, "user.exhibition.unset");
             if (p.getGameMode() == GameMode.SURVIVAL) {
                 f.getItemFrame().setItem(new ItemStack(Material.AIR));
             }
         } else if (p.hasPermission("nu.exhibition.forceUnset")) {
             f.unset();
+            msg(sender, "user.exhibition.unset");
         } else {
             msg(sender, "user.exhibition.unset_protected");
         }
+    }
+
+    @SubCommand(value = "inv", permission = "nu.exhibition.inv")
+    public void commandInv(CommandSender sender, Arguments args){
+        Player p = asPlayer(sender);
+        ExhibitionFrame f = ExhibitionFrame.fromPlayerEye(p);
+        if (f == null) {
+            msg(sender, "user.exhibition.no_item_frame");
+            return;
+        }
+        if (!f.hasItem()) {
+            msg(sender, "user.exhibition.no_item");
+            return;
+        }
+        if (!f.getItemFrame().isVisible()) {
+            msg(sender, "user.exhibition.already_inv");
+            return;
+        }
+        f.inv();
+        msg(sender, "user.exhibition.inv");
+    }
+
+    @SubCommand(value = "uninv", permission = "nu.exhibition.uninv")
+    public void commandUninv(CommandSender sender, Arguments args){
+        Player p = asPlayer(sender);
+        ExhibitionFrame f = ExhibitionFrame.fromPlayerEye(p);
+        if (f == null) {
+            msg(sender, "user.exhibition.no_item_frame");
+            return;
+        }
+        if (!f.hasItem()) {
+            msg(sender, "user.exhibition.no_item");
+            return;
+        }
+        if (f.getItemFrame().isVisible()) {
+            msg(sender, "user.exhibition.not_inv");
+            return;
+        }
+        f.uninv();
+        msg(sender, "user.exhibition.uninv");
     }
 
     @SubCommand(value = "desc", permission = "nu.exhibition.desc")

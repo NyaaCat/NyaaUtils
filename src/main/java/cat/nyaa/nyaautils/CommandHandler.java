@@ -52,10 +52,10 @@ public class CommandHandler extends CommandReceiver {
     public ExhibitionCommands exhibitionCommands;
     @SubCommand("mailbox")
     public MailboxCommands mailboxCommands;
-    @SubCommand("repair")
-    public RepairCommands repairCommands;
-    @SubCommand("enchant")
-    public EnchantCommands enchantCommands;
+    //@SubCommand("repair")
+    //public RepairCommands repairCommands;
+    // @SubCommand("enchant")
+    // public EnchantCommands enchantCommands;
     @SubCommand("el")
     public ElytraCommands elytraCommands;
     @SubCommand("timer")
@@ -198,6 +198,7 @@ public class CommandHandler extends CommandReceiver {
         p.getCommand("nyaautils").setExecutor(null);
         HandlerList.unregisterAll(p);
         p.onEnable();
+        msg(sender, "user.info.reload");
     }
 
     /* Toggle drop protection ON/OFF for the player */
@@ -734,7 +735,7 @@ public class CommandHandler extends CommandReceiver {
         }
     }
 
-    @SubCommand(value = "tpall", permission = "nu.tpall")
+    //@SubCommand(value = "tpall", permission = "nu.tpall")
     public void tpall(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         int r = args.nextInt();
