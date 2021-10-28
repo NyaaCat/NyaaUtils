@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class ExhibitionCommands extends CommandReceiver {
-    private NyaaUtils plugin;
+    private final NyaaUtils plugin;
 
     public ExhibitionCommands(Object plugin, LanguageRepository i18n) {
         super((NyaaUtils) plugin, i18n);
@@ -34,7 +34,7 @@ public class ExhibitionCommands extends CommandReceiver {
             msg(sender, "user.exhibition.no_item_frame");
             return;
         }
-        if (f.getItemFrame().isFixed()){
+        if (f.getItemFrame().isFixed()) {
             msg(sender, "user.exhibition.already_set");
             return;
         }
@@ -83,8 +83,8 @@ public class ExhibitionCommands extends CommandReceiver {
         }
     }
 
-    @SubCommand(value = "inv", permission = "nu.exhibition.inv")
-    public void commandInv(CommandSender sender, Arguments args){
+    @SubCommand(value = "toggleinv", permission = "nu.exhibition.inv")
+    public void commandInv(CommandSender sender, Arguments args) {
         Player p = asPlayer(sender);
         ExhibitionFrame f = ExhibitionFrame.fromPlayerEye(p);
         if (f == null) {
@@ -99,28 +99,19 @@ public class ExhibitionCommands extends CommandReceiver {
             msg(sender, "user.exhibition.already_inv");
             return;
         }
-        f.inv();
-        msg(sender, "user.exhibition.inv");
-    }
+        if (f.ownerMatch(p) || p.isOp() || p.hasPermission("nu.exhibition.forceToggleInv")) {
+            if (f.isVisible()) {
+                f.setVisible(false);
+                msg(sender, "user.exhibition.inv");
+            } else {
+                f.setVisible(true);
+                msg(sender, "user.exhibition.uninv");
+            }
+        } else {
+            msg(sender, "user.exhibition.not_owner");
+        }
 
-    @SubCommand(value = "uninv", permission = "nu.exhibition.uninv")
-    public void commandUninv(CommandSender sender, Arguments args){
-        Player p = asPlayer(sender);
-        ExhibitionFrame f = ExhibitionFrame.fromPlayerEye(p);
-        if (f == null) {
-            msg(sender, "user.exhibition.no_item_frame");
-            return;
-        }
-        if (!f.hasItem()) {
-            msg(sender, "user.exhibition.no_item");
-            return;
-        }
-        if (f.getItemFrame().isVisible()) {
-            msg(sender, "user.exhibition.not_inv");
-            return;
-        }
-        f.uninv();
-        msg(sender, "user.exhibition.uninv");
+
     }
 
     @SubCommand(value = "desc", permission = "nu.exhibition.desc")

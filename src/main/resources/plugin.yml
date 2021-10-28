@@ -50,7 +50,7 @@ permissions:
     description: Exhibition modification
     default: op
   nu.exhibition.uninv:
-    description: Exhibition modificatino
+    description: Exhibition modification
     default: op
   nu.exhibition.desc:
     description: Exhibition modification

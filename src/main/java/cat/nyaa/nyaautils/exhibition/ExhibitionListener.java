@@ -65,8 +65,8 @@ public class ExhibitionListener implements Listener {
             if (ev.getCause() == HangingBreakEvent.RemoveCause.EXPLOSION) { // Explosion protect
                 ev.setCancelled(true);
             } else {
-                plugin.getLogger().warning(String.format("Exhibition broken: Location: %s, item: %s", f.getLocation().toString(),
-                        f.getItem().toString()));
+                plugin.getLogger().warning(String.format("Exhibition broken: Location: %s, item: %s", f.getLocation(),
+                        f.getItem()));
                 f.setItem(new ItemStack(Material.AIR));
             }
         }
@@ -78,7 +78,7 @@ public class ExhibitionListener implements Listener {
         if (ExhibitionFrame.isFrameInnerItem(ev.getCursor())) {
             plugin.getLogger().warning(
                     String.format("Illegal Exhibition Item use: {player: %s, location: %s, item: %s}",
-                            ev.getWhoClicked().getName(), ev.getWhoClicked().getLocation().toString(),
+                            ev.getWhoClicked().getName(), ev.getWhoClicked().getLocation(),
                             ev.getCursor().toString()));
             ev.setCancelled(true);
             ev.getView().setCursor(new ItemStack(Material.AIR));
@@ -86,7 +86,7 @@ public class ExhibitionListener implements Listener {
         if (ExhibitionFrame.isFrameInnerItem(ev.getCurrentItem())) {
             plugin.getLogger().warning(
                     String.format("Illegal Exhibition Item use: {player: %s, location: %s, item: %s}",
-                            ev.getWhoClicked().getName(), ev.getWhoClicked().getLocation().toString(),
+                            ev.getWhoClicked().getName(), ev.getWhoClicked().getLocation(),
                             ev.getCursor().toString()));
             ev.setCancelled(true);
             ev.setCurrentItem(new ItemStack(Material.AIR));

@@ -119,8 +119,7 @@ user:
     line_removed: Line %d removed
     line_changed: Line %d changed
     desc_protected: You cannot set description of a protected frame
-    already_inv: The item frame is already invisible
-    not_inv: The item frame is not invisible
+    not_owner: You are not allowed to change other's protected frame
     set: The item frame is set
     unset: Unset the item frame
     inv: Make the item frame invisible

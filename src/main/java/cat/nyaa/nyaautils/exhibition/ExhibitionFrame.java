@@ -32,11 +32,12 @@ public class ExhibitionFrame {
     private String ownerName;
     private List<String> descriptions;
     private boolean itemSet = false;
+    private final boolean isInvisible = false;
 
     private ExhibitionFrame(ItemFrame frame) {
         if (frame == null) throw new IllegalArgumentException();
         this.frame = frame;
-        if (isLegacyItem(frame.getItem())){
+        if (isLegacyItem(frame.getItem())) {
             decodeLegacy();
             encodeItem();
             return;
@@ -109,7 +110,7 @@ public class ExhibitionFrame {
         return isExhibitionItem;
     }
 
-    private void decodeLegacy(){
+    private void decodeLegacy() {
         itemSet = false;
         ownerName = "";
         ownerUUID = "";
@@ -163,7 +164,7 @@ public class ExhibitionFrame {
         if (item.getType() == AIR) return;
         baseItem = item.clone();
         if (!item.hasItemMeta()) return;
-        if (!isExhibitionItem(item)){
+        if (!isExhibitionItem(item)) {
             return;
         }
         ItemMeta itemMeta = item.getItemMeta();
@@ -209,14 +210,14 @@ public class ExhibitionFrame {
         descriptions.forEach(s -> {
             sb.append(s).append("|");
         });
-        if (sb.length()>0) {
-            sb.deleteCharAt(sb.length()-1);
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         return sb.toString();
     }
 
-    private List<String> splitDescription(String descriptions){
-        if (descriptions == null){
+    private List<String> splitDescription(String descriptions) {
+        if (descriptions == null) {
             return new ArrayList<>();
         }
         String[] split = descriptions.split("\\|");
@@ -257,13 +258,14 @@ public class ExhibitionFrame {
         return p.getUniqueId().toString().equals(ownerUUID);
     }
 
-    public void inv() {
-        frame.setVisible(false);
+    public boolean isVisible() {
+        return frame.isVisible();
     }
 
-    public void uninv() {
-        frame.setVisible(true);
+    public void setVisible(boolean visibility) {
+        frame.setVisible(visibility);
     }
+
 
     public ItemFrame getItemFrame() {
         return frame;

@@ -117,8 +117,7 @@ user:
     line_removed: 第 %d 行说明已移除
     line_changed: 第 %d 行说明已修改
     desc_protected: 不能修改被保护的展示框的说明文字
-    already_inv: 指定的展示框已是隐形状态
-    not_inv: 指定的展示框不是隐形状态
+    not_owner: 您不能修改他人的展示框状态
     set: 已为指定的展示框设置展品
     unset: 已取消展示框的保护状态
     inv: 已将指定的展示框设为隐形状态
