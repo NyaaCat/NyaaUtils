@@ -95,10 +95,6 @@ public class ExhibitionCommands extends CommandReceiver {
             msg(sender, "user.exhibition.no_item");
             return;
         }
-        if (!f.getItemFrame().isVisible()) {
-            msg(sender, "user.exhibition.already_inv");
-            return;
-        }
         if (f.ownerMatch(p) || p.isOp() || p.hasPermission("nu.exhibition.forceToggleInv")) {
             if (f.isVisible()) {
                 f.setVisible(false);
