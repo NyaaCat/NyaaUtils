@@ -32,7 +32,6 @@ permissions:
     description: Add item as enchantment source
     default: op
   nu.launch:
-
     description: Launch player into sky
     default: op
   nu.lootprotect:
@@ -47,6 +46,12 @@ permissions:
   nu.exhibition.unset:
     description: Exhibition modification
     default: true
+  nu.exhibition.inv:
+    description: Exhibition modification
+    default: op
+  nu.exhibition.uninv:
+    description: Exhibition modificatino
+    default: op
   nu.exhibition.desc:
     description: Exhibition modification
     default: true

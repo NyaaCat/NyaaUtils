@@ -6,6 +6,7 @@ user:
     no_item_offhand: 副手中没有物品
     enabled: 已启用
     disabled: 已禁用
+    reload: 插件已重载
   error:
     bad_command: 无效的命令：%s
     not_int: 不是有效的整数
@@ -116,6 +117,12 @@ user:
     line_removed: 第 %d 行说明已移除
     line_changed: 第 %d 行说明已修改
     desc_protected: 不能修改被保护的展示框的说明文字
+    already_inv: 指定的展示框已是隐形状态
+    not_inv: 指定的展示框不是隐形状态
+    set: 已为指定的展示框设置展品
+    unset: 已取消展示框的保护状态
+    inv: 已将指定的展示框设为隐形状态
+    uninv: 已取消指定展示框的隐形状态
   format:
     message: '&r&&f0 &0 黑色
 
@@ -409,6 +416,27 @@ manual:
   dp:
     description: 切换死亡掉落保护状态
     usage: /nu dp
+  bp:
+    add:
+      description: 为玩家扩展背包增加行数
+      usage: /nu bp add {player} <行数>
+    set:
+      description: 为玩家扩展背包设置行数
+      usage: /nu bp set {player} <行数>
+    del:
+      description: 为玩家扩展背包减少行数
+      usage: /nu bp del {player} <行数>
+    open:
+      description: 强制打开玩家的扩展背包
+      usage: /nu bp open {player}
+    description: 打开扩展背包
+    usage: /nu bp
+  ping:
+    description: 查看10秒内的延迟
+    usage: /nu ping
+  pingtop:
+    description: 查看延迟排行
+    usage: /nu pingtop
   launch:
     description: 将玩家发射至空中，并展开鞘翅
     usage: /nu launch <Yaw> <Pitch> <Speed> <Delay> [玩家名称]
@@ -445,7 +473,7 @@ manual:
   setbooktitle:
     description: 设置书的标题
     usage: /nu setbooktitle [标题]
-  setbookunsign:
+  setbookunsigned:
     description: 取消书的签名状态
     usage: /nu setbookunsign
   vote:
@@ -487,6 +515,12 @@ manual:
     unset:
       description: 取消眼前展示框的受保护状态
       usage: /nu exhibition unset
+    inv:
+      description: 将眼前的展示框设为隐形状态
+      usage: /nu exhibition inv
+    uninv:
+      description: 将眼前的展示框设为非隐形状态
+      usage: /nu exhibition uninv
     desc:
       description: 修改受保护展示框的说明
       usage: /nu exhibition desc <行号> [说明文字]
@@ -579,6 +613,12 @@ manual:
     info:
       description: 显示领域信息
       usage: /nu realm info
+    mute:
+      description: 静音领域提示
+      usage: /nu realm mute
+    unmute:
+      description: 取消领域静音提示
+      usage: /nu realm unmute
     list:
       description: 列出所有领域
       usage: /nu realm list
@@ -644,3 +684,12 @@ manual:
     help:
       description: 显示帮助信息
       usage: /nu expcap help
+  tpall:
+    description: 将所有玩家传送至身边
+    usage: /nu tpall
+  tps:
+    description: 查看服务器10秒内的TPS
+    usage: /nu tps
+  sit:
+    description: 开关椅子功能
+    usage: /nu sit
