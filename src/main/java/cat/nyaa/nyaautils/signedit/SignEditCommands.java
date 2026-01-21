@@ -10,7 +10,8 @@ import cat.nyaa.nyaacore.utils.HexColorUtils;
 import cat.nyaa.nyaacore.utils.RayTraceUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import net.md_5.bungee.api.chat.ClickEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -29,9 +30,10 @@ public class SignEditCommands extends CommandReceiver {
     public static void printSignContent(Player player, SignContent content) {
         player.sendMessage(I18n.format("user.signedit.content"));
         for (int i = 0; i < 4; i++) {
-            Message msg = new Message(I18n.format("user.signedit.content_line", i, content.getLine(i)));
-            msg.inner.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/nu se sign "+i+" "+content.getLine(i).replace('§','&')));
-            msg.send(player, Message.MessageType.CHAT);
+            String lineText = I18n.format("user.signedit.content_line", i, content.getLine(i));
+            Component line = Component.text(lineText)
+                    .clickEvent(ClickEvent.suggestCommand("/nu se sign " + i + " " + content.getLine(i).replace('§', '&')));
+            new Message("").append(line).send(player, Message.MessageType.CHAT);
         }
     }
 
@@ -50,7 +52,7 @@ public class SignEditCommands extends CommandReceiver {
             if (block != null && block.getState() instanceof Sign) {
                 String text = args.nextString();
                 text = HexColorUtils.hexColored(text);
-                if (HexColorUtils.stripEssentialsFormat(text).length() > plugin.cfg.signedit_max_length) {
+                if (stripFormatting(text).length() > plugin.cfg.signedit_max_length) {
                     throw new BadCommandException("user.signedit.too_long", plugin.cfg.signedit_max_length);
                 }
                 if ("CLEAR".equalsIgnoreCase(text)) {
@@ -80,7 +82,7 @@ public class SignEditCommands extends CommandReceiver {
             String text = args.nextString();
             checkFormatCodes(text);
             text = HexColorUtils.hexColored( text);
-            if (HexColorUtils.stripEssentialsFormat(text).length() > plugin.cfg.signedit_max_length) {
+            if (stripFormatting(text).length() > plugin.cfg.signedit_max_length) {
                 throw new BadCommandException("user.signedit.too_long", plugin.cfg.signedit_max_length);
             }
             if (line >= 0 && line < 4) {
@@ -105,5 +107,9 @@ public class SignEditCommands extends CommandReceiver {
                 throw new BadCommandException("user.warn.blocked_format_codes", "&" + k);
             }
         }
+    }
+
+    private static String stripFormatting(String text) {
+        return ChatColor.stripColor(HexColorUtils.hexColored(text));
     }
 }

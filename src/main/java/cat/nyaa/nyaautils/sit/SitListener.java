@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.spigotmc.event.entity.EntityDismountEvent;
+import org.bukkit.event.entity.EntityDismountEvent;
 
 import java.util.HashMap;
 import java.util.HashSet;

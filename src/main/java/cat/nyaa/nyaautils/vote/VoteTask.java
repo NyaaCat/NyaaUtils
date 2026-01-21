@@ -2,7 +2,7 @@ package cat.nyaa.nyaautils.vote;
 
 import cat.nyaa.nyaacore.Message;
 import cat.nyaa.nyaautils.I18n;
-import net.md_5.bungee.api.chat.ClickEvent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -64,7 +64,7 @@ public class VoteTask extends BukkitRunnable {
         for (Integer id : voteOptions.keySet()) {
             Message msg = new Message(I18n.format("user.vote.option", id, voteOptions.get(id), voteResults.get(id)));
             if (!end) {
-                msg.inner.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nu vote " + id));
+                msg.inner = msg.inner.clickEvent(ClickEvent.runCommand("/nu vote " + id));
             }
             msg.broadcast();
         }

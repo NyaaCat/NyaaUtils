@@ -5,7 +5,6 @@ import cat.nyaa.nyaacore.cmdreceiver.Arguments;
 import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
 import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.utils.InventoryUtils;
-import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.NyaaUtils;
 import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.Location;
@@ -141,8 +140,6 @@ public class MailboxCommands extends CommandReceiver {
         } else {
 
             msg(p, "user.mailbox.info.location", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-            msg(p, "user.mailbox.info.hand_price", (float) plugin.cfg.mailHandFee);
-            msg(p, "user.mailbox.info.chest_price", (float) plugin.cfg.mailChestFee);
             msg(p, "user.mailbox.info.send_cooldown", ((double) plugin.cfg.mailCooldown) / 20D);
             //msg(p, "user.mailbox.info.send_timeout", ((double) plugin.cfg.mailTimeout) / 20D);
         }
@@ -167,10 +164,6 @@ public class MailboxCommands extends CommandReceiver {
             return;
         }
 
-        if (!VaultUtils.enoughMoney(p, plugin.cfg.mailHandFee)) {
-            msg(p, "user.mailbox.money_insufficient");
-            return;
-        }
         OfflinePlayer toPlayer = args.nextOfflinePlayer();
         UUID recipient = toPlayer.getUniqueId();
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
@@ -204,16 +197,12 @@ public class MailboxCommands extends CommandReceiver {
                 msg(recp, "user.mailbox.mailbox_no_space", sender.getName());
             }
         } else {
-            if (plugin.systemBalance != null) {
-                plugin.systemBalance.deposit(plugin.cfg.mailHandFee, plugin);
-            }
             InventoryUtils.addItem(targetInventory, stack);
             p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-            msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), (float) plugin.cfg.mailHandFee);
+            msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), 0F);
             if (recp != null) {
                 msg(recp, "user.mailbox.mail_received", sender.getName());
             }
-            VaultUtils.withdraw(p, plugin.cfg.mailHandFee);
         }
     }
 
@@ -225,10 +214,6 @@ public class MailboxCommands extends CommandReceiver {
             return;
         }
 
-        if (!VaultUtils.enoughMoney(p, plugin.cfg.mailChestFee)) {
-            msg(p, "user.mailbox.money_insufficient");
-            return;
-        }
         OfflinePlayer toPlayer = args.nextOfflinePlayer();
         UUID recipient = toPlayer.getUniqueId();
         Location toLocation = plugin.cfg.mailbox.getMailboxLocation(recipient);
@@ -260,10 +245,6 @@ public class MailboxCommands extends CommandReceiver {
 
         plugin.mailboxListener.registerRightClickCallback(p, 100,
                 (Location boxLocation) -> {
-                    if (!VaultUtils.enoughMoney(p, plugin.cfg.mailChestFee)) {
-                        msg(p, "user.mailbox.money_insufficient");
-                        return;
-                    }
                     Block b = boxLocation.getBlock();
                     if (plugin.getServer().getPluginManager().getPlugin("LockettePro") != null) {
                         if (LocketteProAPI.isLocked(b) && !LocketteProAPI.isUser(b, p)) {
@@ -299,15 +280,11 @@ public class MailboxCommands extends CommandReceiver {
                         }
                     }
                     if (itemMoved) {
-                        if (plugin.systemBalance != null) {
-                            plugin.systemBalance.deposit(plugin.cfg.mailChestFee, plugin);
-                        }
                         toInventory.setStorageContents(to);
-                        msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), (float) plugin.cfg.mailChestFee);
+                        msg(sender, "user.mailbox.mail_sent", toPlayer.getName(), 0F);
                         if (recpFinal != null) {
                             msg(recpFinal, "user.mailbox.mail_received", sender.getName());
                         }
-                        VaultUtils.withdraw(p, plugin.cfg.mailChestFee);
                     } else {
                         msg(sender, "user.mailbox.mail_sent_nothing");
                     }

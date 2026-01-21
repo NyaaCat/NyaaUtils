@@ -13,7 +13,7 @@ import cat.nyaa.nyaacore.orm.backends.ITypedTable;
 import cat.nyaa.nyaacore.utils.LocaleUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
-import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -211,7 +211,7 @@ public class ExtraBackpackCommands extends CommandReceiver {
             boolean match = nearbyBlock.stream().anyMatch(loc -> loc.getBlock().getType() == plugin.cfg.bp_require_nearby_block);
             if (!match) {
                 new Message("")
-                        .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", new TranslatableComponent(LocaleUtils.getUnlocalizedName(plugin.cfg.bp_require_nearby_block))))
+                        .append(I18n.format("user.backpack.no_required_block", plugin.cfg.bp_require_nearby_distance), Collections.singletonMap("{block}", Component.translatable(LocaleUtils.getUnlocalizedName(plugin.cfg.bp_require_nearby_block))))
                         .send(sender);
                 return;
             }

@@ -1,7 +1,5 @@
 package cat.nyaa.nyaautils.commandwarpper;
 
-import cat.nyaa.nyaacore.utils.IPCUtils;
-import cat.nyaa.nyaacore.utils.VaultUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.earth2me.essentials.Trade;
@@ -9,11 +7,7 @@ import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.LocationUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
-import net.ess3.api.InvalidWorldException;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,11 +16,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class TeleportCmdWarpper implements Listener {
-    private static boolean hasOurTown = false;
     private IEssentials ess;
     private NyaaUtils plugin;
 
@@ -36,17 +29,6 @@ public class TeleportCmdWarpper implements Listener {
         if (plugin.cfg.teleportEnable) {
             plugin.getServer().getPluginManager().registerEvents(this, plugin);
         }
-        hasOurTown = plugin.getServer().getPluginManager().getPlugin("ourtown") != null;
-    }
-
-    private static Location PlayerSpawn(OfflinePlayer player, World world) {
-        if (hasOurTown) {
-            Location spawn = (Location) IPCUtils.callMethod("ourtown_get_player_spawn", player);
-            if (spawn.getWorld().getName().equals(world.getName())) {
-                return spawn;
-            }
-        }
-        return world.getSpawnLocation();
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -73,15 +55,9 @@ public class TeleportCmdWarpper implements Listener {
             if (homes.size() < 1) {
                 msg(p, "user.teleport.not_set_yet");
             } else if (homes.size() == 1 && cmd.equals("/home")) {
-                Location homeLoc;
-                try {
-                    homeLoc = iu.getHome(homes.get(0));
-                } catch (InvalidWorldException ex) {
+                Location homeLoc = iu.getHome(homes.get(0));
+                if (homeLoc == null) {
                     msg(p, "user.teleport.invalid_home");
-                    return;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    msg(p, "user.teleport.error");
                     return;
                 }
                 doHome(p, iu, homeLoc, curLoc);
@@ -89,15 +65,9 @@ public class TeleportCmdWarpper implements Listener {
                 String to = cmd.substring(5).trim();
                 for (String home : homes) {
                     if (home.equals(to)) {
-                        Location homeLoc;
-                        try {
-                            homeLoc = iu.getHome(to);
-                        } catch (InvalidWorldException ex) {
+                        Location homeLoc = iu.getHome(to);
+                        if (homeLoc == null) {
                             msg(p, "user.teleport.invalid_home");
-                            return;
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            msg(p, "user.teleport.error");
                             return;
                         }
                         doHome(p, iu, homeLoc, curLoc);
@@ -138,33 +108,15 @@ public class TeleportCmdWarpper implements Listener {
             msg(p, "user.teleport.invalid_name");
             return;
         }
-        if (!ess.getSettings().isTeleportSafetyEnabled() && LocationUtil.isBlockUnsafeForUser(iu, curLoc.getWorld(), curLoc.getBlockX(), curLoc.getBlockY(), curLoc.getBlockZ())) {
+        if (!ess.getSettings().isTeleportSafetyEnabled()
+                && LocationUtil.isBlockUnsafeForUser(ess, iu, curLoc.getWorld(), curLoc.getBlockX(), curLoc.getBlockY(), curLoc.getBlockZ())) {
             msg(p, "user.teleport.unsafe");
             return;
         }
 
-        double fee = plugin.cfg.setHomeMax;
-        World defaultWorld = Bukkit.getWorld(plugin.cfg.setHomeDefaultWorld);
-        if (defaultWorld == null) {
-            defaultWorld = Bukkit.getWorlds().get(0);
-        }
-        if (curLoc.getWorld() != defaultWorld) {
-            fee += plugin.cfg.setHomeWorld;
-            fee -= curLoc.distance(PlayerSpawn(p, curLoc.getWorld())) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
-        } else {
-            fee -= curLoc.distance(PlayerSpawn(p, defaultWorld)) * (double) plugin.cfg.setHomeDecrement / plugin.cfg.setHomeDistance;
-        }
-        if (fee < plugin.cfg.setHomeMin) fee = plugin.cfg.setHomeMin;
-        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-        if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
-            return;
-        }
+        double fee = 0;
         iu.setHome(name, curLoc);
         msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.sethome"));
-        if (plugin.systemBalance != null && fee > 0) {
-            plugin.systemBalance.deposit(fee, plugin);
-        }
     }
 
     private void doBack(Player p, User iu, Location curLoc, Location lastLoc) {
@@ -173,29 +125,20 @@ public class TeleportCmdWarpper implements Listener {
             return;
         }
 
-        double fee = plugin.cfg.backBase;
-        if (curLoc.getWorld() != lastLoc.getWorld()) {
-            fee += plugin.cfg.backWorld;
-            fee += lastLoc.distance(PlayerSpawn(p, lastLoc.getWorld())) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
-        } else {
-            fee += lastLoc.distance(curLoc) * (double) plugin.cfg.backIncrement / plugin.cfg.backDistance;
-        }
-        if (fee > plugin.cfg.backMax) fee = plugin.cfg.backMax;
-        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-        if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
-            return;
-        }
-        try {
-            iu.getTeleport().back(new Trade(0, ess));
-            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
-            if (plugin.systemBalance != null) {
-                plugin.systemBalance.deposit(fee, plugin);
+        double fee = 0;
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        iu.getAsyncTeleport().back(new Trade(0, ess), future);
+        future.whenComplete((success, throwable) -> {
+            if (throwable != null) {
+                p.sendMessage(throwable.getMessage());
+                return;
             }
-        } catch (Exception e) {
-            VaultUtils.deposit(p, fee);
-            p.sendMessage(e.getMessage());
-        }
+            if (Boolean.TRUE.equals(success)) {
+                msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.back"));
+            } else {
+                msg(p, "user.teleport.error");
+            }
+        });
     }
 
     private void doHome(Player p, User iu, Location homeLoc, Location curLoc) {
@@ -204,29 +147,20 @@ public class TeleportCmdWarpper implements Listener {
             return;
         }
 
-        double fee = plugin.cfg.homeBase;
-        if (homeLoc.getWorld() != curLoc.getWorld()) {
-            fee += plugin.cfg.homeWorld;
-            fee += homeLoc.distance(PlayerSpawn(p, homeLoc.getWorld())) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
-        } else {
-            fee += homeLoc.distance(curLoc) * (double) plugin.cfg.homeIncrement / plugin.cfg.homeDistance;
-        }
-        if (fee > plugin.cfg.homeMax) fee = plugin.cfg.homeMax;
-        fee = new BigDecimal(fee).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
-        if (!VaultUtils.withdraw(p, fee)) {
-            msg(p, "user.teleport.money_insufficient", fee);
-            return;
-        }
-        try {
-            iu.getTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN);
-            msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
-            if (plugin.systemBalance != null) {
-                plugin.systemBalance.deposit(fee, plugin);
+        double fee = 0;
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+        iu.getAsyncTeleport().teleport(homeLoc, new Trade(0, ess), PlayerTeleportEvent.TeleportCause.PLUGIN, future);
+        future.whenComplete((success, throwable) -> {
+            if (throwable != null) {
+                p.sendMessage(throwable.getMessage());
+                return;
             }
-        } catch (Exception e) {
-            VaultUtils.deposit(p, fee);
-            p.sendMessage(e.getMessage());
-        }
+            if (Boolean.TRUE.equals(success)) {
+                msg(p, "user.teleport.ok", fee, I18n.format("user.teleport.home"));
+            } else {
+                msg(p, "user.teleport.error");
+            }
+        });
     }
 
     private int checkHomeLimit(final User user, String name) {

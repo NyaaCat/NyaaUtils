@@ -153,7 +153,12 @@ public class ExtraBackpackGUI implements InventoryHolder {
                 if (tainted.get()) {
                     String tainted = String.format("Tainted backpack of %s closed before saving when backpack opened by %s! Unsaved: %s", owner.toString(), opener.getUniqueId().toString(), desiredState);
                     Message message = new Message(tainted);
-                    Bukkit.getOperators().forEach(op -> message.send(op, true));
+                    Bukkit.getOperators().forEach(op -> {
+                        Player player = op.getPlayer();
+                        if (player != null) {
+                            message.send(player);
+                        }
+                    });
                     plugin.getLogger().severe(tainted);
                     new RuntimeException().printStackTrace();
                 } else {
@@ -173,7 +178,12 @@ public class ExtraBackpackGUI implements InventoryHolder {
                 String errLine1 = String.format("%s's line %s (%d) changed when backpack opened by %s! ", owner.toString(), backpackLine.getId(), lineNo, opener.getUniqueId().toString());
                 String errLine2 = String.format("Should be %s, actually %s, desired %s", lineLastState, lineCurrentState, desiredState);
                 Message message = new Message(errLine1 + "\n" + errLine2);
-                Bukkit.getOperators().forEach(op -> message.send(op, true));
+                Bukkit.getOperators().forEach(op -> {
+                    Player player = op.getPlayer();
+                    if (player != null) {
+                        message.send(player);
+                    }
+                });
                 plugin.getLogger().warning(errLine1);
                 plugin.getLogger().warning(errLine2);
                 return Pair.of(false, null);
@@ -188,7 +198,12 @@ public class ExtraBackpackGUI implements InventoryHolder {
             String errLine1 = String.format("%s's line %d errored saving when backpack opened by %s! ", owner.toString(), lineNo, opener.getUniqueId().toString());
             String errLine2 = String.format("Unsaved %s, error: %s", desiredState, throwable.getLocalizedMessage());
             Message message = new Message(errLine1 + "\n" + errLine2);
-            Bukkit.getOperators().forEach(op -> message.send(op, true));
+            Bukkit.getOperators().forEach(op -> {
+                Player player = op.getPlayer();
+                if (player != null) {
+                    message.send(player);
+                }
+            });
             plugin.getLogger().warning(errLine1);
             plugin.getLogger().warning(errLine2);
             return Pair.of(false, throwable);

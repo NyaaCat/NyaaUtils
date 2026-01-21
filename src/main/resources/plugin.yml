@@ -3,10 +3,10 @@ main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
 version: ${version}
 depend: [Essentials,NyaaCore]
-softdepend: [LockettePro,HamsterEcoHelper,WorldEdit]
+softdepend: [LockettePro,WorldEdit]
 authors: [RecursiveG,Cylin,Librazy]
 website: "https://github.com/NyaaCat/nyaautils"
-api-version: 1.15
+api-version: 1.21
 commands:
   nyaautils:
     description: The command for NyaaUtils
@@ -19,17 +19,8 @@ permissions:
   nu.command:
     description: Base permission node for commands
     default: true
-  nu.enchant:
-    description: Permission node for self-serve enchanting
-    default: true
-  nu.show:
-    description: Permission node for show item
-    default: true
   nu.reload:
     description: Reload permission
-    default: op
-  nu.addenchsrc:
-    description: Add item as enchantment source
     default: op
   nu.launch:
     description: Launch player into sky
@@ -58,17 +49,9 @@ permissions:
   nu.exhibition.forceUnset:
     description: Exhibition modification
     default: op
-  nu.prefix:
-    default: true
-  nu.suffix:
-    default: true
-  nu.format:
-    default: true
   nu.project:
     description: Set player velocity
     default: op
-  nu.enchantinfo:
-    default: true
   nu.addfuel:
     default: op
   nu.givefuel:
@@ -111,15 +94,6 @@ permissions:
   nu.realm.admin:
     description: Create and remove realm
     default: op
-  nu.particles.player:
-    description: Select particle set
-    default: true
-  nu.particles.editor:
-    description: Create and remove particle set
-    default: op
-  nu.particles.admin:
-    description: Create and remove particle set
-    default: op
   nu.se.player:
     description: Edit sign in your hand
     default: true
@@ -149,24 +123,6 @@ permissions:
     default: op
   nu.redstonecontrol.wire:
     description: Cycle through each level of power for redstone wire
-    default: op
-  nu.tps:
-    description: Show TPS graph
-    default: true
-  nu.tps.verbose:
-    description: Show TPS statics
-    default: op
-  nu.tps.tick:
-    description: Show tick time record
-    default: op
-  nu.ping:
-    description: Show player's ping
-    default: true
-  nu.ping.top:
-    description: Show players' ping
-    default: op
-  nu.ping.others:
-    description: Show other player's ping
     default: op
   nu.sit:
     description: allow player sit on blocks

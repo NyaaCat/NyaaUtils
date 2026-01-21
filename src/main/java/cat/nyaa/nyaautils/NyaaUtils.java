@@ -1,12 +1,7 @@
 package cat.nyaa.nyaautils;
 
-import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
-import cat.nyaa.nyaacore.component.IMessageQueue;
-import cat.nyaa.nyaacore.component.ISystemBalance;
-import cat.nyaa.nyaacore.component.NyaaComponent;
 import cat.nyaa.nyaautils.commandwarpper.EsschatCmdWarpper;
 import cat.nyaa.nyaautils.commandwarpper.TeleportCmdWarpper;
-import cat.nyaa.nyaautils.commandwarpper.TpsPingCmdWarpper;
 import cat.nyaa.nyaautils.dropprotect.DropProtectListener;
 import cat.nyaa.nyaautils.elytra.ElytraEnhanceListener;
 import cat.nyaa.nyaautils.elytra.FuelManager;
@@ -17,16 +12,12 @@ import cat.nyaa.nyaautils.extrabackpack.ExtraBackpackListener;
 import cat.nyaa.nyaautils.lootprotect.LootProtectListener;
 import cat.nyaa.nyaautils.mailbox.MailboxListener;
 import cat.nyaa.nyaautils.mention.MentionListener;
-import cat.nyaa.nyaautils.messagequeue.MessageQueue;
-import cat.nyaa.nyaautils.particle.ParticleListener;
-import cat.nyaa.nyaautils.particle.ParticleTask;
 import cat.nyaa.nyaautils.realm.RealmListener;
 import cat.nyaa.nyaautils.redstonecontrol.RedstoneControlListener;
 import cat.nyaa.nyaautils.signedit.SignEditListener;
 import cat.nyaa.nyaautils.sit.SitListener;
 import cat.nyaa.nyaautils.timer.TimerListener;
 import cat.nyaa.nyaautils.timer.TimerManager;
-import cat.nyaa.nyaautils.tpsping.TpsPingTask;
 import cat.nyaa.nyaautils.vote.VoteTask;
 import com.earth2me.essentials.ISettings;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -40,7 +31,6 @@ import java.lang.reflect.InvocationTargetException;
 
 public class NyaaUtils extends JavaPlugin {
     public static NyaaUtils instance;
-    public ISystemBalance systemBalance = null;
     public I18n i18n;
     public CommandHandler commandHandler;
     public Configuration cfg;
@@ -58,16 +48,11 @@ public class NyaaUtils extends JavaPlugin {
     public WorldEditPlugin worldEditPlugin;
     public RealmListener realmListener;
     public IEssentials ess;
-    public ParticleListener particleListener;
-    public ParticleTask particleTask;
     public SignEditListener signEditListener;
     public MentionListener mentionListener;
     public EsschatCmdWarpper esschatCmdWarpper;
     public VoteTask voteTask;
-    public MessageQueue messageQueueListener;
     public RedstoneControlListener redstoneControlListener;
-    public TpsPingTask tpsPingTask;
-    public TpsPingCmdWarpper tpsPingCmdWarpper;
     public SitListener sitListener;
     public ExtraBackpackListener extraBackpackListener;
 
@@ -95,18 +80,9 @@ public class NyaaUtils extends JavaPlugin {
             worldEditPlugin = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         }
         realmListener = new RealmListener(this);
-        try {
-            systemBalance = NyaaComponent.get(ISystemBalance.class);
-        } catch (ComponentNotAvailableException e) {
-            systemBalance = null;
-        }
         ess = (IEssentials) getServer().getPluginManager().getPlugin("Essentials");
-        particleTask = new ParticleTask(this);
-        particleListener = new ParticleListener(this);
         signEditListener = new SignEditListener(this);
         mentionListener = new MentionListener(this);
-        messageQueueListener = new MessageQueue(this);
-        NyaaComponent.register(IMessageQueue.class, messageQueueListener);
         redstoneControlListener = new RedstoneControlListener(this);
         sitListener = new SitListener(this);
         extraBackpackListener = new ExtraBackpackListener(this);
@@ -125,11 +101,6 @@ public class NyaaUtils extends JavaPlugin {
         }
 
         voteTask = null;
-        if (cfg.ping_enable || cfg.tps_enable) {
-            tpsPingTask = new TpsPingTask(this);
-            tpsPingTask.runTaskTimer(this, 0, 0);
-            tpsPingCmdWarpper = new TpsPingCmdWarpper(this);
-        }
     }
 
     @Override

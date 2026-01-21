@@ -77,9 +77,10 @@ public class GlobalLoreBlacklist extends FileConfigure {
 
     public boolean canEnchant(List<String> lore) {
         for (String s : lore) {
-            if (aclMap.containsKey(HexColorUtils.stripEssentialsFormat(s))) {
-                if (aclMap.get(HexColorUtils.stripEssentialsFormat(s)).enchant != this.default_enchant) {
-                    return aclMap.get(HexColorUtils.stripEssentialsFormat(s)).enchant;
+            String stripped = stripFormatting(s);
+            if (aclMap.containsKey(stripped)) {
+                if (aclMap.get(stripped).enchant != this.default_enchant) {
+                    return aclMap.get(stripped).enchant;
                 }
             }
         }
@@ -89,12 +90,17 @@ public class GlobalLoreBlacklist extends FileConfigure {
 
     public boolean canRepair(List<String> lore) {
         for (String s : lore) {
-            if (aclMap.containsKey(HexColorUtils.stripEssentialsFormat(s))) {
-                if (aclMap.get(HexColorUtils.stripEssentialsFormat(s)).repair != this.default_repair) {
-                    return aclMap.get(HexColorUtils.stripEssentialsFormat(s)).repair;
+            String stripped = stripFormatting(s);
+            if (aclMap.containsKey(stripped)) {
+                if (aclMap.get(stripped).repair != this.default_repair) {
+                    return aclMap.get(stripped).repair;
                 }
             }
         }
         return this.default_repair;
+    }
+
+    private static String stripFormatting(String text) {
+        return ChatColor.stripColor(HexColorUtils.hexColored(text));
     }
 }

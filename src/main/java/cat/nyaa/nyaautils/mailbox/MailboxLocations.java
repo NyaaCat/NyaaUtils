@@ -4,7 +4,6 @@ import cat.nyaa.nyaacore.configuration.FileConfigure;
 import cat.nyaa.nyaautils.NyaaUtils;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -95,8 +95,10 @@ public class MailboxLocations extends FileConfigure {
     }
 
     public void updateNameMapping(UUID uuid, String name) {
-        Validate.notNull(uuid);
-        Validate.notEmpty(name);
+        Objects.requireNonNull(uuid, "uuid");
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("name");
+        }
         name = name.toLowerCase();
         if (name.equals(nameMap.get(uuid))) return;
         if (nameMap.containsValue(name)) return;
@@ -105,7 +107,7 @@ public class MailboxLocations extends FileConfigure {
     }
 
     public void updateLocationMapping(UUID uuid, Location location) {
-        Validate.notNull(uuid);
+        Objects.requireNonNull(uuid, "uuid");
         if (location == null) { // unset
             if (locationMap.containsKey(uuid)) {
                 locationMap.remove(uuid);

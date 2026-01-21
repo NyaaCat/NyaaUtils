@@ -91,7 +91,7 @@ public class MentionListener implements Listener {
 
                                 @Override
                                 public void run() {
-                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(sender.getDisplayName() + ChatColor.RESET + ": " + ChatColor.COLOR_CHAR + color.next() + HexColorUtils.stripEssentialsFormat(raw)));
+                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(sender.getDisplayName() + ChatColor.RESET + ": " + ChatColor.COLOR_CHAR + color.next() + stripFormatting(raw)));
                                     if (!color.hasNext()) this.cancel();
                                 }
                             }.runTaskTimer(plugin, 0, 20);
@@ -114,6 +114,10 @@ public class MentionListener implements Listener {
                 }
             }.runTaskTimer(plugin, 0, 5);
         });
+    }
+
+    private static String stripFormatting(String text) {
+        return ChatColor.stripColor(HexColorUtils.hexColored(text));
     }
 
 
