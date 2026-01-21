@@ -3,7 +3,7 @@ main: cat.nyaa.nyaautils.NyaaUtils
 description: "Helper/utilities plugin for Nyaacat Minecraft Server"
 version: ${version}
 depend: [Essentials,NyaaCore]
-softdepend: [LockettePro,WorldEdit]
+softdepend: [WorldEdit]
 authors: [RecursiveG,Cylin,Librazy]
 website: "https://github.com/NyaaCat/nyaautils"
 api-version: 1.21
@@ -31,24 +31,6 @@ permissions:
   nu.dropprotect:
     description: Toggle drop protect status
     default: true
-  nu.exhibition.set:
-    description: Exhibition modification
-    default: true
-  nu.exhibition.unset:
-    description: Exhibition modification
-    default: true
-  nu.exhibition.inv:
-    description: Exhibition modification
-    default: op
-  nu.exhibition.uninv:
-    description: Exhibition modification
-    default: op
-  nu.exhibition.desc:
-    description: Exhibition modification
-    default: true
-  nu.exhibition.forceUnset:
-    description: Exhibition modification
-    default: op
   nu.project:
     description: Set player velocity
     default: op
@@ -58,33 +40,6 @@ permissions:
     default: op
   nu.elytratoggle:
     default: true
-  nu.mailbox:
-    description: Basic permission requied for mailbox
-    default: true
-  nu.mailadmin:
-    description: Administrative commands for mailbox
-    default: op
-  nu.repair:
-    description: Repair item
-    default: true
-  nu.addrepair:
-    description: Add repairable item
-    default: op
-  nu.createtimer:
-    description: Add and remove timer
-    default: op
-  nu.rename:
-    description: Rename item
-    default: op
-  nu.rename.blacklist:
-    description: Bypass blacklist in renaming item
-    default: false
-  nu.setlore:
-    description: Set or append item lore
-    default: op
-  nu.setbook:
-    description: Set book author, title or unsign book
-    default: op
   nu.realm.info:
     description: View realm info
     default: true
@@ -94,42 +49,9 @@ permissions:
   nu.realm.admin:
     description: Create and remove realm
     default: op
-  nu.se.player:
-    description: Edit sign in your hand
-    default: true
-  nu.se.admin:
-    description: Edit a sign
-    default: op
-  nu.expcap.store:
-    description: Store experience
-    default: true
-  nu.expcap.restore:
-    description: Restore experience
-    default: true
-  nu.expcap.set:
-    description: Modify exp capsule
-    default: op
   nu.vote:
     description: Start a vote
     default: true
-  nu.redstonecontrol:
-    description: Control redstone stuff by right click
-    default: true
-  nu.redstonecontrol.lamp:
-    description: Light/off redstone lamp
-    default: true
-  nu.redstonecontrol.torch:
-    description: Light/off redstone torch
-    default: op
-  nu.redstonecontrol.wire:
-    description: Cycle through each level of power for redstone wire
-    default: op
-  nu.sit:
-    description: allow player sit on blocks
-    default: true
-  nu.tpall:
-    description: teleport all players to you
-    default: op
   nu.bp.use:
     description: use extra backpack
     default: op

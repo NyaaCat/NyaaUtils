@@ -7,12 +7,8 @@ import cat.nyaa.nyaacore.orm.backends.BackendConfig;
 import cat.nyaa.nyaautils.dropprotect.DropProtectMode;
 import cat.nyaa.nyaautils.elytra.FuelConfig;
 import cat.nyaa.nyaautils.lootprotect.LootProtectMode;
-import cat.nyaa.nyaautils.mailbox.MailboxLocations;
 import cat.nyaa.nyaautils.mention.MentionNotification;
 import cat.nyaa.nyaautils.realm.RealmConfig;
-import cat.nyaa.nyaautils.repair.RepairConfig;
-import cat.nyaa.nyaautils.sit.SitLocation;
-import cat.nyaa.nyaautils.timer.TimerConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,30 +46,6 @@ public class Configuration extends PluginConfigure {
     public int elytra_fuel_notify = 10;
     @Serializable(name = "elytra_enhance.disabled_worlds", alias = "disabled_world")
     public List<String> disabled_world = new ArrayList<>(Arrays.asList("world1", "world2"));
-    /* Mailing System */
-    @Serializable(name = "mail.cooldownTicks")
-    public int mailCooldown = 20;
-    @Serializable(name = "mail.timeoutTicks")
-    public int mailTimeout = 200;
-    /* Timer */
-    @Serializable
-    public int timerCheckInterval = -1;
-    /* Teleport */
-    @Serializable(name = "teleport.enable")
-    public boolean teleportEnable = true;
-
-    @Serializable(name = "rename.character_limit")
-    public int renameCharacterLimit = 50;
-    @Serializable(name = "rename.disabled_color_codes")
-    public List<String> renameDisabledFormattingCodes = new ArrayList<>();
-    @Serializable(name = "rename.censored_words")
-    public List<String> renameBlockedWords = new ArrayList<>();
-    @Serializable(name = "rename.censored_words")
-    public List<String> renameBlockedMaterials = new ArrayList<>();
-    @Serializable(name = "rename.exp_cost_base")
-    public int renameExpCostBase = 10;
-    @Serializable(name = "rename.exp_cost_per_item")
-    public int renameExpCostPer = 10;
 
     @Serializable(name = "drop_protect.maximum_item_in_world")
     public int dropProtectMaximumItem = 1000;
@@ -93,11 +65,6 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "realm.notification_title_fadeout_tick")
     public int realm_notification_title_fadeout_tick = 10;
 
-    @Serializable(name = "signedit.disabledFormattingCodes")
-    public List<String> signedit_disabledFormattingCodes = new ArrayList<>(Collections.singletonList("k"));
-    @Serializable(name = "signedit.max_length")
-    public int signedit_max_length = 15;
-
     @Serializable(name = "mention.enable")
     public Boolean mention_enable = true;
     @Serializable(name = "mention.sound")
@@ -112,24 +79,6 @@ public class Configuration extends PluginConfigure {
     public String mention_blink_char = "b0fc";
 
 
-    @Serializable
-    public Material expCapsuleType = Material.EXPERIENCE_BOTTLE;
-
-    @Serializable(name = "expcap.thrown_orb.maxAmount")
-    public int expcap_max_orb_amount = 30;
-
-    @Serializable(name = "expcap.thrown_orb.minAmount")
-    public int expcap_min_orb_amount = 1;
-
-    @Serializable(name = "expcap.thrown_orb.ticksBetweenSpawn")
-    public int expcap_orb_ticksBetweenSpawn = 1;
-
-    @Serializable(name = "expcap.max_stored_exp")
-    public int expcap_max_stored_exp = Integer.MAX_VALUE;
-
-    @Serializable(name = "expcap.thrown_orb.enabled")
-    public boolean expcap_thron_enabled = true;
-
     @Serializable(name = "vote.enable")
     public boolean vote_enable = true;
     @Serializable(name = "vote.timeout")
@@ -138,17 +87,6 @@ public class Configuration extends PluginConfigure {
     public int vote_max_options = 8;
     @Serializable(name = "vote.broadcast_interval")
     public int vote_broadcast_interval = -1;
-
-    @Serializable(name = "redstone_control.enable")
-    public boolean redstoneControl;
-
-    @Serializable(name = "redstone_control.material")
-    public Material redstoneControlMaterial = Material.AIR;
-
-    public Set<Material> sit_blocks = new HashSet<>();
-    @Serializable(name = "sit.locations")
-    public Map<String, SitLocation> sit_locations = new HashMap<>();
-
 
     @Serializable(name = "extra_backpack.enable")
     public boolean bp_enable = false;
@@ -166,15 +104,7 @@ public class Configuration extends PluginConfigure {
     public int bp_require_nearby_distance = 5;
 
     @StandaloneConfig
-    public final MailboxLocations mailbox;
-    @StandaloneConfig
-    public final RepairConfig repair;
-    @StandaloneConfig
-    public final GlobalLoreBlacklist globalLoreBlacklist;
-    @StandaloneConfig
     public final FuelConfig fuelConfig;
-    @StandaloneConfig
-    public final TimerConfig timerConfig;
     @StandaloneConfig
     public final RealmConfig realmConfig;
 
@@ -189,11 +119,7 @@ public class Configuration extends PluginConfigure {
     @SuppressWarnings("deprecation")
     public Configuration(NyaaUtils plugin) {
         this.plugin = plugin;
-        this.mailbox = new MailboxLocations(plugin);
-        this.repair = new RepairConfig(plugin);
-        this.globalLoreBlacklist = new GlobalLoreBlacklist(plugin);
         this.fuelConfig = new FuelConfig(plugin);
-        this.timerConfig = new TimerConfig(plugin);
         this.realmConfig = new RealmConfig(plugin);
     }
 
@@ -205,13 +131,6 @@ public class Configuration extends PluginConfigure {
             backpackBackendConfig = BackendConfig.sqliteBackend("Backpack.db");
             if (config.isConfigurationSection("database.extrabackpack")) {
                 backpackBackendConfig.deserialize(config.getConfigurationSection("database.extrabackpack"));
-            }
-        }
-        for (SitLocation s : sit_locations.values()) {
-            if (s.blocks != null) {
-                for (String name : s.blocks) {
-                    sit_blocks.add(Material.valueOf(name));
-                }
             }
         }
     }

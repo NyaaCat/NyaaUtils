@@ -39,10 +39,8 @@ dependencies {
     // Nyaa plugins
     if (gradle.hasProperty("useLocalDependencies") && gradle.useLocalDependencies) {
         compileOnly project(":NyaaCore")
-        compileOnly project(":LockettePro")
     } else {
         compileOnly("cat.nyaa:nyaacore:${nyaacoreVersion}") { transitive = false }
-        compileOnly "me.crafter.mc:lockettepro:2.9-SNAPSHOT"
     }
 
     // Other plugins
