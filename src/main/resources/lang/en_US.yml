@@ -1,47 +1,9 @@
 user:
   info:
-    command_complete: Command Executed!
-    not_player: Only players can do this
-    no_item_hand: No item in main hand
-    no_item_offhand: No item in off hand
-    enabled: Enabled
-    disabled: Disabled
     reload: Plugin reloaded
   error:
-    bad_command: 'Wrong command: %s'
-    not_int: Not a valid integer
-    not_double: Not a valid number
-    command_exception: Internal server error. Unable to run command.
-    bad_enum: 'Invalid enum type: %s. Values: %s'
+    bad_int: Not a valid integer
     no_required_permission: 'You do not have the required permission: %s'
-  warn:
-    blocked_words: 'You can''t use this word: %s'
-    blocked_materials: 'You can''t use this material: %s'
-    blocked_format_codes: 'You can''t use format code: %s'
-    no_enough_money: You do not have that much money
-    not_enough_exp: You do not have enough experience
-  showitem:
-    message: 'Player %s showing item: &r{itemName}&r * {amount}'
-  enchant:
-    list_ench_header: === Available enchantments ===
-    invalid_src: Invalid enchantment source in offhand.
-    invalid_ench: 'Invalid enchantment name: %s'
-    invalid_level: Invalid level
-    invalid_item: The item cannot be enchanted
-    max_level: '(Max level: %d)'
-    success: Enchant success
-    fail: Enchant failed
-    enchantsrc_already_exists: The enchantment source already exists
-  prefix:
-    prefix_too_long: Max prefix length is %d characters
-    success: You prefix has been set to %s
-  suffix:
-    suffix_too_long: Max suffix length is %d characters
-    success: You suffix has been set to %s
-  resetprefix:
-    success: You prefix has been reset
-  resetsuffix:
-    success: Your suffix has been reset
   elytra_enhance:
     fuel_notify: 'Fuel remaining: %d'
     durability_notify: 'Elytra durability remaining: %d'
@@ -69,10 +31,8 @@ user:
       player: Player selector, can be @p in command block
 
       '
-    player_not_online: Player %s is not online
     not_ready_to_fly: You must have an elytra worn.
     not_ready_to_fly_sender: The player must have an elytra worn.
-    missing_name: Player name required
   project:
     usage: '/nu project <Yaw> <Pitch> <Speed> <duration> [Player]
 
@@ -87,8 +47,6 @@ user:
       player: Player selector, can be @p in command block
 
       '
-    missing_name: Player name required
-    player_not_online: Player %s is not online
   dp:
     turned_off: Death drop protect turned off
     turned_on: Death drop protect turned on
@@ -105,160 +63,12 @@ user:
     ignore_vanilla: You won't auto pickup vanilla loot items
     reject_vanilla: You won't pickup vanilla items unless sneaking
     include_vanilla: You will auto pickup vanilla loot items
-  exhibition:
-    no_item_frame: No Item Frame found
-    already_set: Already set
-    no_item: This item frame is empty
-    have_not_set: Haven't set
-    frame_protected: This item frame is protected and cannot be destroyed
-    unset_protected: You cannot unset a protected frame
-    looking_at: 'You are looking at: &r'
-    provided_by: 'Provided by: %s'
-    no_desc: No description left
-    range_error: Invalid line number range
-    line_removed: Line %d removed
-    line_changed: Line %d changed
-    desc_protected: You cannot set description of a protected frame
-    not_owner: You are not allowed to change other's protected frame
-    set: The item frame is set
-    unset: Unset the item frame
-    inv: Make the item frame invisible
-    uninv: Now the item frame is visible
-  format:
-    message: "&r&&f0 &0 black\n&r&&f1 &1 dark blue\n&r&&f2 &2 dark green\n&r&&f3 &3\
-      \ dark aqua\n&r&&f4 &4 dark red\n&r&&f5 &5 dark purple\n&r&&f6 &6 gold\n&r&&f7\
-      \ &7 gray\n&r&&f8 &8 dark gray\n&r&&f9 &9 blue\n&r&&fa &a green\n&r&&fb &b aqua\n\
-      &r&&fc &c red\n&r&&fd &d light purple\n&r&&fe &e yellow\n&r&&ff &f white\n&r&&fk\
-      \ &k\tobfuscated\n&r&&fl &l bold\n&r&&fm &m strikethrough\n&r&&fn &n underline\n\
-      &r&&fo &o ltalic\n&r&&fr &r reset\n"
-  enchantinfo:
-    info_0: === Results Chances ===
-    info_1: 'Success: %d%%'
-    info_2: 'Moderate: %d%%'
-    info_3: 'Fail: %d%%'
-    info_4: 'Destroy: %d%%'
-    info_cooldown: 'Cooldown: %d seconds remaining '
-    enchant_level: 'Level: %d'
-  mailbox:
-    right_click_timeout: No chest clicked in time. Action cancelled.
-    already_set: You should unset your current mailbox before setting a new one.
-    havent_set_self: You do not have a mailbox.
-    havent_set_other: The player %s do not have a mailbox
-    set_success: Successfully set your mailbox.
-    set_fail: Failed to set your mailbox.
-    remove_success: Mailbox removed.
-    now_right_click: Right click a chest in 5 seconds to setup your mailbox.
-    permission_required: You do not have the required permission.
-    same_src_dst: You cannot send your mailbox to yourself.
-    info:
-      location: 'Your mailbox location: X:%d / Y:%d / Z:%d'
-      hand_price: 'Price of send items in hand: %.2f'
-      chest_price: 'Price of send all items in a chest: %.2f'
-      send_cooldown: 'Cooldown between sending mails: %.2f seconds'
-      send_timeout: 'Timeout for rejecting an incoming mail: %.2f seconds'
-    player_no_mailbox: Player %s does not have a mailbox.
-    create_mailbox_hint: 'Player %s wants to send you a package but you don''t have
-      a mailbox.
-
-      Please set your mailbox with &d/nu mailbox create&r
-
-      '
-    recipient_no_space: This player's mailbox is full.
-    mailbox_no_space: Player %s wants to send you a package but your mailbox don't
-      have enough space to store.
-    mail_sent: Your package to %s has been sent and costs you %.2f
-    mail_received: Player %s sent you a package and has been put into your mailbox.
-    now_right_click_send: Now right click the box you want to sent to %s
-    chest_protected: You cannot send this chest because it's protected.
-    mail_sent_nothing: The postman is kind, not charging any fee for an empty box.
-    money_insufficient: You do not have enough money to send a package.
-    admin:
-      right_click_set: Right click to setup mailbox for %s.
-      already_set: The player has a mailbox set already
-      fail_set: Failed to set the mailbox
-      success_set: Mailbox set!
-      player_hint_set: Your mailbox is set by an administrator.
-      no_mailbox: The player does not have a mailbox
-      success_remove: Successfully removed the mailbox
-      player_hint_removed: Your mailbox is removed by an administrator.
-      info: Player %s(%s) X:%d / Y:%d / Z:%d
-  repair:
-    item_added: Repairable item added
-    material_mismatch: Material mismatch
-    no_enough_exp: Insufficient Experience
-    info_1: 'Currently holding: '
-    info_2: 'Item type: %s'
-    info_3: 'Item not repairable. Reason: %s'
-    info_4: 'Durability: %d/%d (%.01f%%)'
-    info_5: 'Material required: '
-    info_6: 'Exp consumption: %d (per material)'
-    info_7: 'Durability gain: %d (%.01f%%) (per material)'
-    info_8: 'Repair limit: unlimited'
-    info_9: 'Repair limit: %d/%d'
-    info_10: 'Full repair material cost: %d units'
-    unrepairable:
-      UNREPAIRABLE: Item not repairable.
-      UNREPAIRABLE_REPAIRED: Already fully repaired.
-      UNREPAIRABLE_UNBREAKABLE: Item is unbreakable.
-      UNREPAIRABLE_RLE: Repair limit exceeded.
-      UNREPAIRABLE_LOWRECOVER: Durability not recoverable.
-    repaired: You've repaired your item.
-  timer:
-    timer_create: Create success
-    timer_remove: Timer %s has been removed
-    timer_exist: Timer %s already exist
-    timer_not_found: Timer %s not found
-    timer_enable: Timer %s enabled
-    timer_disable: Timer %s has been disabled
-    timer_info: 'Timer: %s, Checkpoints: %d, Status: %s, Point Broadcast: %s, Finish Broadcast: %s'
-    checkpoint_broadcast_enable: Checkpoint broadcast enabled
-    checkpoint_broadcast_disable: Checkpoint broadcast disabled
-    finishpoint_broadcast_enable: Finishpoint broadcast enabled
-    finishpoint_broadcast_disable: Finishpoint broadcast disabled
-    checkpoint_remove: Checkpoint %s has been removed
-    checkpoint_not_found: Checkpoint %s not found
-    checkpoint_broadcast: '[%s] Player %s reached checkpoint %d, time [ %d min %.2fs
-      ] '
-    checkpoint_info: 'Checkpoint %d world: %s (%d, %d, %d) (%d, %d, %d)'
-    select: Please select a area first
-    checkpoint_conflict: Area conflict with checkpoint %d
-    start: '[%s] Start'
-    invalid: '[%s] You need go to checkpoint %d'
-    finish_0: 'Player %s''s timer at %s:'
-    finish_1: time to checkpoint %d [ %d min %.2fs ]
-    finish_2: time total [ %d min %.2fs ]
-    list: 'timers: %d'
-  teleport:
-    home: home
-    sethome: set home
-    back: back
-    ok: You spend %.2f to %s
-    not_set_yet: You has not set a home
-    no_loc: No valid location found
-    money_insufficient: You don't have enough money(%.2f) to use this command
-    error: That home seems to be broken, seek pm for help
-    invalid_home: That home is in a removed world
-    bed_not_set_yet: You has not set a bed or home
-    unsafe: The teleport destination is unsafe
-    invalid_name: Invalid home name
-    home_limit: You cannot set more than %d homes
-    home_limit_one: You can set only one home. Renaming to home
-    homes: 'Homes: %s'
-  rename:
-    name_too_long: Name '%s' is too long! Should less than %d chars
-    success: Rename success
-  setlore:
-    success: Lore set
-  setbook:
-    no_book: No book in your main hand
-    success: Book information set
   realm:
     select: Please select a area first
     create: Create success
     remove: Realm %s has been removed
     exist: Realm %s already exist
     not_found: Realm %s not found
-    type_error: Realm type error
     no_realm: No realm
     current_location: 'Current location: %s (X: %d, Y:%d, Z: %d)'
     info_0: 'Realm: %s, Type: %s, Priority: %d %s'
@@ -281,46 +91,6 @@ user:
       info_0: Realms (%d / %d)
       info_1: '%s, Type: %s, Priority: %d, owner: %s World: %s, (%d, %d, %d) (%d,
         %d, %d)'
-  particle:
-    not_exist: Particle set %d not found
-    not_enabled: Particle %s is not enabled
-    no_permission: You do not have permission to edit this particle
-    invalid_material: Invalid material
-    add:
-      limit: You can not add more particle to this particle set
-      need_material: 'This particle need a material, usage: %s [material]'
-      dust_options: 'This particle need color and size, usage: %s [color] [size]'
-    type:
-      not_enabled: Particle type %s is not enabled
-    remove:
-      success: Particle set %d has been removed
-    info:
-      page: ======== (%d/%d) ========
-      name: '[%d] [%s] author: %s'
-      content: '  [%d] [particle: %s, amount %d, freq %d, offsetX: %.3f , offsetY:
-        %.3f , offsetZ: %.3f , extra: %.3f]'
-      use: Click to use this particle set
-      material: ' [material: %s]'
-      dust_options: ' [color: %s, size: %s]'
-    turned_on: Particle turned on
-    turned_off: Particle turned off
-  signedit:
-    content: ===== Sign content =====
-    content_line: '[%d]&r %s'
-    not_sign: You must target a sign
-    invalid_line: Invalid line number
-    need_sign: You do not have a sign in your hand
-    too_long: 'Max length: %d'
-  expcap:
-    not_enough_exp: You do not have enough experience
-    not_enough_exp_cap: Not enough exp in capsule
-    wrong_cap_type: Incorrect capsule type
-    current_exp: 'Your exp point before storing: %d'
-    contain_exp: 'Stored Exp: %s'
-    not_stackable: You cannot operate on stacked capsules
-    wrong_nbr: Invalid exp amount
-    bottle_full: 'bottle full'
-    stored_exp: 'stored %d exp(s), %d total.'
   vote:
     options_header: "=== Vote: %s, use /nu vote [option id] to vote ==="
     option: "%d. [%s](%d votes)"
@@ -330,43 +100,16 @@ user:
     success: "You success voted for %s"
     unknown: "unknown option: %s"
     repeat: "You can't repeat vote"
-  mq:
-    deliver: |-
-      You received a message on %s:
-      [
-      {message}
-      ]
-  ping:
-    history10s: "Last 10s ping history of %s:
-
-     %s"
-    avgmax30s: "Last 30s ping average: %s&r, max: %s"
-    top:
-      avg: "Page %d/%d, average ping of players: %.2f"
-      player: "No.%d: %sms %s"
-  tps:
-    header: "TPS graph for last %ds"
-    header_verbose: "TPS records for last %ds"
-    header_tick: "Time records for last %d tick"
-    tick_statics: "Avg millis: %.2f, Top millis at %s: %.2f"
-  sit:
-    invalid_location: "you can't sit here"
-    toggle:
-      enabled: "chairs enabled"
-      disabled: "chairs disabled"
-  tpall:
-    error: "not enough space"
-    success: "teleported %d players to you"
   backpack:
     already_opened: This bacpack is already opened
     force_opened: Your backpack is being opened by admin
-    invalid_page: 'Invalid page %d. Expected: [0, %d)'
     title: 'Backpack of %s. Page %d/%d'
     error_saving: Error saving backpack. Please concat operators for help.
     error_state: 'Backpack of %s line %d failed to save when opened by %s'
+    unexpected_error: 'Unexpected error when opening backpack of %s line %d by %s'
     disabled: Current backpack is disabled
     n_lines: 'Backpack of %s set to %d lines'
-    no_required_blocks: 'There are no {block} in %d blocks'
+    no_required_block: 'There are no {block} in %d blocks'
     error_closed: 'Your backpack is already closed!'
 manual:
   help:
@@ -375,9 +118,6 @@ manual:
   reload:
     description: Reload config from config file. Unsaved changes will lost
     usage: /nu reload
-  show:
-    description: Show off the item in hand
-    usage: /nu show
   lp:
     description: Toggle loot protect status
     usage: /nu lp
@@ -399,51 +139,12 @@ manual:
       usage: /nu bp open {player}
     description: Open extrabackpack
     usage: /nu bp
-  ping:
-    description: Display the ping in 10sec
-    usage: /nu ping
-  pingtop:
-    description: Display pingtop
-    usage: /nu pingtop
   launch:
     description: Launch player into sky and open their elytra
     usage: /nu launch <Yaw> <Pitch> <Speed> <Delay> [Player]
   project:
     description: Set player velocity
     usage: /nu project <Yaw> <Pitch> <Speed> <duration> [Player]
-  prefix:
-    description: Set youself prefix
-    usage: /nu prefix [prefix]
-  suffix:
-    description: Set youself suffix
-    usage: /nu suffix [suffix]
-  resetprefix:
-    description: Reset youself prefix
-    usage: /nu resetprefix
-  resetsuffix:
-    description: Reset youself suffix
-    usage: /nu resetsuffix
-  format:
-    description: Show formatting codes examples
-    usage: /nu format
-  rename:
-    description: Rename item in hand
-    usage: /nu rename [name]
-  setlore:
-    description: Set item lore
-    usage: /nu setlore [lore]
-  addlore:
-    description: Append item lore
-    usage: /nu addlore [lore]
-  setbookauthor:
-    description: Set book author
-    usage: /nu setbookauthor [author]
-  setbooktitle:
-    description: Set book title
-    usage: /nu setbooktitle [title]
-  setbookunsigned:
-    description: Unsign book
-    usage: /nu setbookunsign
   vote:
     description: start a vote
     usage: /nu vote [subject] [option1] [option2] [option3] [option4]...
@@ -462,116 +163,6 @@ manual:
     help:
       description: Show help messages
       usage: /nu el help
-  enchant:
-    description: Enchant item
-    usage: /nu enchant [Enchantment] [Level] or /nu enchant help
-    addsrc:
-      description: Register Item in hand as a valid enchant source
-      usage: /nu enchant addsrc
-    info:
-      description: Show enchant info
-      usage: /nu enchant info
-    help:
-      description: Show help messages
-      usage: /nu enchant help
-  exhibition:
-    description: Create or modify exhibition items
-    usage: /nu exhibition help
-    set:
-      description: Set the ItemFrame looking at as an exhibition
-      usage: /nu exhibition set
-    unset:
-      description: Destroy the ItemFrame looking at
-      usage: /nu exhibition unset
-    inv:
-      description: Make the Itemframe looking at invisible
-      usage: /nu exhibition inv
-    uninv:
-      description: Make the Itemframe looking at visible
-      usage: /nu exhibition uninv
-    desc:
-      description: Change the description of the exhibition
-      usage: /nu exhibition desc <lineNumber> [description]
-    help:
-      description: Show help messages
-      usage: /nu exhibition help
-  mailbox:
-    description: Set mailbox or send items
-    usage: /nu mailbox help
-    create:
-      description: Right click chest to setup an mailbox
-      usage: /nu mailbox create [player]
-    info:
-      description: Show your mailbox info
-      usage: /nu mailbox info [player]
-    remove:
-      description: Unset your mailbox
-      usage: /nu mailbox remove [player]
-    send:
-      description: Send item in hand to another player
-      usage: /nu mailbox send <player>
-    sendchest:
-      description: Send whole chest to another player
-      usage: /nu mailbox sendchest <player>
-    help:
-      description: Print help messages
-      usage: /nu mailbox help
-  repair:
-    description: Repair item
-    usage: /nu repair help
-    add:
-      description: Add repairable item
-      usage: /nu repair add [item] [material] [fullRepairCostAmount] [expCostPerConsume]
-        [enchantCostPerLv] [repairTimesLimit]
-    hand:
-      description: Repair the item in hand
-      usage: /nu repair hand
-    full:
-      description: Completely repair the item in hand
-      usage: /nu repair full
-    info:
-      description: Show repair info about the item in hand
-      usage: /nu repair info
-    help:
-      description: Print help messages
-      usage: /nu repair help
-  timer:
-    description: Timer manipulation
-    usage: /nu timer help
-    create:
-      description: Create timer
-      usage: /nu timer create [timer name]
-    remove:
-      description: Remove timer
-      usage: /nu timer remove [timer name]
-    enable:
-      description: Enable a timer
-      usage: /nu timer enable [timer name]
-    disable:
-      description: Disable a timer
-      usage: /nu timer disable [timer name]
-    togglepointbroadcast:
-      description: Toggle normal checkpoint broadcast
-      usage: /nu timer togglepointbroadcast [timer name]
-    togglefinishbroadcast:
-      description: Toggle finish broadcast
-      usage: /nu timer togglepointbroadcast [timer name]
-    addcheckpoint:
-      description: Add checkpoint to timer
-      usage: /nu timer addcheckpoint [timer name] [x1] [y1] [z1] [x2] [y2] [z2] or /nu timer addcheckpoint [timer
-        name] [x1] [y1] [z1] [x2] [y2] [z2] [checkpoint id]
-    removecheckpoint:
-      description: Remove checkpoint from timer
-      usage: /nu timer addcheckpoint [timer name] [checkpoint id]
-    info:
-      description: Show timer info
-      usage: /nu timer info [timer name]
-    list:
-      description: list all timers
-      usage: /nu timer list
-    help:
-      description: Print help messages
-      usage: /nu timer help
   realm:
     description: Realm manipulation
     usage: /nu realm help
@@ -599,68 +190,3 @@ manual:
     help:
       description: Print help messages
       usage: /nu realm help
-  particle:
-    description: Set particle effects
-    usage: /nu particle help
-    create:
-      description: Create a particle set
-      usage: /nu particle create [particle type] [name]
-    remove:
-      description: Remove a particle set or remove a particle from particle set
-      usage: /nu particle remove [particle set id] or /nu particle remove [particle
-        set id] [index]
-    set:
-      description: Set your particle
-      usage: /nu particle set [particle type] [particle set id|clear]
-    list:
-      description: List all particle sets
-      usage: /nu particle list [particle type] [page]
-    my:
-      description: List your particle sets
-      usage: /nu particle my [particle type] [page]
-    add:
-      description: Add particle to your particle set
-      usage: /nu particle add [particle set id] [particle name] [amount] [freq] [offset
-        x] [offset y] [offset z] [extra]
-    toggle:
-      description: Toggle particle
-      usage: /nu particle toggle
-    help:
-      description: Print help messages
-      usage: /nu particle help
-  se:
-    description: Sign editor
-    usage: /nu se help
-    edit:
-      description: Edit a sign
-      usage: /nu se edit [line] [text|clear]
-    sign:
-      description: Edit sign in your hand
-      usage: /nu se sign [line] [text|clear]
-    help:
-      description: Print help messages
-      usage: /nu se help
-  expcap:
-    description: Experience Capsule
-    usage: /nu expcap [store|restore]
-    store:
-      description: Store experience into capsule
-      usage: /nu expcap store [exp|ALL]
-    restore:
-      description: Extract experience from capsule
-      usage: /nu expcap restore <exp|ALL>
-    set:
-      description: Set experience in capsule
-      usage: /nu expcap set <exp>
-    help:
-      description: Print help messages
-      usage: /nu expcap help
-  sit:
-    description: toggle sit
-    usage: /nu sit
-  tpall:
-    description: teleport all players to you
-    usage: /nu tpall [radius]
-  tps:
-    description: Display TPS in 10sec.
-    usage: /nu tps
