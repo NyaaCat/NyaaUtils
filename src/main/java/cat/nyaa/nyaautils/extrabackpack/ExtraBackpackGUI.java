@@ -8,6 +8,7 @@ import cat.nyaa.nyaacore.orm.backends.ITypedTable;
 import cat.nyaa.nyaacore.utils.ItemStackUtils;
 import cat.nyaa.nyaautils.I18n;
 import cat.nyaa.nyaautils.NyaaUtils;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -102,15 +103,18 @@ public class ExtraBackpackGUI implements InventoryHolder {
         if (daemonTask == null) {
             daemonTask = new BukkitRunnable() {
                 @Override
-                public void run() {
-                    if (!opener.isOnline() || opener.getOpenInventory().getTopInventory().getHolder() != ExtraBackpackGUI.this) {
-                        this.cancel();
-                        new IllegalAccessException().printStackTrace();
-                        saveScheduled.set(1);
-                        saveAll(extraBackpack);
-                        close();
+                    public void run() {
+                        if (!opener.isOnline() || opener.getOpenInventory().getTopInventory().getHolder() != ExtraBackpackGUI.this) {
+                            this.cancel();
+                            new IllegalAccessException().printStackTrace();
+                            if (!opened.containsKey(owner) || !lastState.containsKey(owner)) {
+                                return;
+                            }
+                            saveScheduled.set(1);
+                            saveAll(extraBackpack);
+                            close();
+                        }
                     }
-                }
             }.runTaskTimer(plugin, 0, 0);
         }
     }
@@ -225,7 +229,7 @@ public class ExtraBackpackGUI implements InventoryHolder {
         for (int page = 0; page < pageCount; page++) {
             long size = lines.stream().skip(page * 6).limit(6).count();
             String title = getInventoryTitle(page);
-            Inventory inventory = Bukkit.createInventory(this, (int) size * 9, title);
+            Inventory inventory = Bukkit.createInventory(this, (int) size * 9, LegacyComponentSerializer.legacySection().deserialize(title));
             List<ExtraBackpackLine> view = lines.stream().skip(page * 6).limit(6).collect(Collectors.toList());
             ItemStack[] itemStacks = view.stream().flatMap(l -> l.getItemStacks().stream()).toArray(ItemStack[]::new);
             inventory.setContents(itemStacks);
@@ -441,6 +445,10 @@ public class ExtraBackpackGUI implements InventoryHolder {
     }
 
     private void close() {
+        if (daemonTask != null) {
+            daemonTask.cancel();
+            daemonTask = null;
+        }
         opened.remove(owner);
         lastState.remove(owner);
         opener.closeInventory();

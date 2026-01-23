@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,11 +32,10 @@ public class ExtraBackpackInventory {
             Inventory inventory = inventories.get(i);
             // FIXME: Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), inventory.getTitle());
             String title = holder instanceof ExtraBackpackGUI ? ((ExtraBackpackGUI) holder).getInventoryTitle(i):"";
-            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), title);
+            Inventory inventory1 = Bukkit.createInventory(holder, inventory.getSize(), LegacyComponentSerializer.legacySection().deserialize(title));
             inventory1.setContents(inventory.getContents());
             clone.inventories.add(inventory1);
         }
         return clone;
     }
 }
-
